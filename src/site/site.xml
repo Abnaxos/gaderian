@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Gaderian" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+    <bannerLeft>
+        <name>Gaderian</name>
+        <href>http://gaderian.ops4j.org/</href>
+        <src>/images/gaderian-logo.png</src>
+        <alt>Gaderian</alt>
+    </bannerLeft>
+
+    <bannerRight>
+        <name>Open Participation Software for Java</name>
+        <href>http://www.ops4j.org</href>
+        <src>/images/ops4j-logo.png</src>
+        <alt>Open Participation Software for Java</alt>
+    </bannerRight>
+
+    <skin>
+        <groupId>org.ops4j.gaderian.tools</groupId>
+        <artifactId>maven-gaderian-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <version position="right"/>
+    <publishDate position="right"/>
+
+    <body>
+
+        <head>
+            <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-9000238-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+        </head>
+
+        <breadcrumbs>
+            <item name="OPS4J" href="http://www.ops4j.org/"/>
+            <item name="Gaderian" href="http://gaderian.ops4j.org/"/>
+        </breadcrumbs>
+
+        <menu name="Gaderian">
+
+            <item name="Home" href="index.html"/>
+            <item name="Overview" href="overview.html"/>
+            <item name="Downloads" href="/downloads.html"/>
+            <item name="History" href="history.html"/>
+            <!-- <item name="Maven" href="maven.html"/> -->
+
+            <item name="References" collapse="true" href="references.html">
+                <item name="Services" href="services.html"/>
+                <item name="Configurations" href="configurations.html"/>
+                <item name="Module Reports" href="module-reports.html"/>
+                <item name="Module Descriptor" href="descriptor.html"/>
+                <item name="Contribution Processing Rules" href="rules.html"/>
+                <item name="Conditional Contributions" href="conditional.html"/>
+                <item name="Serializing Services" href="serializing.html"/>
+                <item name="Instance Initialization" href="instance-initialization.html"/>
+            </item>
+
+
+            <item name="Tutorials" collapse="true" href="tutorials.html">
+                <item name="Bootstrapping the Registry" href="bootstrap.html"/>
+                <item name="Inversion Of Control" href="ioc.html"/>
+                <item name="Localization" href="localization.html"/>
+                <item name="Multi-Threading" href="multithreading.html"/>
+                <item name="Filters" href="filters.html"/>
+                <item name="Overriding Services" href="override.html"/>
+                <item name="Groovy Support" href="groovy.html"/>
+            </item>
+        </menu>
+
+        <menu ref="modules"/>
+
+        <menu ref="reports" inherit="bottom" />
+
+        <menu name="Other Resources" inherit="bottom">
+            <item name="Home" href="/index.html"/>
+            <item name="Downloads" href="/downloads.html"/>
+            <item name="Wiki" href="http://wiki.ops4j.org/display/gaderian/Home"/>
+            <item name="OPS4J" href="http://ops4j.org"/>
+        </menu>
+
+
+    </body>
+</project>

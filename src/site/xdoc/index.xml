@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+    <title>Welcome to Gaderian</title>
+    <author email="ahuegen@apache.org">Achim Huegen</author>
+  </properties>
+  <body>
+
+    <section name="Welcome to Gaderian">
+
+      <div class="frame note">
+        <div class="content">
+          <b>gaderian</b> ['gaderian]: <i>(Old English)</i> to assemble, to put together, to collect, to gather
+        </div>
+      </div>
+      <div id="downloadbox">
+        <h5>Get Gaderian!</h5>
+        <p>Please watch this space for the upcoming 1.0 release!
+<!--
+          <span class="icon">
+            <a href="downloads.html">
+              <img src="images/folder-open.gif" border="0" alt="" title="download"/>
+            </a>
+          </span>
+          <span class="icon_text"><a href="downloads.html">Download</a> Gaderian 1.0</span>
+-->
+        </p>
+
+        <br/>
+
+        <div id="twitter">
+          <h5>Twitter</h5>
+          <ul id="twitter_update_list">
+            <li>
+              <span class="icon"><img src="images/twitter-loading.gif" alt=""/></span>
+              <span class="icon_text">Loading...</span>
+            </li>
+          </ul>
+          <p><a href="http://twitter.com/gaderian">Follow Gaderian development on Twitter</a></p>
+        </div>
+        <!-- hack: xdoc removes the id="twitter_update_list" from the <ul> above, so
+             re-add it using JavaScript -->
+        <script type="text/javascript"><![CDATA[
+          new function() {
+            var twitterDiv = document.getElementById('twitter');
+            twitterDiv.getElementsByTagName('ul')[0].setAttribute('id', 'twitter_update_list');
+          }();
+        ]]></script>
+        <script type="text/javascript" src="http://twitter.com/javascripts/blogger.js"></script>
+        <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/gaderian.json?callback=twitterCallback2&amp;count=5"></script>
+
+      </div>
+      <p>
+        <strong>Gaderian</strong>
+        is an services and configuration microkernel.
+        Its features are also referred to as Inversion of Control (IoC) Container
+        or Lightweight Container.
+      </p>
+      <p>The adoption of Gaderian in an application ensures the use of
+        certain design principles which improve encapsulation, modularization,
+        testability and reusability.
+      </p>
+      <ul>
+        <li><strong>Services</strong>: Gaderian
+          services are
+          <em>POJOs</em>
+          (Plain Old Java Objects) that can be easily
+          accessed and combined. Each service ideally defines a Java interface it
+          implements (this is not mandatory). Gaderian takes care of the life cycle
+          of services. It instantiates and finalizes services and configures each
+          service just as necessary. Gaderian lets services collaborate with each
+          other via dependency injection, so that the service code itself
+          is released from the task of looking up dependencies.
+        </li>
+        <li><strong>Configuration</strong>:
+          Gaderian allows you to provide complex configuration data to your
+          services in a format
+          <em>you</em>
+          define. Gaderian will integrate the
+          contributions of such data from multiple modules and convert it all into
+          data objects for you. Gaderian configurations allow for powerful,
+          data-driven solutions which combine seemlessly with the service
+          architecture.
+        </li>
+      </ul>
+    </section>
+
+  </body>
+</document>

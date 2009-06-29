@@ -1,0 +1,410 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Introduction to Gaderian</title>
+  </properties>
+  <body>
+    <section name="Introduction to Gaderian">
+
+      <p>
+        <strong>Gaderian</strong>
+        is a services and configuration microkernel:
+      </p>
+      <ul>
+        <li>
+          <p>
+            <strong>
+              <a href="services.html">Services</a>
+            </strong>
+            : Gaderian
+            services are
+            <em>POJOs</em>
+            (Plain Old Java Objects) that can be easily
+            accessed and combined. Each service ideally defines a Java interface it
+            implements (but this is no longer mandatory). Gaderian takes care of instantiating and configuring each
+            service just as necessary. Gaderian lets services collaborate with each
+            other via
+            <a href="ioc.html">dependency injection</a>
+            .
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>
+              <a href="configurations.html">Configuration</a>
+            </strong>
+            :
+            Gaderian allows you to provide complex configuration data to your
+            services in a format
+            <em>you</em>
+            define. Gaderian will integrate the
+            contributions of such data from multiple modules and convert it all into
+            data objects for you. Gaderian configurations allow for powerful,
+            data-driven solutions which combine seemlessly with the service
+            architecture.
+          </p>
+        </li>
+        <li>
+          <p>
+            <strong>Microkernel</strong>
+            : Gaderian is a framework for creating applications, not
+            an application, or even an application server, itself. The 'core' of Gaderian
+            is the
+            <a href="bootstrap.html">startup logic</a>
+            that knows how to parse and understand the
+            <a href="descriptor.html">module deployment descriptors</a>
+            , and use that
+            information to
+            <a href="ioc.html">instantiate and initialize</a>
+            all those services and configurations.
+          </p>
+
+        </li>
+      </ul>
+
+      <p>In Gaderian, a service is an implementation of a Java interface. Unlike
+        other SOAs (Service Oriented Architectures, such as a SOAP, or EJBs),
+        Gaderian is explicitly about combining Java code within a single JVM.
+        Gaderian uses a
+        <a href="descriptor.html">descriptor</a>
+        to describe
+        different services, their lifecycles, and how they are combined. Gaderian
+        takes care of thread-safe, just-in-time creation of singleton service
+        objects so your code doesn't have to.
+      </p>
+
+      <p>
+        Gaderian sits between your application code and the underlying J2EE or other APIs:
+      </p>
+
+      <p>
+        <img align="center" src="images/FrameworkStack.png" alt="[Framework Stack]"/>
+      </p>
+
+      <p>
+        In this diagram, the application accesses key Gaderian services (the small circles). These services
+        acts as facades; the implementations of
+        the services are dependent on many other services, as well as configurations (the blue stacks of blocks).
+        Service implementations make use of Java and J2EE APIs, and may even "bridge" into other systems such
+        as EJB session beans.
+      </p>
+
+      <p>Gaderian is organized around
+        <em>modules</em>
+        : individual building
+        blocks, each providing a particular set of services and configurations.
+        Each module is deployed as its own JAR file, containing its own
+        <a
+                href="descriptor.html">descriptor
+        </a>
+        . At runtime, Gaderian combines
+        <em>all</em>
+        the modules and their descriptors together ... seemlessly
+        combining the services specific to your application with the services
+        provided by Gaderian and by other third-party libraries.
+      </p>
+      <p>Gaderian is designed with particular attention to J2EE. Because J2EE
+        applications are multi-threaded, everything in Gaderian is thread-safe.
+        That's one less thing for you to be concerned about.
+      </p>
+      <p>Gaderian allows you to create more complex applications, yet keep the
+        individual pieces (the individual services) simple and testable. Gaderian enourages the use
+        of common best practices, such as coding to interfaces, seperation of concerns, and keeping
+        code highly testable without a special container.
+      </p>
+    </section>
+
+      <section name="Why should you use Gaderian?">
+          <p>The concept behind Gaderian, and most other dependency-injection microkernels, is to reduce the amount of
+              code
+              in your application and at the same time, make your application more testable. If your applications are
+              like my
+              applications, there is an awful lot of code in place that deals just with creating objects and hooking
+              them
+              together, and reading and processing configuration files.
+          </p>
+          <p>Gaderian moves virtually all of that logic into the framework, driven by the module deployment descriptors.
+              Inside the descriptor, you describe your services, your configuration data, and how everything is hooked
+              together within and between modules.
+          </p>
+          <p>Gaderian can do all the grunt work for you; using Gaderian makes it so that
+              <em>the easiest approach is also
+                  the correct approach.
+              </em>
+          </p>
+          <section name="Task: Log method entry and exit">
+              <section name="Typical Approach">
+                  <source> <![CDATA[
+public String myMethod(String param)
+{
+  if (LOG.isDebugEnabled())
+    LOG.debug("myMethod(" + param + ")");
+
+  String result = // . . .
+
+  if (LOG.isDebugEnabled())
+    LOG.debug("myMethod() returns " + result);
+
+  return result;
+}]]> </source>
+                  <p>This approach doesn't do a good or consistent job when a method has multiple return points. It also
+                      creates many more branch points within the code ... basically, a lot of clutter. Finally, it
+                      doesn't report
+                      on exceptions thrown from within the method.
+                  </p>
+              </section>
+              <section name="Gaderian Approach">
+                  <p>Let Gaderian add a
+                      <a href="gaderian/LoggingInterceptor.html">logging interceptor</a>
+                      to your
+                      service. It will consistently log method entry and exit, and log any exceptions thrown by the
+                      method.
+                  </p>
+                  <p>The following descriptor snippet defines a service, provides a core service implementation (using
+                      &lt;create-instance&gt;), and adds method logging (using &lt;interceptor&gt;):
+                  </p>
+                  <source><![CDATA[
+<service-point id="MyService" interface="com.myco.MyServiceInterface">
+  <create-instance class="com.myco.impl.MyServiceImpl"/>
+  <interceptor service-id="gaderian.LoggingInterceptor"/>
+</service-point>]]> </source>
+              </section>
+          </section>
+          <section name="Task: Reference another service">
+              <section name="Typical Approach">
+                  <source><![CDATA[
+private SomeOtherService _otherService;
+
+public String myMethod(String param)
+{
+  if (_otherService == null)
+    _otherService = // Lookup other service . . .
+
+  _otherService.doSomething(. . .);
+
+  . . .
+}]]> </source>
+                  <p>How the other service is looked up is specified to the environment; it might be a JNDI lookup for
+                      an EJB.
+                      For other microkernels, such as Avalon, there will be calls to a specific API.
+                  </p>
+                  <p>In addition, this code is not thread-safe; multiple threads could execute it simultaneously,
+                      causing
+                      unwanted (and possibly destructive) multiple lookups of the other service.
+                  </p>
+              </section>
+              <section name="Gaderian Approach">
+                  <p>Let Gaderian assign the other service as a property. This is
+                      <a
+                              href="http://www.martinfowler.com/articles/injection.html">dependency injection
+                      </a>
+                      . Gaderian can
+                      inject dependencies using JavaBeans properties or constructor arguments.
+                  </p>
+                  <source><![CDATA[
+private SomeOtherService _otherService;
+
+public void setOtherService(SomeOtherService otherService)
+{
+  _otherService = otherService;
+}
+
+public String myMethod(String param)
+{
+  _otherService.doSomething(. . .);
+
+  . . .
+}]]> </source>
+                  <p>Gaderian uses a system of proxies to defer creation of services until actually needed. The proxy
+                      object
+                      assigned to the otherService property will cause the actual service implementation to be
+                      instantiated and
+                      configured the first time a service method is invoked ... and all of this is done in a thread-safe
+                      manner.
+                  </p>
+              </section>
+          </section>
+          <section name="Task: Read configuration data">
+              <section name="Typical Approach">
+                  <p>Find a properties file or XML file (on the classpath? in the filesystem?) and read it, then write
+                      code to
+                      intepret the raw data and possibly convert it to Java objects.
+                  </p>
+                  <p>The lack of a standard approach means that data-driven solutions are often more trouble than they
+                      are
+                      worth, leading to code bloat and a loss of flexibility.
+                  </p>
+                  <p>Even when XML files are used for configuration, the code that reads the content is often
+                      inefficient,
+                      incompletely tested, and lacking the kind of error detection built into Gaderian.
+                  </p>
+              </section>
+              <section name="Gaderian Approach">
+                  <source><![CDATA[
+private List _configuration;
+
+public void setConfiguration(List configuration)
+{
+  _configuration = configuration;
+}
+
+public void myMethod()
+{
+  Iterator i = _configuration.iterator();
+  while (i.hasNext())
+  {
+    MyConfigItem item = (MyConfigItem)i.next();
+
+    item.doStuff(. . .);
+  }
+}]]> </source>
+                  <p>Gaderian will set the
+                      <code>configuration</code>
+                      property from a
+                      <a
+                              href="configurations.html">configuration point
+                      </a>
+                      you specify. The objects in the list are constructed
+                      from configuration point contributions and converted, by Gaderian, into objects. As with services,
+                      a
+                      thread-safe, just-in-time conversion takes place.
+                  </p>
+                  <p>The type and number of extension points and how and when your code makes use of them is entirely up
+                      to
+                      you, configured in the module deployment descriptor.
+                  </p>
+              </section>
+          </section>
+          <section name="Task: Test your services">
+              <section name="Typical Approach">
+                  <p>In complex environments, such as EJB containers, you will often have to deploy your code and then
+                      test it
+                      from the outside. EJB code in particular is hard to test because collaborating EJBs make use of
+                      JNDI to
+                      access each other. It is very difficult to "stub out" part of the overall application for testing
+                      purposes.
+                  </p>
+              </section>
+              <section name="Gaderian Approach">
+                  <p>Making code testable is a key concern of Gaderian, and shows up in its general testing strategy:
+                  </p>
+                  <ul>
+                      <li>Because Gaderian services are simply POJOs, your unit tests can simply instantiate them
+                          directly.
+                      </li>
+                      <li>Gaderian services are always identified by
+                          <em>interface</em>
+                          , so it's easy to provide a mocked-up
+                          implementation of the interface.
+                      </li>
+                      <li>Services collaborate via
+                          <a href="ioc.html">dependency injection</a>
+                          , so it's easy for a unit
+                          test to wire a service to real or mock implementations of collaborating services.
+                      </li>
+                      <li>Because configuration data is just lists of Java objects, unit tests can easily create objects
+                          suitable
+                          for testing.
+                      </li>
+                  </ul>
+              </section>
+          </section>
+      </section>
+
+    <section name="Coding">
+      <p>Coding using Gaderian is designed to be as succinct and painless as
+        possible. Since services are, ultimately, simple objects (POJOs -- plain
+        old java objects) within the same JVM, all the complexity of J2EE falls
+        away ... no more JNDI lookups, no more RemoteExceptions, no more home
+        and remote interfaces. Of course, you can still use Gaderian to
+        <a href="gaderian-util/EJBProxyFactory.html">front your
+          EJBs
+        </a>
+        , in which case the service is
+        responsible for performing the JNDI lookup and so forth (which in itself
+        has a lot of value), before forwarding the request to the EJB.
+      </p>
+      <p>In any case, the code should be short. To external objects (objects
+        that are not managed by Gaderian, such as a servlet) the code for
+        accessing a service is quite streamlined:
+      </p>
+
+      <source><![CDATA[
+Registry registry = RegistryBuilder.constructDefaultRegistry();
+MyService service = (MyService) registry.getService("com.mypackage.MyService", MyService.class);
+
+service.perform(...);
+    ]]></source>
+
+      <p>You code is responsible for:</p>
+
+      <ul>
+        <li>Obtaining a reference to the Registry singleton</li>
+        <li>Knowing the complete id of the service to access</li>
+        <li>Passing in the interface class</li>
+      </ul>
+
+      <p>Gaderian is responsible for:</p>
+
+      <ul>
+        <li>Finding the service, creating it as needed</li>
+        <li>Checking the type of the service against your code's expections</li>
+        <li>Operating in a completely thread-safe manner</li>
+        <li>Reporting any errors in a useful, verbose fashion</li>
+      </ul>
+
+      <div class="frame note"><div class="label">Note</div><div class="content">
+        In the not-unusual case that only a single service within the entire Registry
+        implements a particular service interface,
+        then you may omit the service id, i.e.
+        <code>getService(MyService.class)</code>
+        .
+      </div></div>
+
+      <p>However, a much more common case is for services to collaborate: that's
+        much simpler, since Gaderian will connect the two services together for
+        you. You'll just need to provide an instance variable and either a
+        setter method or a constructor argument.
+      </p>
+
+    </section>
+
+    <section name="Documentation">
+      <p>An important part of the Gaderian picture is documentation.
+        Comprehensive documentation about a Gaderian application,
+        <a
+                href="module-reports.html">Module Reports
+        </a>
+        , can be automatically generated by
+        your build process. This documentation lists all modules, all extension
+        points (both service and configuration), all contributions (of service
+        constructors, service interceptors and configuration elements) and cross
+        links all extension points to their contributions.
+      </p>
+      <p>Modules and extension points include a description which is
+        incorporated into the generated documentation.
+      </p>
+      <p>Gaderian is used to construct very complex systems using a large number
+        of small parts. Module Reports is an important tool for developers to
+        understand and debug the application.
+      </p>
+    </section>
+
+  </body>
+</document>

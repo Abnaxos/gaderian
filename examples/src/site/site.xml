@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+
+    <skin>
+        <groupId>org.ops4j.gaderian.tools</groupId>
+        <artifactId>maven-gaderian-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <body>
+
+        <menu name="Examples">
+            <item name="Calculator" href="calc.html"/>
+            <item name="Logging" href="logging.html"/>
+            <item name="Setters" href="setters.html"/>
+        </menu>
+
+        <menu ref="parent"/>
+
+    </body>
+</project>

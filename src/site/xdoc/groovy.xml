@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+    <title>Using Groovy to Define Modules</title>
+  </properties>
+  <body>
+      <section name="Using Groovy to Define Modules">
+    <p>
+		Gaderian's XML format is intentionally designed as a static (with the exception of the Ant style
+		properties called <em>substitution symbols</em>) descriptive format.  Yet, in some situations it
+		would be nice to be able to specify the Gaderian module descriptors in more dynamic and expressive
+		ways.  <a href="http://groovy.codehaus.org/">Groovy</a> to the rescue.
+    </p>
+	<p>
+		In the following we will take a look at how the
+    <a href="bootstrap.html">calculator example module</a> can be expressed using a
+		Groovy script.  We will also go through the steps required to get module descriptors defined in
+		Groovy loaded into the Registry.
+	</p>
+	<subsection name="Module Descriptor in Groovy">
+		<source><![CDATA[
+import gaderian.examples.*
+import gaderian.examples.impl.*
+
+def addSimpleServiceWithLogging(id, interfaceClass) {
+	interfaceName = interfaceClass.name
+	processor.servicePoint(id:id, interface:interfaceName) {
+		lastDotIdx = interfaceName.lastIndexOf('.')
+		createInstance(class:interfaceName.substring(0, lastDotIdx) + '.impl' +
+			interfaceName.substring(lastDotIdx) + 'Impl')
+		interceptor(serviceId:'gaderian.LoggingInterceptor')
+	}
+}
+
+processor.module(id:'gaderian.examples', version:'1.0.0') {
+
+	addSimpleServiceWithLogging('Adder', Adder.class)
+	addSimpleServiceWithLogging('Subtracter', Subtracter.class)
+	addSimpleServiceWithLogging('Multiplier', Multiplier.class)
+	addSimpleServiceWithLogging('Divider', Divider.class)
+
+	servicePoint(id:'Calculator', interface:Calculator.class.name) {
+		invokeFactory {
+			construct(class:CalculatorImpl.class.name)
+		}
+		interceptor(serviceId:'gaderian.LoggingInterceptor')
+	}
+}]]></source>
+	<p>
+		At first glance this looks very different from a standard XML module descriptor.  But if you take a
+		closer look you will notice that the main differences stem from the dynamic aspects which have been
+		introduced.  Without these the module descriptor would actually look very much alike its XML
+		equivalent.
+	</p>
+	<p>
+		There are a few important things you should know when writing Groovy module descriptors:
+	</p>
+	<ul>
+		<li>Gaderian binds the variable <code>processor</code> to the script, which is the
+			<a href="http://groovy.codehaus.org/GroovyMarkup">GroovyMarkup</a> builder.  You can only
+			use it to define one module descriptor per script.</li>
+		<li>The XML descriptor elements correspond to methods and the element attributes correspond to
+			method parameters.  Instead of the hyphened element and attribute names we have corresponding
+			camelCased identifiers (e.g. <code>servicePoint</code> instead of &lt;service-point&gt;).</li>
+	</ul>
+	</subsection>
+	<subsection name="Setting up the Registry">
+		<source>
+package gaderian.examples;
+
+import java.util.Locale;
+
+import org.ops4j.gaderian.*;
+import org.ops4j.gaderian.impl.*;
+import org.ops4j.gaderian.utilities.groovy.GroovyModuleDescriptorProvider;
+import org.ops4j.gaderian.util.ClasspathResource;
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        double arg0 = Double.parseDouble(args[0]);
+        double arg1 = Double.parseDouble(args[1]);
+
+        RegistryBuilder builder = new RegistryBuilder();
+
+        // we have to add the default provider to load Gaderian's own modules
+        builder.addDefaultModuleDescriptorProvider();
+
+        ClassResolver resolver = new DefaultClassResolver();
+
+        Resource groovyScript = new ClasspathResource(resolver,
+                "/META-INF/gaderian.examples.groovy");
+
+        // now we add a Groovy provider to load our Groovy script
+        builder.addModuleDescriptorProvider(new GroovyModuleDescriptorProvider(resolver,
+                groovyScript));
+
+        Registry registry = builder.constructRegistry(Locale.getDefault());
+
+        Calculator calculator = (Calculator) registry.getService(Calculator.class);
+
+        System.out.println("Inputs:   " + arg0 + " and " + arg1);
+        System.out.println("Add:      " + calculator.add(arg0, arg1));
+        System.out.println("Subtract: " + calculator.subtract(arg0, arg1));
+        System.out.println("Multiply: " + calculator.multiply(arg0, arg1));
+        System.out.println("Divide:   " + calculator.divide(arg0, arg1));
+
+        registry.shutdown();
+    }
+}</source>
+	<p>
+		As you can see there is slightly more work involved in setting up the Registry when using Groovy
+		module descriptors.  The <a href="/gaderian/apidocs/org/ops4j/gaderian/impl/RegistryBuilder.html">RegistryBuilder</a> must be instantiated manually and the
+		<a href="/gaderian/apidocs/org/ops4j/gaderian/ModuleDescriptorProvider.html">ModuleDescriptorProvider</a> instances providing the module descriptors must be registered with it
+		prior to the Registry can be built.  The Groovy specific provider is initialized with a single
+		Resource or a List of Resources (see <a href="/gaderian-util/apidocs/org/ops4j/gaderian/utilities/groovy/GroovyModuleDescriptorProvider.html">GroovyModuleDescriptorProvider</a>).
+	</p>
+	</subsection>
+      </section>
+  </body>
+</document>

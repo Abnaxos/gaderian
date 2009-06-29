@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+	<properties>
+		<title>Gaderian Localization</title>
+	</properties>
+	<body>
+		<p>Every Gaderian module may have its own set of messages. Messages are
+			stored alongside the module deployment descriptor, as <code>
+			META-INF/org/ops4j/gaderian/module.properties</code> (within the module's JAR).</p>
+		<div class="frame note"><div class="label">Note</div><div class="content">In actuality, the name of the properties file is created by stripping
+			off the extension (".xml") from the descriptor name and
+			appending the localization code and ".properties". This is relevant only
+			if you load your module deployment descriptors from a non-standard
+			location, possibly via the <a href="descriptor.html#sub-module">&lt;sub-module&gt;</a> element.</div></div>
+		<p>Services can gain access to localized messages, as an instance of <a href="gaderian/apidocs/org/ops4j/gaderian/Messages.html">Messages</a>
+			, which includes methods for accessing messages and formatting messages
+			with arguments.</p>
+		<p>In a module descriptor, within the <a href="descriptor.html#contribution">&lt;contribution&gt;</a> and <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
+			elements, you can reference a localized message in an attribute or element
+			content simply by prefixing the message key with '%'. Examples:</p>
+		<source> <![CDATA[
+<contribution configuration-id=...>
+  <some-item> <message="%message.key">
+    %other.message.key
+  </some-item>
+</contribution>]]> </source>
+		<p>The two keys (<code>message.key</code> and <code>other.message.key</code>
+			) are searched for in the <em>contributing</em> module's messages.</p>
+
+        <div class="frame warning">
+            <div class="label">Warning</div>
+            <div class="content">
+                Support for this '%' syntax will likely be removed soon. This is because
+                the locale is now changeable; what locale to use when converting configuration
+                data becomes dangerously ambiguous.
+            </div>
+        </div>
+
+		<p>Gaderian gracefully recovers from undefined messages. If a message is not
+			in the properties file, then Gaderian provides a substitute value by
+			converting the key to upper-case and adding brackets, i.e. <code>
+			[MESSAGE.KEY]</code>. This allows your application to continue running,
+			but clearly identifies missing messages.</p>
+		<p>By adding additional files, message localization can be accomplished. For
+			example, adding a second file, <code>META-INF/org/ops4j/gaderian/module_fr.properties</code>
+			would provide French language localizations. Any common keys between the
+			two files defer to the more specific file.</p>
+
+      <p>
+        The <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a> can inject an <a href="gaderian/apidocs/org/ops4j/gaderian/Messages.html">Messages</a> object that allows access
+        to the module's messages.
+      </p>
+		<section name="Setting the locale">
+			<p>When a <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a> is created by the <a href="gaderian/apidocs/org/ops4j/gaderian/impl/RegistryBuilder.html">RegistryBuilder</a>, a locale
+				is specified. This is the <em>default</em> locale for the Registry and, by extension, for
+				all Modules in the registry. </p>
+
+        <p>
+          Threads will always use this locale by default, but the locale for
+          an individual <em>thread</em> may be changed using the <a href="gaderian/ThreadLocale.html">gaderian.ThreadLocale</a> service.
+          The <a href="gaderian/apidocs/org/ops4j/gaderian/Messages.html">Messages</a> injected into your services automatically adjusts for the
+          thread's current locale.
+        </p>
+
+        <p>
+          You should not store, in your services, any localized values, since different threads
+          may want different localizations. Instead, you should always obtain values
+          from the <a href="gaderian/apidocs/org/ops4j/gaderian/Messages.html">Messages</a>.
+        </p>
+
+		</section>
+	</body>
+</document>

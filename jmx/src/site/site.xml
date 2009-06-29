@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Gaderian Library" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+    <skin>
+        <groupId>org.ops4j.gaderian.tools</groupId>
+        <artifactId>maven-gaderian-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <body>
+        
+
+        <menu name="JMX">
+            <item name="Quick Start" href="quickstart.html"/>
+            <item name="Setup Overview" href="setupOverview.html" collapse="true">
+                <item name="Choose JMX Implementation" href="setupJMXImplementation.html"/>
+                <item name="Connect to MBean Server" href="setupMBeanServer.html"/>
+                <item name="Setup Connectors" href="setupConnectors.html"/>
+            </item>
+        </menu>
+
+        <menu ref="parent"/>
+
+    </body>
+</project>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+    <title>References</title>
+  </properties>
+  <body>
+      <section name="References">
+          <p>Below is a list of reference information available for the various parts of Gaderian; how to use and configure components and resources</p>
+          <ul>
+              <li>
+                  <a href="services.html">Services</a>
+              </li>
+              <li>
+                  <a href="configurations.html">Configurations</a>
+              </li>
+              <li>
+                  <a href="hivedoc.html">HiveDoc</a>
+              </li>
+              <li>
+                  <a href="descriptor.html">Module Descriptor</a>
+              </li>
+              <li>
+                  <a href="rules.html">Contribution Processing Rules</a>
+              </li>
+              <li>
+                  <a href="conditional.html">Conditional Contributions</a>
+              </li>
+              <li>
+                  <a href="serializing.html">Serializing Services</a>
+              </li>
+              <li>
+                  <a href="instance-initialization.html">Instance Initialization</a>
+              </li>
+
+          </ul>
+      </section>
+  </body>
+</document>

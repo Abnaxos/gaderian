@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.ops4j.gaderian</groupId>
+    <artifactId>gaderian-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>org.ops4j.gaderian</groupId>
+  <artifactId>gaderian-dist</artifactId>
+  <packaging>pom</packaging>
+
+  <name>Gaderian Distribution</name>
+  <description>The POM used the create binary and source assemblies of the project</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.ops4j.gaderian</groupId>
+      <artifactId>gaderian</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.gaderian</groupId>
+      <artifactId>gaderian-util</artifactId>
+      <version>${project.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+      <dependency>
+        <groupId>org.ops4j.gaderian</groupId>
+        <artifactId>gaderian-jmx</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.ops4j.gaderian</groupId>
+        <artifactId>gaderian-examples</artifactId>
+        <version>${project.version}</version>
+        <type>jar</type>
+        <!-- don't include any artifacts for that one, but make sure it's built before
+             the distribution -->
+        <scope>provided</scope>
+      </dependency>
+  </dependencies>
+
+  <profiles>
+    <profile>
+      <id>assembly</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.2-beta-3</version>
+            <executions>
+              <execution>
+                <id>assembly</id>
+                <inherited>false</inherited>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <phase>package</phase>
+                <configuration>
+                  <descriptors>
+                    <descriptor>src/assembly/bin.xml</descriptor>
+                    <descriptor>src/assembly/src.xml</descriptor>
+                    <descriptor>src/assembly/doc.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<registry>
+    <module id="gaderian.test.config" package="gaderian.test.config" version="1.0.0">
+        <service-point
+            id="gaderian.test.config.FactoryDefaultsSymbolSource" interface="org.ops4j.gaderian.SymbolSource">
+            <invoke-factory model="singleton" service-id="gaderian.test.config.FactoryDefaultsSymbolSource"/>
+            <interceptor service-id="gaderian.test.config.MyService"/>
+        </service-point>
+    </module>
+</registry>

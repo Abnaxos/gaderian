@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Setup JMX Connectors</title>
+  </properties>
+  <body>
+      <section name="Setup JMX Connectors">
+  	<p>
+  		Finally you have to decide how you want to access the management
+  		functionality of your application. The JMX specification calls
+  		the responsible components connectors and protocol adaptors.
+  		The HTML protocol adaptors have the big advantage, that no
+  		additional management console is needed. All that is needed is
+  		a web browser.<br/>
+  		Gaderian offers preconfigured services for the most common
+  		connectors.
+  	</p>
+		<subsection name="HTML Adaptors">
+
+            <p>HTML Adaptors are provide by MX4J and Sun RI.
+			</p>
+			<h4>MX4J HTML Adaptor</h4>
+				<p>Enable the MX4J HTML Adaptor by including these lines in
+					your descriptor:
+				</p>
+				<source><![CDATA[
+<contribution configuration-id="gaderian.management.MBeans">
+   <mbean service-id="gaderian.management.connector.MX4JHttpAdaptorMBean"
+          start-method="start" />
+</contribution>]]></source>
+				<p>By default the adaptor listens on port 9000 for incoming
+					HTTP request and renders a HTML user interface.<br/>
+					To change the port, modify the symbol "management.http.Port":
+				</p>
+				<source><![CDATA[
+<contribution configuration-id="gaderian.ApplicationDefaults">
+  <default symbol="management.http.Port" value="9001" />
+</contribution>]]></source>
+
+			<h4>SUN RI HTML Adaptor</h4>
+				<p>Enable the SUN HTML Adaptor by including these lines in
+					your descriptor:
+				</p>
+				<source><![CDATA[
+<contribution configuration-id="gaderian.management.MBeans">
+   <mbean service-id="gaderian.management.connector.SunHttpAdaptorMBean"
+          start-method="start" />
+</contribution>]]></source>
+				<p>The default port and configuration of the port correspond
+					to the MX4J description above.
+				</p>
+			<h4>J2SE 1.5 and HTML Adaptors</h4>
+				<p>There is no HTTP Adaptor provided with J2SE 1.5.
+					But you can combine the MX4J or Sun RI HTTP Adaptors with
+					J2SE 1.5. Just include the xxx-tools.jar in the classpath
+					and setup the adaptor like described above.
+				</p>
+		</subsection>
+		<subsection name="JSR 160 connectors">
+			<p>JSR 160 connectors allow the remote management of the application using any
+				management console that supports that standard (like JConsole, MC4J).
+				The connectors are created by a standardized api so there are no implementation
+				specific MBeans like with HTTP Adaptors. <br/>
+				The standard allows use of different protocols for the remote management (which
+				must be supported by both the JMX implementation and the management console).
+				Most common is a RMI protocol and this is what Gaderian uses by default.
+				The protocol requires a running RMI Registry. <br/>
+				Add these lines:
+			</p>
+				<source><![CDATA[
+<contribution configuration-id="gaderian.management.MBeans">
+   <mbean service-id="gaderian.management.connector.NamingServiceMBean"
+      start-method="start" />
+   <mbean service-id="gaderian.management.connector.JMXConnectorServerMBean"
+      start-method="start" />
+</contribution>]]></source>
+				<p>Now you can connect to the application with jconsole or MC4J
+					using this url: service:jmx:rmi://localhost/jndi/rmi://localhost:1099/jmx .
+				</p>
+				<p>You can change RMI port and the service url this way:
+				</p>
+				<source><![CDATA[
+<contribution configuration-id="gaderian.ApplicationDefaults">
+  <default symbol="management.namingservice.port" value="1099" />
+  <default symbol="management.jmxconnector.ServiceUrl"
+      value="service:jmx:rmi://localhost/jndi/rmi://localhost:1099/jmx" />
+</contribution>]]></source>
+		</subsection>
+		<subsection name="J2SE 1.5 local connector">
+			<p>Local management with jconsole is possible without adding any connector, if
+				your application runs on J2SE 1.5. Simply set the
+				system property com.sun.management.jmxremote before launching your app:
+			</p>
+				<source><![CDATA[
+java -Dcom.sun.management.jmxremote ...]]></source>
+		</subsection>
+      </section>
+  </body>
+</document>

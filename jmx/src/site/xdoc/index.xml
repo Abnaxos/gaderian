@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+  <properties>
+      <title>Gaderian JMX</title>
+   </properties>
+  <body>
+      <section name="Gaderian JMX">
+
+	<p>
+	The Gaderian JMX library brings the benefits of mature application management
+	and monitoring to your Gaderian based applications by integration of
+	the
+	<a target="_blank" href="http://java.sun.com/products/JavaManagement">Java Management Extension (JMX)</a>.
+	</p>
+	<p>With minimal effort you can reach these goals, for example:
+    	</p>
+	<ul>
+		<li>Change log levels in your running application via a web based interface
+			or by use of a management console</li>
+		<li>Measure the performance of middleware calls and view the data online</li>
+		<li>Make your services configurable at runtime. Change database urls or cache sizes</li>
+	</ul>
+
+	<p>
+		The services of this library are implemented in the module
+	<a href="module-report/module/gaderian.management.html">gaderian.management</a>
+	</p>
+	<p>Start <a href="quickstart.html">here</a> for a JMX quickstart or read
+		a more detailled introduction <a href="setupOverview.html">here</a>
+  </p>
+      </section>
+  </body>
+</document>

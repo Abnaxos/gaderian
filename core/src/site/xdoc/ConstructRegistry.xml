@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!-- 
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Construct Registry Ant Task</title>
+    </properties>
+    <body>
+        <section name="Construct Registry Ant Task">
+            <p>Reads some number of Gaderian module descriptors and assembles a single
+                registry file from them. The output registry consists of a &lt;registry&gt;
+                element which contains one &lt;module&gt; element for each module
+                descriptor read. This registry is useful for generating documentation.
+            </p>
+            <p>The registry XML is only updated if it does not exist, or if any of the
+                module deployment descriptor is newer.
+            </p>
+            <p>This task is implemented as<a
+                    href="/apidocs/ant/ConstructRegistry.html">
+                org.ops4j.gaderian.ant.ConstructRegistry</a>.
+            </p>
+            <subsection name="Parameters">
+                <table>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                    <tr>
+                        <td>output</td>
+                        <td>The file to write the registry to.</td>
+                        <td>Yes</td>
+                    </tr>
+                </table>
+            </subsection>
+            <subsection name="Parameters specified as nested elements">
+                <h4>descriptors</h4>
+                    <p>A path-like structure, used to identify which Gaderian module
+                        descriptors (<code>module.xml</code>) should be included.
+                    </p>
+                    <p>Each path element should either be a module deployment descriptor, or
+                        be a JAR containing a deployment descriptor (in the
+                        <code>META-INF/org/ops4j/gaderian</code>
+                        folder).
+                    </p>
+            </subsection>
+            <subsection name="Examples">
+                <p>Create
+                    <code>target/registry.xml</code>
+                    from all
+                    <code>module.xml</code>
+                    descriptors found inside the
+                    <code>src</code>
+                    directory.
+                </p>
+                <source><![CDATA[
+<constructregistry output="target/registry.xml">
+  <descriptors>
+    <fileset dir="src">
+      <include name="**/module.xml"/>
+    </fileset>
+  </descriptors>
+</constructregistry>]]> </source>
+            </subsection>
+        </section>
+    </body>
+</document>

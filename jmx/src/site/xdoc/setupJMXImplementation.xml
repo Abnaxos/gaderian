@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+  <properties>
+    <title>Choose JMX implementation</title>
+  </properties>
+  <body>
+      <section name="Choose JMX implementation">
+  	<p>First of all you have to choose how all the JMX infrastructure
+  		is provided. Various JMX implementations are freely available.</p>
+  	<p>Gaderian uses <a target="_blank" href="http://mx4j.sourceforge.net" >MX4J</a>
+			for development and testing, but it can run with any other JMX 1.2
+			implementation. Gaderian has additionally been tested with
+			J2SE 1.5 and the Sun Reference Implementation of JMX.
+		</p>
+		<subsection name="MX4J">
+			<p>Get MX4J <a target="_blank" href="http://mx4j.sourceforge.net" >here</a>
+				in version 2.x or grab the libraries from the ext-package/lib
+				folder after an ant build of Gaderian</p>
+			<p>Add mx4j.jar, mx4j-tools.jar to the classpath. Add mx4j-remote.jar only if you use JSR 160 connectors.
+			</p>
+		</subsection>
+		<subsection name="J2SE 1.5">
+			<p>If your application runs with Sun J2SE 1.5 no additional libraries are needed
+				This can change later if you decide to use HTTP to manage your application.
+			</p>
+		</subsection>
+		<subsection name="Sun Reference Implementation">
+			<p>The Sun RI can be downloaded <a target="_blank" href="http://java.sun.com/products/JavaManagement/download.html">here</a>
+				in version 1.2.1
+			</p>
+			<p>Add jmxri.jar and jmxtools.jar to the classpath.
+			</p>
+		</subsection>
+      </section>
+  </body>
+</document>

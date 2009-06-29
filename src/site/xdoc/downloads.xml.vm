@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Gaderian Downloads</title>
+    </properties>
+    <body>
+        <section name="Current Version">
+          <p>Please watch this space for the upcoming 1.0 release of Gaderian</p>
+          <!--<p>The latest stable release of Gaderian is version ${project.version}</p>-->
+
+          
+        </section>
+<!--        
+        <subsection name="Downloads">
+
+            <p>Gaderian is available as full binary, source or documentation distributions.</p>
+            
+
+
+            <table>
+              <th>Format</th><th>Binary</th><th>Source</th><th>Documentation</th>
+              <tr>
+                <td>tar.gz</td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.gz">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.gz">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.gz">download</a></td>
+              </tr>
+              <tr>
+                <td>zip</td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.zip">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.zip">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.zip">download</a></td>
+              </tr>
+              <tr>
+                <td>tar.bz2</td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.bz2">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.bz2">download</a></td>
+                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.bz2">download</a></td>
+              </tr>
+            </table>
+
+        </subsection>
+        
+        <subsection name="Maven 2">
+          <p>If you plan to use Gaderian and you are already using Maven 2.0, please see the <a href="maven.html">Using Gaderian with Maven 2.0</a>.</p>
+        </subsection>
+-->                        
+        
+    </body>
+</document>

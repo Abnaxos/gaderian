@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Gaderian Util" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+    <skin>
+        <groupId>org.ops4j.gaderian.tools</groupId>
+        <artifactId>maven-gaderian-skin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </skin>
+
+    <body>
+        
+        <menu name="Util">
+            <item name="Introduction" href="index.html"/>
+            <item name="Bean Factory Builder" href="BeanFactoryBuilder.html"/>
+            <item name="Chain Builder" href="ChainBuilder.html"/>
+            <item name="Chain Factory" href="ChainFactory.html"/>
+            <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
+            <item name="EJB Proxy Factory" href="EJBProxyFactory.html"/>
+            <item name="Method Interceptor Factory" href="MethodInterceptorFactory.html"/>
+            <item name="Name Lookup" href="NameLookup.html"/>
+            <item name="Pipeline Factory" href="PipelineFactory.html"/>
+            <item name="Remote Exception Coordinator" href="RemoteExceptionCoordinator.html"/>
+            <item name="Service Property Factory" href="ServicePropertyFactory.html"/>
+            <item name="Strategy Factory" href="StrategyFactory.html"/>
+        </menu>
+
+        <menu ref="parent"/>
+
+    </body>
+</project>
