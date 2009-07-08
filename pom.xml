@@ -313,8 +313,8 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/laboratory/hivemind/devel</connection>
-        <url>http://scm.ops4j.org/browse/OPS4J/laboratory/hivemind/devel</url>
+        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian</connection>
+        <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian</url>
     </scm>
 
 </project>
