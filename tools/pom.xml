@@ -9,16 +9,10 @@
     <groupId>org.ops4j.gaderian</groupId>
     <artifactId>gaderian-tools</artifactId>
     <packaging>pom</packaging>
-
-    <parent>
-        <groupId>org.ops4j.gaderian</groupId>
-        <artifactId>gaderian-project</artifactId>
-        <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
+    <version>1.0-SNAPSHOT</version>
 
     <name>Gaderian Tools</name>
-    <description></description>
+    <description>Tools for Gaderian site and report generation</description>
 
     <modules>
         <module>maven-gaderian-skin</module>

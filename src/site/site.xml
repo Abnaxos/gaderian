@@ -20,7 +20,7 @@
     <skin>
         <groupId>org.ops4j.gaderian.tools</groupId>
         <artifactId>maven-gaderian-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </skin>
 
     <version position="right"/>

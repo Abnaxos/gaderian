@@ -23,17 +23,12 @@
     </properties>
     <body>
         <section name="Current Version">
-          <p>Please watch this space for the upcoming 1.0 release of Gaderian</p>
-          <!--<p>The latest stable release of Gaderian is version ${project.version}</p>-->
-
-          
+          <p>The latest stable release of Gaderian is version ${project.version}</p>
         </section>
-<!--        
+
         <subsection name="Downloads">
 
             <p>Gaderian is available as full binary, source or documentation distributions.</p>
-            
-
 
             <table>
               <th>Format</th><th>Binary</th><th>Source</th><th>Documentation</th>
@@ -62,7 +57,6 @@
         <subsection name="Maven 2">
           <p>If you plan to use Gaderian and you are already using Maven 2.0, please see the <a href="maven.html">Using Gaderian with Maven 2.0</a>.</p>
         </subsection>
--->                        
-        
+
     </body>
 </document>

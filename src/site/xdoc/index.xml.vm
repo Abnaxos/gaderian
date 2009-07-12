@@ -5,7 +5,6 @@
 
   <properties>
     <title>Welcome to Gaderian</title>
-    <author email="ahuegen@apache.org">Achim Huegen</author>
   </properties>
   <body>
 
@@ -19,14 +18,14 @@
       <div id="downloadbox">
         <h5>Get Gaderian!</h5>
         <p>Please watch this space for the upcoming 1.0 release!
-<!--
+
           <span class="icon">
             <a href="downloads.html">
               <img src="images/folder-open.gif" border="0" alt="" title="download"/>
             </a>
           </span>
-          <span class="icon_text"><a href="downloads.html">Download</a> Gaderian 1.0</span>
--->
+          <span class="icon_text"><a href="downloads.html">Download</a> Gaderian ${project.version}</span>
+
         </p>
 
         <br/>
