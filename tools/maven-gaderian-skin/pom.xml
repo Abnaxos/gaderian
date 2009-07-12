@@ -30,4 +30,17 @@
         <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian/tools/maven-gaderian-skin</url>
     </scm>
 
+
+    <distributionManagement>
+        <repository>
+            <id>ops4j.releases.deploy</id>
+            <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/mvn-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>ops4j.snapshots.deploy</id>
+            <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/mvn-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
 </project>
