@@ -3,7 +3,7 @@
     <parent>
       <groupId>org.ops4j.gaderian</groupId>
       <artifactId>gaderian-project</artifactId>
-      <version>1.0-RC-FINAL</version>
+      <version>1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
