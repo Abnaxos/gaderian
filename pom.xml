@@ -221,7 +221,6 @@
                 <configuration>
                     <tagBase>https://scm.ops4j.org/repos/ops4j/qa/gaderian</tagBase>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <generateReleasePoms>true</generateReleasePoms>
                     <preparationGoals>clean install</preparationGoals>
                 </configuration>
             </plugin>
