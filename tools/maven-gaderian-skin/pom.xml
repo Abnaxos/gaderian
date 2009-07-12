@@ -25,4 +25,9 @@
         </plugins>
     </build>
 
+     <scm>
+        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian/tools/maven-gaderian-skin</connection>
+        <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian/tools/maven-gaderian-skin</url>
+    </scm>
+
 </project>
