@@ -17,7 +17,6 @@
                 <configuration>
                     <tagBase>https://scm.ops4j.org/repos/ops4j/qa/gaderian</tagBase>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <generateReleasePoms>true</generateReleasePoms>
                 </configuration>
             </plugin>
         </plugins>
