@@ -46,7 +46,7 @@
 			</ul>
 			<p>At runtime, the number of actual contributions is checked against the
 				constraint and an error is reported if the number doesn't match.</p>
-			<section name="Defining the Contribution Format">
+			<subsection name="Defining the Contribution Format">
 				<p>A significant portion of an configuration point is the <a href="descriptor.html#schema">&lt;schema&gt;</a>
 					element ... this is used to define the format of contributions that
 					may be made inside <a href="descriptor.html#contribution">&lt;contribution&gt;</a> elements. Contributions take the
@@ -125,7 +125,7 @@
 					referenced within a single module using an unqualified id, or
 					referenced between modules using a fully qualified id (that is,
 					prefixed with the module's id).</p>
-			</section>
+			</subsection>
 		</section>
 
 		<section name="Accessing Configuration Points">
@@ -165,7 +165,7 @@
 				practice is to always access the configuration through a service, which
 				can organize and validate the data in the configuration.</div></div>
 
-			<section name="Accessing Configurations as a Map">
+			<subsection name="Accessing Configurations as a Map">
 				<p>As mentioned it is also possible to have the configuration contributions
 					injected as a Map.  This requires the schema to define the attribute of
 					the top-level elements which should be used as the key for the elements
@@ -197,7 +197,7 @@
 				<div class="frame note"><div class="label">Note</div><div class="content">It is also possible to access the elements of this configuration point as
 					a List, but the elements therein are now the objects (in this case Strings)
 					created by the &lt;push-attribute&gt; rule.</div></div>
-			</section>
+			</subsection>
 
 		</section>
 		<section name="Lazy Loading">
@@ -252,7 +252,7 @@
           already using the Gaderian symbol notation for its own, internal purposes.  For example, <code>foo $${bar} baz</code> will be
           expanded into the text <code>foo ${bar} baz</code>.
         </div></div>
-			<section name="Symbol Sources">
+			<subsection name="Symbol Sources">
 				<p>This begs the question: where do symbol values come from? The answser
 					is application dependent. Gaderian itself defines a configuration
 					configuration point for this purpose: <a href="gaderian/SymbolSources.html">gaderian.SymbolSources</a>.
@@ -263,7 +263,7 @@
 					for a given symbol then Gaderian will leave the reference to that
 					symbol <em>as is</em>, including the surrounding <code>${</code> and
 					<code>}</code>. Additionally an error will be logged.</p>
-			</section>
+			</subsection>
 		</section>
 		<section name="Frequently Asked Questions">
 			<ul>

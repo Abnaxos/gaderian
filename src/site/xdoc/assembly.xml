@@ -62,7 +62,7 @@
             </div>
         </div>
 
-      <section name="assembly">
+      <subsection name="assembly">
         <table>
           <tr>
             <th>Attribute</th>
@@ -91,7 +91,7 @@
         <p>The remaining elements are enclosed by the &lt;assembly&gt; element,
           and are used to configure properties of the core service implementation.
         </p>
-      </section>
+      </subsection>
     </section>
 
 
@@ -195,7 +195,7 @@
     </section>
 
     <section name="Service Property Configuring Elements">
-      <section name="listener">
+      <subsection name="listener">
         <table>
           <tr>
             <th>Attribute</th>
@@ -252,8 +252,8 @@
           though Gaderian does not make use of the remove method. This is
           an offshoot of how the JavaBeans API defines event sets.
         </p>
-      </section>
-      <section name="set">
+      </subsection>
+      <subsection name="set">
         <table>
           <tr>
             <th>Attribute</th>
@@ -279,7 +279,7 @@
             </td>
           </tr>
         </table>
-      </section>
+      </subsection>
     </section>
   </body>
 </document>

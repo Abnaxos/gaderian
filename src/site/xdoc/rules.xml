@@ -51,7 +51,7 @@
 				objects. The top object on the stack is the child, the object beneath
 				that is the parent. The <a href="rules.html#set-parent">&lt;set-parent&gt;</a> and <a href="rules.html#invoke-parent">&lt;invoke-parent&gt;</a> rules are
 				useful for creating hierarchies of objects.</p>
-			<section name="create-object">
+			<subsection name="create-object">
 				<p>The &lt;create-object&gt; rule is used to create a new object, which is
 					pushed onto the stack at <code>begin()</code>. The object is popped
 					off the stack at <code>end()</code>. &lt;create-object&gt; is typically
@@ -74,8 +74,8 @@
               You may use <a href="instance-initialization">instance initializer</a> syntax.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="custom">
+			</subsection>
+			<subsection name="custom">
 				<p>The &lt;custom&gt; rule is used to provide a custom implementation of the
 					<code>Rule</code> interface. Note that any such rules must not contain
 					any individual state, as they will be reused, possibly by multiple
@@ -95,8 +95,8 @@
 							interface.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="invoke-parent">
+			</subsection>
+			<subsection name="invoke-parent">
 				<p>The &lt;invoke-parent&gt; rule is used to connect the child (top object on
 					the stack) to its parent (the next object down). A method of the
 					parent is invoked, passing the child as a parameter. This invocation
@@ -140,8 +140,8 @@
                 </div>
 
 
-			</section>
-			<section name="push-attribute">
+			</subsection>
+			<subsection name="push-attribute">
 				<p>The &lt;push-attribute&gt; rule reads an attribute, converts it with a
 					translator, and pushes the result onto the stack. It will typically be
 					combined with a <a href="rules.html#invoke-parent">&lt;invoke-parent&gt;</a> to get the pushed value added to the
@@ -160,14 +160,14 @@
 						<td>The name of the attribute to read.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="push-content">
+			</subsection>
+			<subsection name="push-content">
 				<p>The &lt;push-content&gt; rule reads the content, converts it with the content
 					translator, and pushes the result onto the stack. It will typically be
 					combined with a <a href="rules.html#invoke-parent">&lt;invoke-parent&gt;</a> to get the pushed value added to the
 					configuration point elements (or to some parent object).</p>
-			</section>
-			<section name="read-attribute">
+			</subsection>
+			<subsection name="read-attribute">
 				<p>The &lt;read-attribute&gt; rule reads an attribute from the current
 					element, optionally translates it (from a string to some other type),
 					and then assigns the value to a property of the top object on the
@@ -211,8 +211,8 @@
           </td>
         </tr>
 				</table>
-			</section>
-			<section name="read-content">
+			</subsection>
+			<subsection name="read-content">
 				<p>The &lt;read-content&gt; rule is similar to <a href="rules.html#read-attribute">&lt;read-attribute&gt;</a>, except it
 					concerns the content of the current element (the text wrapped by its
 					start and end tags).</p>
@@ -231,8 +231,8 @@
 							update.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="set-module">
+			</subsection>
+			<subsection name="set-module">
 				<p> &lt;set-module&gt; is used to set a property of the top object on the
 					stack to the module which made the contribution. This is often used
 					when some other attribute of the contribution is the name of a service
@@ -255,8 +255,8 @@
 							contributing module.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="set-parent">
+			</subsection>
+			<subsection name="set-parent">
 				<p>The &lt;set-parent&gt; rule is used to set a property of the child object
 					to parent object. This allows for backwards connections from child
 					objects to parent objects.</p>
@@ -274,8 +274,8 @@
 						<td>The name of the property of the child object to set.</td>
 					</tr>
 				</table>
-			</section>
-			<section name="set-property">
+			</subsection>
+			<subsection name="set-property">
 				<p>The &lt;set-property&gt; rule is used to set a property of the top object
 					to a preset value.</p>
 				<table>
@@ -301,7 +301,7 @@
 							expected.</td>
 					</tr>
 				</table>
-			</section>
+			</subsection>
 		</section>
 		<!-- Rules -->
     <section name="Translators">
@@ -318,36 +318,38 @@
         ... but each Translator is free to interpret the initializer string its own way.</p>
       <p>The following sections describe the basic translators provided with the framework. You can add additional
         translators by contributing to the <a href="gaderian/Translators.html">gaderian.Translators</a> configuration point.</p>
-      <section name="boolean">
+      <subsection name="boolean">
         <p>The boolean translator converts an input string into a boolean value. "true" is translated to true, and
           "false" to false.</p>
         <p>A default value is used when the input is blank. Normally, this default is false, but the "default" key in
           the initializer can override this (i.e., <code>boolean,default=true</code>).</p>
-      </section>
-      <section name="class">
+      </subsection>
+      <subsection name="class">
         <p>The class translator converts a class name into a Class object. The value must
         be a fully qualified class name. A null input value returns null.</p>
         <div class="frame note"><div class="label">Note</div><div class="content">This translator is hard-coded, and does not appear in the
           <a href="gaderian/Translators.html">gaderian.Translators</a>
           configuration point.
         </div></div>
-      </section>
-      <section name="configuration">
+      </subsection>
+      <subsection name="configuration">
         <p>The configuration translator converts an input value into a configuration point id, then obtains the
           elements for that configuration point as a List. The id may be fully qualified, or a local id within the
           contributing module.</p>
         <p>A blank input value returns null.</p>
-      </section>
-      <section name="double">
+      </subsection>
+      <subsection name="double">
         <p>The double translator converts the input into an double precision floating point value. It recognizes three
           initializer values:</p>
         <ul>
-          <li>default: the default value (normally 0) to use when the input is blank</li>
+          <li>default: the default value (normally 0) to use when the input is blank. 
+	  You must also set the 'skip-if-null' attribute to 'false' for the rule
+	  (see <a href="rules.html#read-attribute">&lt;read-attribute&gt;</a>)</li>
           <li>min: a minimum acceptible value</li>
           <li>max: a maximum acceptible value</li>
         </ul>
-      </section>
-      <section name="enumeration">
+      </subsection>
+      <subsection name="enumeration">
         <p>The enumeration translator converts input strings into enumerated values. Enumeration <em>requires</em> an
           initializer string, with a special format: <br/> <code>
           enumeration,class-name,input=field-name[,input=field-name]*</code> </p>
@@ -356,13 +358,13 @@
           enumeration,java.lang.Boolean,yes=TRUE,no=FALSE</code> </p>
         <p>If the input is null or empty, then the translator returns null.</p>
         <p>The class name for the enumeration may be abbreviated.</p>
-      </section>
-      <section name="id-list">
+      </subsection>
+      <subsection name="id-list">
         <p>Translates a comma-seperated list of ids into a comma-seperated list of fully qualified ids (qualified
           against the contributing module). Alternately, passes the value <code>*</code> through as-is. Id lists are
           typically used to establish ordering of items within a list, as with <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>. </p>
-      </section>
-      <section name="instance">
+      </subsection>
+      <subsection name="instance">
         <p>The object translator converts a fully qualified class name into an object instance. The class must
           implement a public no-arguments constructor.</p>
           <p>The class name may be abbreviated.</p>
@@ -370,11 +372,13 @@
          <p>
           The instance translator may also initialize properties  using <a href="instance-initialization">instance initializer</a> syntax.
           </p>
-      </section>
-      <section name="int">
+      </subsection>
+      <subsection name="int">
         <p>The int translator converts the input into an integer value. It recognizes three initializer values:</p>
         <ul>
-          <li>default: the default value (normally 0) to use when the input is blank</li>
+          <li>default: the default value (normally 0) to use when the input is blank.
+	  You must also set the 'skip-if-null' attribute to 'false' for the rule
+	  (see <a href="rules.html#read-attribute">&lt;read-attribute&gt;</a>)</li>
           <li>min: a minimum acceptible value</li>
           <li>max: a maximum acceptible value</li>
         </ul>
@@ -382,17 +386,19 @@
           <a href="gaderian/Translators.html">gaderian.Translators</a>
           configuration point.
         </div></div>
-      </section>
-      <section name="long">
+      </subsection>
+      <subsection name="long">
         <p>The long translator converts the input into an long integer (64 bit) value. It recognizes three initializer
           values:</p>
         <ul>
-          <li>default: the default value (normally 0) to use when the input is blank</li>
+          <li>default: the default value (normally 0) to use when the input is blank.
+	  You must also set the 'skip-if-null' attribute to 'false' for the rule
+	  (see <a href="rules.html#read-attribute">&lt;read-attribute&gt;</a>)</li>
           <li>min: a minimum acceptible value</li>
           <li>max: a maximum acceptible value</li>
         </ul>
-      </section>
-      <section name="object">
+      </subsection>
+      <subsection name="object">
         <p>
           The object translator is allows the caller to provide an object value
           in a multitude of ways. The object translator inverts the normal roles; the caller
@@ -405,31 +411,31 @@
           Some object providers include a class name, which may be abbreviated and will be
           resolved by the <em>contributing</em> module.
         </p>
-      </section>
+      </subsection>
 
-      <section name="qualified-id">
+      <subsection name="qualified-id">
         <p>Translates an id into a fully qualified id (qualified against the contributing module's id). </p>
-      </section>
-      <section name="resource">
+      </subsection>
+      <subsection name="resource">
         <p>The resource translator is used to find a resource packaged with (or near) the module's deployment
           descriptor. The input value is the relative path to a file. The translator converts the input value to a
           <a href="gaderian/apidocs/org/ops4j/gaderian/Resource.html">Resource</a> for that file.</p>
         <p>If the file doesn't exist, then an error is logged. If a localization of the file exists, then the Resource
           for that localization is returned.</p>
-      </section>
-      <section name="service">
+      </subsection>
+      <subsection name="service">
         <p>The service translator is used to lookup a service in the registry. The input
         value is either a local service id from the contributing module, or a fully qualified service id.</p>
         <div class="frame note"><div class="label">Note</div><div class="content">This translator is hard-coded, and does not appear in the
           <a href="gaderian/Translators.html">gaderian.Translators</a>
           configuration point.
         </div></div>
-      </section>
-      <section name="service-point">
+      </subsection>
+      <subsection name="service-point">
         <p>The service translator is used to lookup a service point (not a service) in the registry. The input value is
           either a local service id from the contributing module, or a fully qualified service id.</p>
-      </section>
-      <section name="smart">
+      </subsection>
+      <subsection name="smart">
         <p>The smart translator attempts an automatic conversion from a string value (the
         attribute value or element content) to a particular type. It determines the type from the property to which the
         value will be assigned. Smart translator makes use of the JavaBeans's PropertyEditor class for the conversion,
@@ -442,7 +448,7 @@
           <a href="gaderian/Translators.html">gaderian.Translators</a>
           configuration point.
         </div></div>
-      </section>
+      </subsection>
     </section>
 		<!-- Translators -->
 	</body>

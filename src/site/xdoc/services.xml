@@ -96,7 +96,7 @@
 					to have another service create the implementation</li> </ul> </li>
 				<li><a href="descriptor.html#interceptor">&lt;interceptor&gt;</a> to add additional logic to a core implementation</li>
 			</ul>
-			<section name="Service Constructors">
+			<subsection name="Service Constructors">
 				<p>A service constructor is used to instantiate a Java class as the core
 					implementation instance for the service.</p>
 				<p>There are two forms of service constructors: instance creators and
@@ -108,8 +108,8 @@
 					implementation factory service (which implements the <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceImplementationFactory.html">ServiceImplementationFactory</a>
 					interface). The most common example is the <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a>
 					service.</p>
-			</section>
-			<section name="Implementation Factories">
+			</subsection>
+			<subsection name="Implementation Factories">
 				<p>An implementation factory is used to create a core implementation for
 					a service at runtime.</p>
 				<p>Often, the factory will need some additional configuration
@@ -129,8 +129,8 @@
 				<p>The most common service factory is <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a>. It is
 					used to construct a service and then set properties of the service
 					implementation object.</p>
-			</section>
-			<section name="Interceptor Contributions">
+			</subsection>
+			<subsection name="Interceptor Contributions">
 				<p>An interceptor contribution is represented by an <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>
 					element. The service-id attribute identifies a service interceptor
 					factory service: a service that implements the <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceInterceptorFactory.html">ServiceInterceptorFactory</a>
@@ -190,7 +190,7 @@
                         service implementation's method. However, this is not a recommended practice.
                     </div>
                 </div>
-			</section>
+			</subsection>
 		</section>
 		<section name="A short example">
 			<p>As an example, let's create an interface with a single method, used to

@@ -20,6 +20,7 @@
 		<title>Overriding a Service</title>
 	</properties>
 	<body>
+	<section name="overriding">
 		<p>It is not uncommon to want to override an existing service and replace it
 			with a new implementation. This goes beyond simply intercepting the
 			service ... the goal is to replace the original implementation with a new
@@ -62,7 +63,7 @@
     <p>
       A service must be visible (i.e., not private) to be overriden.
     </p>
-
+    </section>
 		<section name="Step One: A service with default implementation">
 			<p>To describe this technique, we'll start with a ordinary, every day
 				service. In fact, for discussion purposes, there will be two services:

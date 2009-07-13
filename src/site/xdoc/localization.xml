@@ -20,6 +20,7 @@
 		<title>Gaderian Localization</title>
 	</properties>
 	<body>
+		<section name="localization">
 		<p>Every Gaderian module may have its own set of messages. Messages are
 			stored alongside the module deployment descriptor, as <code>
 			META-INF/org/ops4j/gaderian/module.properties</code> (within the module's JAR).</p>
@@ -66,6 +67,7 @@
         The <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a> can inject an <a href="gaderian/apidocs/org/ops4j/gaderian/Messages.html">Messages</a> object that allows access
         to the module's messages.
       </p>
+      </section>
 		<section name="Setting the locale">
 			<p>When a <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a> is created by the <a href="gaderian/apidocs/org/ops4j/gaderian/impl/RegistryBuilder.html">RegistryBuilder</a>, a locale
 				is specified. This is the <em>default</em> locale for the Registry and, by extension, for

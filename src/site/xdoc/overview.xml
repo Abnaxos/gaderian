@@ -94,7 +94,7 @@
       </p>
 
       <p>
-        <img align="center" src="images/FrameworkStack.png" alt="[Framework Stack]"/>
+        <img align="middle" src="images/FrameworkStack.png" alt="[Framework Stack]"/>
       </p>
 
       <p>
@@ -148,8 +148,8 @@
                   the correct approach.
               </em>
           </p>
-          <section name="Task: Log method entry and exit">
-              <section name="Typical Approach">
+          <subsection name="Task: Log method entry and exit">
+              <h4>Typical Approach</h4>
                   <source> <![CDATA[
 public String myMethod(String param)
 {
@@ -168,8 +168,7 @@ public String myMethod(String param)
                       doesn't report
                       on exceptions thrown from within the method.
                   </p>
-              </section>
-              <section name="Gaderian Approach">
+              <h4>Gaderian Approach</h4>
                   <p>Let Gaderian add a
                       <a href="gaderian/LoggingInterceptor.html">logging interceptor</a>
                       to your
@@ -184,10 +183,9 @@ public String myMethod(String param)
   <create-instance class="com.myco.impl.MyServiceImpl"/>
   <interceptor service-id="gaderian.LoggingInterceptor"/>
 </service-point>]]> </source>
-              </section>
-          </section>
-          <section name="Task: Reference another service">
-              <section name="Typical Approach">
+          </subsection>
+          <subsection name="Task: Reference another service">
+              <h4>Typical Approach</h4>
                   <source><![CDATA[
 private SomeOtherService _otherService;
 
@@ -208,8 +206,7 @@ public String myMethod(String param)
                       causing
                       unwanted (and possibly destructive) multiple lookups of the other service.
                   </p>
-              </section>
-              <section name="Gaderian Approach">
+              <h4>Gaderian Approach</h4>
                   <p>Let Gaderian assign the other service as a property. This is
                       <a
                               href="http://www.martinfowler.com/articles/injection.html">dependency injection
@@ -238,10 +235,9 @@ public String myMethod(String param)
                       configured the first time a service method is invoked ... and all of this is done in a thread-safe
                       manner.
                   </p>
-              </section>
-          </section>
-          <section name="Task: Read configuration data">
-              <section name="Typical Approach">
+          </subsection>
+          <subsection name="Task: Read configuration data">
+              <h4>Typical Approach</h4>
                   <p>Find a properties file or XML file (on the classpath? in the filesystem?) and read it, then write
                       code to
                       intepret the raw data and possibly convert it to Java objects.
@@ -254,8 +250,7 @@ public String myMethod(String param)
                       inefficient,
                       incompletely tested, and lacking the kind of error detection built into Gaderian.
                   </p>
-              </section>
-              <section name="Gaderian Approach">
+              <h4>Gaderian Approach"</h4>
                   <source><![CDATA[
 private List _configuration;
 
@@ -289,10 +284,9 @@ public void myMethod()
                       to
                       you, configured in the module deployment descriptor.
                   </p>
-              </section>
-          </section>
-          <section name="Task: Test your services">
-              <section name="Typical Approach">
+          </subsection>
+          <subsection name="Task: Test your services">
+              <h4>Typical Approach</h4>
                   <p>In complex environments, such as EJB containers, you will often have to deploy your code and then
                       test it
                       from the outside. EJB code in particular is hard to test because collaborating EJBs make use of
@@ -300,8 +294,7 @@ public void myMethod()
                       access each other. It is very difficult to "stub out" part of the overall application for testing
                       purposes.
                   </p>
-              </section>
-              <section name="Gaderian Approach">
+              <h4>Gaderian Approach</h4>
                   <p>Making code testable is a key concern of Gaderian, and shows up in its general testing strategy:
                   </p>
                   <ul>
@@ -323,8 +316,7 @@ public void myMethod()
                           for testing.
                       </li>
                   </ul>
-              </section>
-          </section>
+          </subsection>
       </section>
 
     <section name="Coding">
