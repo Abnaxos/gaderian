@@ -77,11 +77,10 @@
     <reporting>
         <plugins>
 
-<!--
             <plugin>
                 <groupId>org.ops4j.gaderian.tools</groupId>
                 <artifactId>maven-gaderian-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0</version>
                 <configuration>
                     <includes>
                         <include>META-INF/org/ops4j/gaderian/module.xml</include>
@@ -89,7 +88,6 @@
                     <linkJavadoc>false</linkJavadoc>
                 </configuration>
             </plugin>
--->
 
         </plugins>
     </reporting>
