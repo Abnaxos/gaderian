@@ -4,7 +4,7 @@
     <groupId>org.ops4j.gaderian</groupId>
     <artifactId>gaderian-project</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>Gaderian</name>
     <inceptionYear>2009</inceptionYear>
@@ -309,9 +309,9 @@
     </distributionManagement>
 
     <scm>
-        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian</connection>
-        <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian</developerConnection>
-        <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian</url>
+        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/gaderian/gaderian-project-1.0</connection>
+        <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/gaderian/gaderian-project-1.0</developerConnection>
+        <url>http://scm.ops4j.org/browse/OPS4J/qa/gaderian/gaderian-project-1.0</url>
     </scm>
 
 </project>
