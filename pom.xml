@@ -17,6 +17,7 @@
     </organization>
 
     <modules>
+        <module>annotations</module>
         <module>core</module>
         <module>util</module>
         <module>jmx</module>

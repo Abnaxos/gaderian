@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Gaderian Framework" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
+    <skin>
+        <groupId>org.ops4j.gaderian.tools</groupId>
+        <artifactId>maven-gaderian-skin</artifactId>
+        <version>1.0</version>
+    </skin>
+
+    <body>
+
+        <menu name="Core">
+
+            <item name="Introduction" href="index.html"/>
+            <item name="References" collapse="true" href="references.html">
+                
+                <item name="Symbol Sources" href="SymbolSources.html"/>
+                <item name="FactoryDefaults" href="FactoryDefaults.html"/>
+                <item name="ApplicationDefaults" href="ApplicationDefaults.html"/>
+                
+                <item name="ObjectProviders" href="ObjectProviders.html"/>
+                <item name="Translators" href="Translators.html"/>
+
+                <item name="ServiceModels" href="ServiceModels.html"/>
+                <item name="BuilderFactory" href="BuilderFactory.html"/>
+                <item name="EagerLoad" href="EagerLoad.html"/>
+                <item name="ShutdownCoordinator" href="ShutdownCoordinator.html"/>
+                <item name="ThreadLocale" href="ThreadLocale.html"/>
+                <item name="ThreadLocalStorage" href="ThreadLocalStorage.html"/>
+                <item name="LoggingInterceptor" href="LoggingInterceptor.html"/>
+                
+            </item>
+        </menu>
+
+        <menu ref="parent"/>
+
+    </body>
+</project>
