@@ -22,22 +22,8 @@
     <body>
         <section name="Maven 2">
 
-
-            <p>To use Gaderian modules within your Maven 2 enabled project, simply add the following repository to
-                your pom:
-            </p>
-            <source><![CDATA[
-                    ...
-                    <repositories>
-                        ...
-                       <repository>
-                          <id>ops4j-repo</id>
-                          <name>OPS4J Maven 2 Repository</name>
-                          <url>http://repository.ops4j.org/maven2/</url>
-                       </repository>
-                    </repositories>]]>
-            </source>
-            <p>Next, add the dependencies for the modules of Gaderian that you wish to use:</p>
+            <p>The Gaderian releases are all available from the Maven Central repository, so no new repository settings are required to use Gaderian in your project.</p>
+            <p>To use Gaderian modules within your Maven 2 enabled project, simply add the following dependencies of the modules of Gaderian that you wish to use:</p>
             <source><![CDATA[
                     <dependencies>
                         ...
@@ -53,11 +39,33 @@
                         <version>${project.version}</version>
                       </dependency>
                        
-                       
+                       ....
                     </dependencies>]]>
             </source>
 
+            <subsection name="Using Snapshots">
+                <p>Snapshot versions of Gaderian are available from the OPS4J Maven repository and to use them, please add the following repository information to your pom.xml file:</p>
+                <source><![CDATA[
+                    ...
+                    <repositories>
+
+                        ...
+
+                       <repository>
+                          <id>ops4j-repo</id>
+                          <name>OPS4J Maven 2 Snapshot Repository</name>
+                          <url>http://repository.ops4j.org/mvn-snapshots/</url>
+                       </repository>
+
+                       ....
+
+                    </repositories>]]>
+                </source>
+            </subsection>
+
         </section>
+
+
 
     </body>
     </document>
