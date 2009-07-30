@@ -65,59 +65,6 @@ public final class DescriptorParser extends AbstractParser
 
     private static final Log LOG = LogFactory.getLog(DescriptorParser.class);
 
-    /**
-     * States used while parsing the document. Most states correspond to a particular XML element in
-     * the document. STATE_START is the initial state, before the &lt;module&gt; element is reached.
-     */
-    private static final int STATE_START = 0;
-
-    private static final int STATE_MODULE = 1;
-
-    // private static final int STATE_DESCRIPTION = 2;
-    private static final int STATE_CONFIGURATION_POINT = 3;
-
-    private static final int STATE_CONTRIBUTION = 4;
-
-    private static final int STATE_SERVICE_POINT = 5;
-
-    private static final int STATE_CREATE_INSTANCE = 6;
-
-    private static final int STATE_IMPLEMENTATION = 8;
-
-    /**
-     * Used for both &lt;schema&;gt; within a &lt;extension-point&gt;, and for
-     * &lt;parameters-schema&gt; within a &lt;service&gt;.
-     */
-    private static final int STATE_SCHEMA = 9;
-
-    private static final int STATE_ELEMENT = 10;
-
-    private static final int STATE_RULES = 11;
-
-    /**
-     * Used with &lt;invoke-factory&gt; and &lt;interceptor&gt; to collect parameters that will be
-     * passed to the implementation or interceptor factory service.
-     */
-    private static final int STATE_COLLECT_SERVICE_PARAMETERS = 12;
-
-    /**
-     * Used with the &lt;conversion&gt; element (an alternative to using &lt;rules&gt;. Finds
-     * &lt;map&gt; elements.
-     */
-    private static final int STATE_CONVERSION = 13;
-
-    /**
-     * Represents building Element hierarchy as a light-wieght DOM.
-     */
-
-    private static final int STATE_LWDOM = 100;
-
-    /**
-     * Special state for elements that are not allowed to contain any other elements.
-     */
-
-    private static final int STATE_NO_CONTENT = 300;
-
     private static final String SIMPLE_ID = "[a-zA-Z0-9_]+";
 
     /**
@@ -138,14 +85,14 @@ public final class DescriptorParser extends AbstractParser
     /**
      * Temporary storage of the current {@link org.xml.sax.Attributes}.
      */
-    private Map _attributes = new HashMap();
+    private Map<String,String> _attributes = new HashMap<String,String>();
 
     /**
      * Built from DescriptorParser.properties. Key is element name, value is an instance of
      * {@link ElementParseInfo}.
      */
 
-    private Map _elementParseInfo = new HashMap();
+    private Map<String,ElementParseInfo> _elementParseInfo = new HashMap<String,ElementParseInfo>();
 
     private ModuleDescriptor _moduleDescriptor;
 
@@ -153,14 +100,14 @@ public final class DescriptorParser extends AbstractParser
 
     private ClassResolver _resolver;
 
-    private Map _compiledPatterns;
+    private Map<String,Pattern> _compiledPatterns;
 
     /**
      * Map of Rule keyed on class name, used with &lt;custom&gt; rules.
      */
-    private final Map _ruleMap = new HashMap();
+    private final Map<String,Rule> _ruleMap = new HashMap<String,Rule>();
 
-    private final Map OCCURS_MAP = new HashMap();
+    private final Map<String, Occurances> OCCURS_MAP = new HashMap<String, Occurances>();
 
     {
         OCCURS_MAP.put("0..1", Occurances.OPTIONAL);
@@ -170,7 +117,7 @@ public final class DescriptorParser extends AbstractParser
         OCCURS_MAP.put("none", Occurances.NONE);
     }
 
-    private final Map VISIBILITY_MAP = new HashMap();
+    private final Map<String,Visibility> VISIBILITY_MAP = new HashMap<String,Visibility>();
 
     {
         VISIBILITY_MAP.put("public", Visibility.PUBLIC);
@@ -184,7 +131,7 @@ public final class DescriptorParser extends AbstractParser
         initializeFromPropertiesFile();
     }
 
-    public void begin(String elementName, Map attributes)
+    public void begin(String elementName, Map<String,String> attributes)
     {
         _attributes = attributes;
 
@@ -272,7 +219,7 @@ public final class DescriptorParser extends AbstractParser
 
         sid.addParameter(element);
 
-        push(elementName, element, STATE_LWDOM, false);
+        push(elementName, element, DescriptorParsingState.STATE_LWDOM, false);
     }
 
     /**
@@ -298,7 +245,7 @@ public final class DescriptorParser extends AbstractParser
         ContributionDescriptor ed = (ContributionDescriptor) peekObject();
         ed.addElement(element);
 
-        push(elementName, element, STATE_LWDOM, false);
+        push(elementName, element, DescriptorParsingState.STATE_LWDOM, false);
     }
 
     private void beginConversion(String elementName)
@@ -309,7 +256,7 @@ public final class DescriptorParser extends AbstractParser
 
             AttributeMappingDescriptor amd = new AttributeMappingDescriptor();
 
-            push(elementName, amd, STATE_NO_CONTENT);
+            push(elementName, amd, DescriptorParsingState.STATE_NO_CONTENT);
 
             checkAttributes();
 
@@ -388,7 +335,7 @@ public final class DescriptorParser extends AbstractParser
         ElementImpl parent = (ElementImpl) peekObject();
         parent.addElement(element);
 
-        push(elementName, element, STATE_LWDOM, false);
+        push(elementName, element, DescriptorParsingState.STATE_LWDOM, false);
     }
 
     /**
@@ -551,7 +498,7 @@ public final class DescriptorParser extends AbstractParser
 
         ModuleDescriptor md = new ModuleDescriptor(_resolver, _errorHandler);
 
-        push(elementName, md, STATE_MODULE);
+        push(elementName, md, DescriptorParsingState.STATE_MODULE);
 
         checkAttributes();
 
@@ -569,7 +516,7 @@ public final class DescriptorParser extends AbstractParser
         _moduleDescriptor = md;
     }
 
-    protected void push(String elementName, Object object, int state)
+    protected void push(String elementName, Object object, DescriptorParsingState state)
     {
         if (object instanceof AnnotationHolder)
             super.push(elementName, object, state, false);
@@ -611,7 +558,7 @@ public final class DescriptorParser extends AbstractParser
     {
         Iterator i = _attributes.keySet().iterator();
 
-        ElementParseInfo epi = (ElementParseInfo) _elementParseInfo.get(elementName);
+        ElementParseInfo epi = _elementParseInfo.get(elementName);
 
         // A few elements have no attributes at all.
 
@@ -721,7 +668,7 @@ public final class DescriptorParser extends AbstractParser
 
         AttributeModelImpl attributeModel = new AttributeModelImpl();
 
-        push(elementName, attributeModel, STATE_NO_CONTENT);
+        push(elementName, attributeModel, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -740,7 +687,7 @@ public final class DescriptorParser extends AbstractParser
 
         ConfigurationPointDescriptor cpd = new ConfigurationPointDescriptor();
 
-        push(elementName, cpd, STATE_CONFIGURATION_POINT);
+        push(elementName, cpd, DescriptorParsingState.STATE_CONFIGURATION_POINT);
 
         checkAttributes();
 
@@ -767,7 +714,7 @@ public final class DescriptorParser extends AbstractParser
 
         ContributionDescriptor cd = new ContributionDescriptor();
 
-        push(elementName, cd, STATE_CONTRIBUTION);
+        push(elementName, cd, DescriptorParsingState.STATE_CONTRIBUTION);
 
         checkAttributes();
 
@@ -783,7 +730,7 @@ public final class DescriptorParser extends AbstractParser
 
         ConversionDescriptor cd = new ConversionDescriptor(_errorHandler, elementModel);
 
-        push(elementName, cd, STATE_CONVERSION);
+        push(elementName, cd, DescriptorParsingState.STATE_CONVERSION);
 
         checkAttributes();
 
@@ -802,7 +749,7 @@ public final class DescriptorParser extends AbstractParser
         AbstractServiceDescriptor sd = (AbstractServiceDescriptor) peekObject();
         CreateInstanceDescriptor cid = new CreateInstanceDescriptor();
 
-        push(elementName, cid, STATE_CREATE_INSTANCE);
+        push(elementName, cid, DescriptorParsingState.STATE_CREATE_INSTANCE);
 
         checkAttributes();
 
@@ -820,7 +767,7 @@ public final class DescriptorParser extends AbstractParser
     {
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         CreateObjectRule rule = new CreateObjectRule();
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -835,7 +782,7 @@ public final class DescriptorParser extends AbstractParser
 
         // Don't know what it is going to be, yet.
 
-        push(elementName, null, STATE_NO_CONTENT);
+        push(elementName, null, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -854,7 +801,7 @@ public final class DescriptorParser extends AbstractParser
     {
         ElementModelImpl result = new ElementModelImpl();
 
-        push(elementName, result, STATE_ELEMENT);
+        push(elementName, result, DescriptorParsingState.STATE_ELEMENT);
 
         checkAttributes();
 
@@ -871,7 +818,7 @@ public final class DescriptorParser extends AbstractParser
 
         SchemaImpl schema = new SchemaImpl();
 
-        push(elementName, schema, STATE_SCHEMA);
+        push(elementName, schema, DescriptorParsingState.STATE_SCHEMA);
 
         if (cpd.getContributionsSchemaId() != null)
         {
@@ -891,7 +838,7 @@ public final class DescriptorParser extends AbstractParser
         ServicePointDescriptor spd = (ServicePointDescriptor) peekObject();
         SchemaImpl schema = new SchemaImpl();
 
-        push(elementName, schema, STATE_SCHEMA);
+        push(elementName, schema, DescriptorParsingState.STATE_SCHEMA);
 
         checkAttributes();
 
@@ -912,7 +859,7 @@ public final class DescriptorParser extends AbstractParser
 
         ImplementationDescriptor id = new ImplementationDescriptor();
 
-        push(elementName, id, STATE_IMPLEMENTATION);
+        push(elementName, id, DescriptorParsingState.STATE_IMPLEMENTATION);
 
         checkAttributes();
 
@@ -927,7 +874,7 @@ public final class DescriptorParser extends AbstractParser
         AbstractServiceDescriptor sd = (AbstractServiceDescriptor) peekObject();
         InterceptorDescriptor id = new InterceptorDescriptor();
 
-        push(elementName, id, STATE_COLLECT_SERVICE_PARAMETERS);
+        push(elementName, id, DescriptorParsingState.STATE_COLLECT_SERVICE_PARAMETERS);
 
         checkAttributes();
 
@@ -945,7 +892,7 @@ public final class DescriptorParser extends AbstractParser
         AbstractServiceDescriptor sd = (AbstractServiceDescriptor) peekObject();
         InvokeFactoryDescriptor ifd = new InvokeFactoryDescriptor();
 
-        push(elementName, ifd, STATE_COLLECT_SERVICE_PARAMETERS);
+        push(elementName, ifd, DescriptorParsingState.STATE_COLLECT_SERVICE_PARAMETERS);
 
         checkAttributes();
 
@@ -966,7 +913,7 @@ public final class DescriptorParser extends AbstractParser
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         InvokeParentRule rule = new InvokeParentRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -983,7 +930,7 @@ public final class DescriptorParser extends AbstractParser
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         ReadAttributeRule rule = new ReadAttributeRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1000,7 +947,7 @@ public final class DescriptorParser extends AbstractParser
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         ReadContentRule rule = new ReadContentRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1013,7 +960,7 @@ public final class DescriptorParser extends AbstractParser
     {
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
 
-        push(elementName, elementModel, STATE_RULES);
+        push(elementName, elementModel, DescriptorParsingState.STATE_RULES);
 
     }
 
@@ -1021,7 +968,7 @@ public final class DescriptorParser extends AbstractParser
     {
         SchemaImpl schema = new SchemaImpl();
 
-        push(elementName, schema, STATE_SCHEMA);
+        push(elementName, schema, DescriptorParsingState.STATE_SCHEMA);
 
         checkAttributes();
 
@@ -1043,7 +990,7 @@ public final class DescriptorParser extends AbstractParser
 
         ServicePointDescriptor spd = new ServicePointDescriptor();
 
-        push(elementName, spd, STATE_SERVICE_POINT);
+        push(elementName, spd, DescriptorParsingState.STATE_SERVICE_POINT);
 
         checkAttributes();
 
@@ -1084,7 +1031,7 @@ public final class DescriptorParser extends AbstractParser
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         SetModuleRule rule = new SetModuleRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1098,7 +1045,7 @@ public final class DescriptorParser extends AbstractParser
         ElementModelImpl elementModel = (ElementModelImpl) peekObject();
         SetParentRule rule = new SetParentRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1113,7 +1060,7 @@ public final class DescriptorParser extends AbstractParser
 
         SetPropertyRule rule = new SetPropertyRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1129,7 +1076,7 @@ public final class DescriptorParser extends AbstractParser
 
         PushAttributeRule rule = new PushAttributeRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1144,7 +1091,7 @@ public final class DescriptorParser extends AbstractParser
 
         PushContentRule rule = new PushContentRule();
 
-        push(elementName, rule, STATE_NO_CONTENT);
+        push(elementName, rule, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1157,7 +1104,7 @@ public final class DescriptorParser extends AbstractParser
 
         SubModuleDescriptor smd = new SubModuleDescriptor();
 
-        push(elementName, smd, STATE_NO_CONTENT);
+        push(elementName, smd, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1175,7 +1122,7 @@ public final class DescriptorParser extends AbstractParser
 
         DependencyDescriptor dd = new DependencyDescriptor();
 
-        push(elementName, dd, STATE_NO_CONTENT);
+        push(elementName, dd, DescriptorParsingState.STATE_NO_CONTENT);
 
         checkAttributes();
 
@@ -1187,12 +1134,12 @@ public final class DescriptorParser extends AbstractParser
 
     private String getAttribute(String name)
     {
-        return (String) _attributes.get(name);
+        return _attributes.get(name);
     }
 
     private String getAttribute(String name, String defaultValue)
     {
-        String result = (String) _attributes.get(name);
+        String result = _attributes.get(name);
 
         if (result == null)
             result = defaultValue;
@@ -1218,10 +1165,10 @@ public final class DescriptorParser extends AbstractParser
     {
         if (_compiledPatterns == null)
         {
-            _compiledPatterns = new HashMap();
+            _compiledPatterns = new HashMap<String,Pattern>();
         }
 
-        Pattern compiled = (Pattern) _compiledPatterns.get(pattern);
+        Pattern compiled = _compiledPatterns.get(pattern);
         if (compiled == null)
         {
         	try {
@@ -1261,7 +1208,7 @@ public final class DescriptorParser extends AbstractParser
 
     private Rule getCustomRule(String ruleClassName)
     {
-        Rule result = (Rule) _ruleMap.get(ruleClassName);
+        Rule result = _ruleMap.get(ruleClassName);
 
         if (result == null)
         {
@@ -1405,7 +1352,7 @@ public final class DescriptorParser extends AbstractParser
     /** @since 1.1 */
     public void initialize(Resource resource, ClassResolver resolver)
     {
-        initializeParser(resource, STATE_START);
+        initializeParser(resource, DescriptorParsingState.STATE_START);
 
         _resolver = resolver;
     }

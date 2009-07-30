@@ -179,7 +179,7 @@ class ImplMessages
 
     static String occurances(Occurances occurances)
     {
-        return _formatter.getMessage("occurances." + occurances.getName());
+        return _formatter.getMessage("occurances." + occurances.name());
     }
 
     static String contributionCount(int count)

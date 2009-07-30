@@ -19,87 +19,93 @@ package org.ops4j.gaderian;
  * 
  * @author Howard Lewis Ship
  */
-public abstract class Occurances
+public enum Occurances
 {
     /**
      * An unbounded number, zero or more.
      */
-    public static final Occurances UNBOUNDED = new Occurances("UNBOUNDED")
-    {
-        public boolean inRange(int count)
+    UNBOUNDED(new RangeChecker() {
+
+        public boolean inRange(final int count)
         {
             return true;
         }
-    };
+    }),
 
     /**
-     * Optional, may be zero or one, but not more.
+     * Optional, may be zero or one, but not more
      */
+    OPTIONAL(new RangeChecker() {
 
-    public static final Occurances OPTIONAL = new Occurances("OPTIONAL")
-    {
-        public boolean inRange(int count)
+        public boolean inRange(final int count)
         {
             return count < 2;
         }
-    };
-
+    }),
     /**
      * Exactly one is required.
      */
+    REQUIRED(new RangeChecker() {
 
-    public static final Occurances REQUIRED = new Occurances("REQUIRED")
-    {
-        public boolean inRange(int count)
+        public boolean inRange(final int count)
         {
             return count == 1;
         }
-    };
+    }),
 
     /**
      * At least one is required.
      */
+    ONE_PLUS(new RangeChecker() {
 
-    public static final Occurances ONE_PLUS = new Occurances("ONE_PLUS")
-    {
-        public boolean inRange(int count)
+        public boolean inRange(final int count)
         {
             return count > 0;
         }
-    };
+    }),
 
-    public static final Occurances NONE = new Occurances("NONE")
-    {
-        public boolean inRange(int count)
+    /**
+     * No
+     */
+    NONE(new RangeChecker() {
+
+        public boolean inRange(final int count)
         {
             return count == 0;
         }
-    };
+    });
 
-    private String _name;
+    private Occurances.RangeChecker _rangeChecker;
 
-    private Occurances(String name)
+    Occurances(final RangeChecker rangeChecker)
     {
-        _name = name;
-    }
-
-    public String getName()
-    {
-        return _name;
-    }
-
-    public String toString()
-    {
-        return "Occurances[" + _name + "]";
+        _rangeChecker = rangeChecker;
     }
 
     /**
      * Validates that an actual count is in range for the particular Occurances count.
-     * 
+     *
      * @param count
      *            the number of items to check. Should be zero or greater.
      * @return true if count is a valid number in accordance to the range, false otherwise
      */
-    public abstract boolean inRange(int count);
+    public boolean inRange(int count)
+    {
+        return _rangeChecker.inRange(count);
+    }
+
+    /** Defines the interface for internal range checking within the enum.
+     */
+    private static interface RangeChecker
+    {
+        /**
+         * Validates that an actual count is in range for the particular Occurances count.
+         *
+         * @param count
+         *            the number of items to check. Should be zero or greater.
+         * @return true if count is a valid number in accordance to the range, false otherwise
+         */
+        public boolean inRange(int count);
+    }
 
 }

@@ -62,9 +62,9 @@ public abstract class AbstractParser extends DefaultHandler
         /**
          * Prior state of the parser before this item was pushed.
          */
-        int _priorState;
+        DescriptorParsingState _priorState;
 
-        Item(String elementName, Object object, int priorState, boolean ignoreCharacterData)
+        Item(String elementName, Object object, DescriptorParsingState priorState, boolean ignoreCharacterData)
         {
             _elementName = elementName;
             _object = object;
@@ -102,9 +102,9 @@ public abstract class AbstractParser extends DefaultHandler
 
     private Resource _resource;
 
-    private List _stack;
+    private List<Item> _stack;
 
-    private int _state;
+    private DescriptorParsingState _state;
 
     private Item _top;
 
@@ -179,7 +179,7 @@ public abstract class AbstractParser extends DefaultHandler
     }
 
     /**
-     * Returns the {@link Resource} being parsed (as set by {@link #initializeParser(Resource, int)}.
+     * Returns the {@link Resource} being parsed (as set by {@link #initializeParser(Resource, DescriptorParsingState)}.
      */
 
     protected Resource getResource()
@@ -189,10 +189,10 @@ public abstract class AbstractParser extends DefaultHandler
 
     /**
      * Returns the current state of the parser. State is initially set by
-     * {@link #initializeParser(Resource, int)} and is later updated by
-     * {@link #push(String, Object, int, boolean)} and {@link #pop()}.
+     * {@link #initializeParser(Resource, DescriptorParsingState)} and is later updated by
+     * {@link #push(String, Object, DescriptorParsingState, boolean)} and {@link #pop()}.
      */
-    protected int getState()
+    protected DescriptorParsingState getState()
     {
         return _state;
     }
@@ -206,10 +206,10 @@ public abstract class AbstractParser extends DefaultHandler
      *            the initial state of the parser (the interpretation of state is determined by
      *            subclasses)
      */
-    protected void initializeParser(Resource resource, int startState)
+    protected void initializeParser(Resource resource, DescriptorParsingState startState)
     {
         _resource = resource;
-        _stack = new ArrayList();
+        _stack = new ArrayList<Item>();
 
         _location = null;
         _state = startState;
@@ -262,7 +262,7 @@ public abstract class AbstractParser extends DefaultHandler
 
     /**
      * Enters a new state, pushing an object onto the stack. Invokes
-     * {@link #push(String, Object, int, boolean)}, and ignores character data within the element.
+     * {@link #push(String, Object, DescriptorParsingState, boolean)}, and ignores character data within the element.
      *
      * @param elementName
      *            the element whose start tag was just parsed
@@ -271,7 +271,7 @@ public abstract class AbstractParser extends DefaultHandler
      * @param state
      *            the new state for the parse
      */
-    protected void push(String elementName, Object object, int state)
+    protected void push(String elementName, Object object, DescriptorParsingState state)
     {
         push(elementName, object, state, true);
     }
@@ -291,7 +291,7 @@ public abstract class AbstractParser extends DefaultHandler
      *            if true, then any character data (typically whitespace) directly enclosed by the
      *            element is ignored
      */
-    protected void push(String elementName, Object object, int state, boolean ignoreCharacterData)
+    protected void push(String elementName, Object object, DescriptorParsingState state, boolean ignoreCharacterData)
     {
         Gaderian.setLocation(object, getLocation());
 
@@ -325,7 +325,7 @@ public abstract class AbstractParser extends DefaultHandler
     /**
      * Forces a change to a specific state.
      */
-    protected void setState(int state)
+    protected void setState(DescriptorParsingState state)
     {
         _state = state;
     }
@@ -363,9 +363,9 @@ public abstract class AbstractParser extends DefaultHandler
         fatalError(ex);
     }
 
-    private Map constructAttributesMap(Attributes attributes)
+    private Map<String,String> constructAttributesMap(Attributes attributes)
     {
-        Map result = new HashMap();
+        Map<String,String> result = new HashMap<String,String>();
         int count = attributes.getLength();
 
         for (int i = 0; i < count; i++)
@@ -387,14 +387,13 @@ public abstract class AbstractParser extends DefaultHandler
      * Invoked when an element's start tag is recognized. The element and attributes are provided to
      * the subclass for further processing.
      */
-    protected abstract void begin(String elementName, Map attributes);
+    protected abstract void begin(String elementName, Map<String,String> attributes);
 
     /**
      * Invoked when an element's close tag is recognized. The element is provided. The content of
      * the element (the unparsed whitespace within the element's tags) is available via
      * {@link #peekContent()}.
      */
-
     protected abstract void end(String elementName);
 
     public void endElement(String uri, String localName, String qName) throws SAXException

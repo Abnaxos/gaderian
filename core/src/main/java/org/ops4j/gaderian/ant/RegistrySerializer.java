@@ -311,8 +311,7 @@ public class RegistrySerializer
         if (spd.getVisibility() == Visibility.PRIVATE)
             servicePoint.setAttribute("visibility", "private");
         if (spd.getParametersCount() != Occurances.REQUIRED)
-            servicePoint.setAttribute("parameters-occurs", spd.getParametersCount().getName()
-                    .toLowerCase());
+            servicePoint.setAttribute("parameters-occurs", spd.getParametersCount().name().toLowerCase());
 
         servicePoint.appendChild(_document.createTextNode(spd.getAnnotation()));
 
