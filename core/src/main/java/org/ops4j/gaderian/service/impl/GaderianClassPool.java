@@ -32,8 +32,7 @@ import javassist.LoaderClassPath;
  */
 public class GaderianClassPool extends ClassPool
 {
-    private ClassFactoryClassLoader _loader = new ClassFactoryClassLoader(GaderianClassPool.class
-            .getClassLoader());
+    private ClassFactoryClassLoader _loader = new ClassFactoryClassLoader(GaderianClassPool.class.getClassLoader());
 
     /**
      * Used to identify which class loaders have already been integrated into the pool.
@@ -73,6 +72,6 @@ public class GaderianClassPool extends ClassPool
      */
     public Class toClass(CtClass ctClass) throws CannotCompileException
     {
-        return ctClass.toClass(_loader);
+        return ctClass.toClass(_loader, GaderianClassPool.class.getProtectionDomain());
     }
 }

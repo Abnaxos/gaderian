@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -75,7 +76,7 @@ public class TestClassFab extends GaderianTestCase
 
         MethodSignature setStringValue = new MethodSignature(void.class, "setStringValue",
                 new Class[]
-                { String.class }, null);
+                        {String.class}, null);
 
         cf.addMethod(Modifier.PUBLIC, setStringValue, "_stringValue = $1;");
 
@@ -101,7 +102,7 @@ public class TestClassFab extends GaderianTestCase
 
         cf.addField("_stringValue", String.class);
         cf.addConstructor(new Class[]
-        { String.class }, null, "{ _stringValue = $1; }");
+                {String.class}, null, "{ _stringValue = $1; }");
 
         MethodSignature getStringValue = new MethodSignature(String.class, "getStringValue", null,
                 null);
@@ -122,7 +123,7 @@ public class TestClassFab extends GaderianTestCase
         Constructor c = targetClass.getConstructors()[0];
 
         Object targetBean = c.newInstance(new Object[]
-        { "Buffy" });
+                {"Buffy"});
 
         String actual = (String) PropertyUtils.read(targetBean, "stringValue");
 
@@ -135,7 +136,7 @@ public class TestClassFab extends GaderianTestCase
 
         cf.addField("_intValue", int.class);
         cf.addConstructor(new Class[]
-        { int.class }, null, "{ _intValue = $1; }");
+                {int.class}, null, "{ _intValue = $1; }");
 
         cf.addMethod(
                 Modifier.PUBLIC,
@@ -146,7 +147,7 @@ public class TestClassFab extends GaderianTestCase
         Constructor c = targetClass.getConstructors()[0];
 
         AbstractIntWrapper targetBean = (AbstractIntWrapper) c.newInstance(new Object[]
-        { new Integer(137) });
+                {new Integer(137)});
 
         assertEquals(137, targetBean.getIntValue());
     }
@@ -173,7 +174,7 @@ public class TestClassFab extends GaderianTestCase
         cf.addInterface(SimpleService.class);
 
         cf.addMethod(Modifier.PUBLIC, new MethodSignature(int.class, "add", new Class[]
-        { int.class, int.class }, null), "return $1 + $2;");
+                {int.class, int.class}, null), "return $1 + $2;");
 
         Class targetClass = cf.createClass();
 
@@ -369,8 +370,15 @@ public class TestClassFab extends GaderianTestCase
         }
     }
 
-    public void testInvalidField() throws Exception
+    public void testInvalidFields() throws Exception
     {
+        // Javassist lets us down here; I can't think of a way to get addField() to actually
+        // fail.
+
+        // JLI: Upgrading to version 3.7-GA caused this test to surprisingly fail
+        // JLI: Are there no 'invalid' field names if you create your 'own' bytecode?
+        // JLI: Anyway, made test check for the presence of the fields in question
+
         ClassFab cf = newClassFab("InvalidField", Object.class);
 
         cf.addField(".", String.class);
@@ -380,18 +388,24 @@ public class TestClassFab extends GaderianTestCase
         try
         {
             cf.createClass();
-            unreachable();
+
+            final String toString = cf.toString();
+
+            contains(toString, "private java.lang.String .");
+            contains(toString, "private int buffy");
+            contains(toString, "private int ");
+
         }
         catch (ApplicationRuntimeException ex)
         {
             assertExceptionSubstring(ex, "Unable to create class InvalidField");
         }
 
-        // Javassist lets us down here; I can't think of a way to get addField() to actually
-        // fail.
     }
 
-    /** @since 1.1 */
+    /**
+     * @since 1.1
+     */
     public void testToString() throws Exception
     {
         ClassFab cf = newClassFab("FredRunnable", BaseLocatable.class);
@@ -402,12 +416,12 @@ public class TestClassFab extends GaderianTestCase
         cf.addField("_map", Map.class);
 
         cf.addConstructor(new Class[]
-        { Map.class, Runnable.class }, new Class[]
-        { IllegalArgumentException.class, DataFormatException.class }, "{ _map = $1; }");
+                {Map.class, Runnable.class}, new Class[]
+                {IllegalArgumentException.class, DataFormatException.class}, "{ _map = $1; }");
 
         MethodSignature sig = new MethodSignature(Map.class, "doTheNasty", new Class[]
-        { int.class, String.class }, new Class[]
-        { InstantiationException.class, IllegalAccessException.class });
+                {int.class, String.class}, new Class[]
+                {InstantiationException.class, IllegalAccessException.class});
 
         MethodFab mf = cf.addMethod(
                 Modifier.PUBLIC + Modifier.FINAL + Modifier.SYNCHRONIZED,
@@ -443,18 +457,22 @@ public class TestClassFab extends GaderianTestCase
 
     public void testCanConvert()
     {
-    	final ClassFab cf = newClassFab("BamBam", Object.class);
-    	assertTrue( cf.canConvert( String.class ) );
-    	assertFalse(cf.canConvert(CglibBeanInterfaceFactory.createCglibBean().getClass()));
-    	assertFalse(cf.canConvert(JavassistBeanInterfaceFactory.createJavassistBean().getClass()));
-    	assertFalse(cf.canConvert(JdkBeanInterfaceFactory.createJdkBean().getClass()));
+        final ClassFab cf = newClassFab("BamBam", Object.class);
+        assertTrue(cf.canConvert(String.class));
+        assertFalse(cf.canConvert(CglibBeanInterfaceFactory.createCglibBean().getClass()));
+        assertFalse(cf.canConvert(JavassistBeanInterfaceFactory.createJavassistBean().getClass()));
+        assertFalse(cf.canConvert(JdkBeanInterfaceFactory.createJdkBean().getClass()));
     }
 
-    /** @since 1.1 */
+    /**
+     * @since 1.1
+     */
     private void contains(String actual, String expected)
     {
         if (actual.indexOf(expected) < 0)
-            throw new AssertionFailedError("Missing substring: " + expected);
+        {
+            throw new AssertionFailedError("Missing substring: " + expected + " Actual: " + actual);
+        }
     }
 
 

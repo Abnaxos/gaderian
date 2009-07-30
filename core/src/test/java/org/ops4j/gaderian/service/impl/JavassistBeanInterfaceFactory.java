@@ -52,8 +52,10 @@ public class JavassistBeanInterfaceFactory implements
 					new CtClass[0], theClass);
 			theMethod.setBody("return \"Hello, World!\";");
 			theClass.addMethod(theMethod);
-			Class clazz = theClass.toClass();
-			return ( BeanInterface )clazz.newInstance();
+            Class clazz = theClass.toClass(
+                    BeanInterface.class.getClassLoader(),
+                    BeanInterface.class.getProtectionDomain());
+            return ( BeanInterface )clazz.newInstance();
 		} catch (Exception e) {
 			throw new ApplicationRuntimeException("Cannot construct instance.",
 					e);

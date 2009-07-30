@@ -113,12 +113,10 @@ public class CtClassSource
 
     public Class createClass(CtClass ctClass)
     {
-        // String className = ctClass.getName();
-
         try
         {
-            Class result = _pool.toClass(ctClass);
-
+            Class result = _pool.toClass(ctClass, _pool.getClassLoader(), this.getClass().getProtectionDomain());
+            
             _createdClassCount++;
 
             return result;
