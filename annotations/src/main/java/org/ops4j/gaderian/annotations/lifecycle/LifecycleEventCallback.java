@@ -10,8 +10,9 @@ import java.lang.annotation.ElementType;
  * @author Johan Lindquist
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ThreadStartedMethod
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = ElementType.METHOD)
+public @interface LifecycleEventCallback
 {
+    LifecycleEvent[] lifecycleEvents(); 
 }

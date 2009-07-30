@@ -19,27 +19,8 @@ package org.ops4j.gaderian.internal;
  * 
  * @since 1.1
  */
-public final class Visibility
+public enum Visibility
 {
-    private String _name;
-
-    /**
-     * The default visibility, allowing access to the artifact from any module.
-     */
-    public static final Visibility PUBLIC = new Visibility("PUBLIC");
-
-    /**
-     * Restricts access to the artifact to just the module which defines it.
-     */
-    public static final Visibility PRIVATE = new Visibility("PRIVATE");
-
-    private Visibility(String name)
-    {
-        _name = name;
-    }
-
-    public String toString()
-    {
-        return "Visibility[" + _name + "]";
-    }
+    PUBLIC,
+    PRIVATE
 }
