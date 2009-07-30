@@ -6,6 +6,12 @@
     <packaging>pom</packaging>
     <version>1.1-SNAPSHOT</version>
 
+   <parent>
+    <groupId>org.ops4j</groupId>
+    <artifactId>master</artifactId>
+    <version>1.0.0</version>
+  </parent>
+
     <name>Gaderian</name>
     <inceptionYear>2009</inceptionYear>
 
@@ -199,6 +205,12 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.0.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>2.5</version>
                 <configuration>
@@ -294,14 +306,6 @@
     </profiles>
 
     <distributionManagement>
-        <repository>
-            <id>ops4j.releases.deploy</id>
-            <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/mvn-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>ops4j.snapshots.deploy</id>
-            <url>scpexe://repository.ops4j.org/var/http/repository.ops4j.org/mvn-snapshots</url>
-        </snapshotRepository>
         <site>
             <id>gaderian.ops4j.org</id>
             <name>Gaderian Website</name>
