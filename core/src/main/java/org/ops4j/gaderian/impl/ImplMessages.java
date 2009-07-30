@@ -285,22 +285,22 @@ class ImplMessages
         return _formatter.format("no-service-point-for-interface", interfaceClass.getName());
     }
 
-    static String multipleServicePointsForInterface(Class interfaceClass,
-            Collection matchingPoints)
+    static String multipleVisibleServicePointsForInterface(Class interfaceClass,
+            Collection<ServicePoint> visibleServicePoints)
     {
         StringBuffer buffer = new StringBuffer("{");
 
         boolean following = false;
 
-        Iterator i = matchingPoints.iterator();
+        Iterator<ServicePoint> i = visibleServicePoints.iterator();
         while (i.hasNext())
         {
             if (following)
                 buffer.append(", ");
 
-            ServicePoint p = (ServicePoint) i.next();
+            ServicePoint servicePoint = i.next();
 
-            buffer.append(p.getExtensionPointId());
+            buffer.append(servicePoint.getExtensionPointId());
 
             following = true;
         }

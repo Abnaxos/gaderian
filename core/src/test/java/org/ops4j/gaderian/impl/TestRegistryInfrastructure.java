@@ -88,6 +88,42 @@ public class TestRegistryInfrastructure extends GaderianTestCase
         assertTrue( serviceIds.isEmpty() );
     }
 
+    public void testGetServiceTooManyVisible()
+    {
+
+        RegistryInfrastructureImpl registryInfrastructure = new RegistryInfrastructureImpl(null, null);
+
+        ModuleImpl module1 = new ModuleImpl();
+        module1.setModuleId("module1");
+
+        ModuleImpl module2 = new ModuleImpl();
+        module1.setModuleId("module2");
+
+        ModuleImpl module3 = new ModuleImpl();
+        module1.setModuleId("module3");
+
+        final ServicePoint servicePoint1 = createServicePoint(module1, "module1.A", ResultSet.class, Visibility.PUBLIC);
+        registryInfrastructure.addServicePoint(servicePoint1);
+        final ServicePoint servicePoint2 = createServicePoint(module2, "module2.B", ResultSet.class, Visibility.PUBLIC);
+        registryInfrastructure.addServicePoint(servicePoint2);
+        final ServicePoint servicePoint3 = createServicePoint(module3, "module3.C", ResultSet.class, Visibility.PUBLIC);
+        registryInfrastructure.addServicePoint(servicePoint3);
+        final ServicePoint servicePoint4 = createServicePoint(module3, "module3.D", ResultSet.class, Visibility.PRIVATE);
+        registryInfrastructure.addServicePoint(servicePoint4);
+
+        try
+        {
+            registryInfrastructure.getService(ResultSet.class,null);
+            unreachable();
+        }
+        catch (Exception e)
+        {
+            // Only 3 of the above services should be visible
+            assertEquals(ImplMessages.multipleVisibleServicePointsForInterface( ResultSet.class, Arrays.asList(servicePoint1,servicePoint2,servicePoint3)), e.getMessage() );
+        }
+
+    }
+
     public void testGetServiceIdsInterfaceNotFound()
     {
         RegistryInfrastructureImpl r = new RegistryInfrastructureImpl( null, null );

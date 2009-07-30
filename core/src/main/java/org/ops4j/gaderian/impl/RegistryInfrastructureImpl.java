@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
@@ -55,17 +56,17 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     /**
      * Map of {@link ServicePoint} keyed on fully qualified service id.
      */
-    private Map _servicePoints = new HashMap();
+    private Map<String,ServicePoint> _servicePoints = new HashMap<String,ServicePoint>();
 
     /**
      * Map of List (of {@link ServicePoint}, keyed on class name service interface.
      */
-    private Map _servicePointsByInterfaceClassName = new HashMap();
+    private Map<String,List<ServicePoint>> _servicePointsByInterfaceClassName = new HashMap<String,List<ServicePoint>>();
 
     /**
      * Map of {@link ConfigurationPoint} keyed on fully qualified configuration id.
      */
-    private Map _configurationPoints = new HashMap();
+    private Map<String,ConfigurationPoint> _configurationPoints = new HashMap<String,ConfigurationPoint>();
 
     private SymbolSource[] _variableSources;
 
@@ -81,7 +82,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
      * @since 1.1
      */
 
-    private Map _serviceTokens;
+    private Map<String,ServiceToken> _serviceTokens;
 
     /**
      * Map of {@link ServiceModelFactory}, keyed on service model name, loaded from
@@ -127,11 +128,11 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     {
         String key = point.getServiceInterfaceClassName();
 
-        List l = (List) _servicePointsByInterfaceClassName.get(key);
+        List<ServicePoint> l = _servicePointsByInterfaceClassName.get(key);
 
         if (l == null)
         {
-            l = new LinkedList();
+            l = new LinkedList<ServicePoint>();
             _servicePointsByInterfaceClassName.put(key, l);
         }
 
@@ -148,7 +149,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     public ServicePoint getServicePoint(String serviceId, Module module)
     {
         checkShutdown();
-        ServicePoint result = (ServicePoint) _servicePoints.get(serviceId);
+        ServicePoint result = _servicePoints.get(serviceId);
         if (result == null)
         {
             if (serviceId.indexOf('.') == -1)
@@ -182,14 +183,12 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         return result;
     }
 
-    private List getMatchingServiceIds(String serviceId)
+    private List<String> getMatchingServiceIds(String serviceId)
     {
-        final List possibleMatches = new LinkedList();
-        for (Iterator i = _servicePoints.values().iterator(); i.hasNext();)
+        final List<String> possibleMatches = new LinkedList<String>();
+        for (final ServicePoint servicePoint : _servicePoints.values())
         {
-            final ServicePoint servicePoint = (ServicePoint) i.next();
-            if (servicePoint.getExtensionPointId().equals(
-                    servicePoint.getModule().getModuleId() + "." + serviceId))
+            if (servicePoint.getExtensionPointId().equals(servicePoint.getModule().getModuleId() + "." + serviceId))
             {
                 possibleMatches.add(servicePoint.getExtensionPointId());
             }
@@ -208,44 +207,38 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     {
         String key = serviceInterface.getName();
 
-        List servicePoints = (List) _servicePointsByInterfaceClassName.get(key);
+        List<ServicePoint> servicePoints = _servicePointsByInterfaceClassName.get(key);
 
         if (servicePoints == null)
-            servicePoints = Collections.EMPTY_LIST;
+            servicePoints = Collections.emptyList();
 
-        ServicePoint point = null;
-        int count = 0;
+        final List<ServicePoint> visibleServicePoints = new ArrayList<ServicePoint>();
 
-        Iterator i = servicePoints.iterator();
-        while (i.hasNext())
+        for (final ServicePoint servicePoint : servicePoints)
         {
-            ServicePoint sp = (ServicePoint) i.next();
-
-            if (!sp.visibleToModule(module))
+            if (!servicePoint.visibleToModule(module))
                 continue;
 
-            point = sp;
-
-            count++;
+            visibleServicePoints.add(servicePoint);
         }
 
-        if (count == 0)
+        if (visibleServicePoints.size() == 0)
             throw new ApplicationRuntimeException(ImplMessages
                     .noServicePointForInterface(serviceInterface));
 
-        if (count > 1)
-            throw new ApplicationRuntimeException(ImplMessages.multipleServicePointsForInterface(
+        if (visibleServicePoints.size() > 1)
+            throw new ApplicationRuntimeException(ImplMessages.multipleVisibleServicePointsForInterface(
                     serviceInterface,
-                    servicePoints));
+                    visibleServicePoints));
 
-        return point.getService(serviceInterface);
+        return visibleServicePoints.get(0).getService(serviceInterface);
     }
 
     public ConfigurationPoint getConfigurationPoint(String configurationId, Module module)
     {
         checkShutdown();
 
-        ConfigurationPoint result = (ConfigurationPoint) _configurationPoints.get(configurationId);
+        ConfigurationPoint result = _configurationPoints.get(configurationId);
 
         if (result == null)
             throw new ApplicationRuntimeException(ImplMessages.noSuchConfiguration(configurationId));
@@ -299,12 +292,14 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
         SymbolSource[] sources = getSymbolSources();
 
-        for (int i = 0; i < sources.length; i++)
+        for (SymbolSource source : sources)
         {
-            String value = sources[i].valueForSymbol(name);
+            String value = source.valueForSymbol(name);
 
             if (value != null)
+            {
                 return value;
+            }
         }
 
         return null;
@@ -315,28 +310,24 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         if (_variableSources != null)
             return _variableSources;
 
-        List contributions = getConfiguration(SYMBOL_SOURCES, null);
+        List<SymbolSourceContribution> contributions = getConfiguration(SYMBOL_SOURCES, null);
 
         Log log = LogFactory.getLog(SYMBOL_SOURCES);
-        Orderer o = new Orderer(log, _errorHandler, ImplMessages
-                .symbolSourceContribution());
+        Orderer o = new Orderer(log, _errorHandler, ImplMessages.symbolSourceContribution());
 
-        Iterator i = contributions.iterator();
-        while (i.hasNext())
+        for (final SymbolSourceContribution symbolSourceContribution : contributions)
         {
-            SymbolSourceContribution c = (SymbolSourceContribution) i.next();
-
             // check that there is actually a source set
             // TODO: this checks only that source is not null; it can't check for a overwritten source
             // (if both class="..." and service-id="..." are specified, service-id silently wins)
-            if (c.getSource() == null)
+            if (symbolSourceContribution.getSource() == null)
             {
-                _errorHandler.error(log, ImplMessages.noSymbolSourceImplementation(c.getName()),
-                                    c.getLocation(), null);
+                _errorHandler.error(log, ImplMessages.noSymbolSourceImplementation(symbolSourceContribution.getName()),
+                        symbolSourceContribution.getLocation(), null);
             }
             else
             {
-                o.add(c, c.getName(), c.getPrecedingNames(), c.getFollowingNames());
+                o.add(symbolSourceContribution, symbolSourceContribution.getName(), symbolSourceContribution.getPrecedingNames(), symbolSourceContribution.getFollowingNames());
             }
         }
 
@@ -496,7 +487,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     {
         checkShutdown();
 
-        ConfigurationPoint result = (ConfigurationPoint) _configurationPoints.get(configurationId);
+        ConfigurationPoint result =  _configurationPoints.get(configurationId);
 
         return result != null && result.visibleToModule(module);
     }
@@ -507,20 +498,19 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
         String key = serviceInterface.getName();
 
-        List servicePoints = (List) _servicePointsByInterfaceClassName.get(key);
+        List<ServicePoint> servicePoints = _servicePointsByInterfaceClassName.get(key);
 
         if (servicePoints == null)
             return false;
 
         int count = 0;
 
-        Iterator i = servicePoints.iterator();
-        while (i.hasNext())
+        for (final ServicePoint servicePoint : servicePoints)
         {
-            ServicePoint point = (ServicePoint) i.next();
-
-            if (point.visibleToModule(module))
+            if (servicePoint.visibleToModule(module))
+            {
                 count++;
+            }
         }
 
         return count == 1;
@@ -530,7 +520,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
     {
         checkShutdown();
 
-        ServicePoint point = (ServicePoint) _servicePoints.get(serviceId);
+        ServicePoint point = _servicePoints.get(serviceId);
 
         if (point == null)
             return false;
@@ -557,7 +547,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
         String serviceId = token.getServiceId();
 
-        ServicePoint sp = (ServicePoint) _servicePoints.get(serviceId);
+        ServicePoint sp = _servicePoints.get(serviceId);
 
         return sp.getService(Object.class);
     }
@@ -569,9 +559,9 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         checkShutdown();
 
         if (_serviceTokens == null)
-            _serviceTokens = new HashMap();
+            _serviceTokens = new HashMap<String,ServiceToken>();
 
-        ServiceToken result = (ServiceToken) _serviceTokens.get(serviceId);
+        ServiceToken result = _serviceTokens.get(serviceId);
 
         if (result == null)
         {
@@ -596,10 +586,8 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
     public Module getModule(String moduleId)
     {
-        for (Iterator i = _servicePoints.values().iterator(); i.hasNext();)
+        for (final ServicePoint servicePoint : _servicePoints.values())
         {
-            final ServicePoint servicePoint = (ServicePoint) i.next();
-
             if (servicePoint.getModule().getModuleId().equals(moduleId))
             {
                 return servicePoint.getModule();
@@ -613,19 +601,16 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
      *
      * @see org.ops4j.gaderian.internal.RegistryInfrastructure#getServiceIds(java.lang.Class)
      */
-    public List getServiceIds(Class serviceInterface)
+    public List<String> getServiceIds(Class serviceInterface)
     {
-        final List serviceIds = new LinkedList();
+        final List<String> serviceIds = new LinkedList<String>();
         if( serviceInterface == null )
         {
             return serviceIds;
         }
-        for (Iterator i = _servicePoints.values().iterator(); i.hasNext();)
+        for (final ServicePoint servicePoint : _servicePoints.values())
         {
-            final ServicePoint servicePoint = (ServicePoint) i.next();
-
-            if (serviceInterface.getName().equals( servicePoint.getServiceInterfaceClassName() )
-                    && servicePoint.visibleToModule(null))
+            if (serviceInterface.getName().equals(servicePoint.getServiceInterfaceClassName()) && servicePoint.visibleToModule(null))
             {
                 serviceIds.add(servicePoint.getExtensionPointId());
             }

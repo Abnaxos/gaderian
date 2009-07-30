@@ -48,7 +48,7 @@ public interface RegistryInfrastructure extends SymbolSource
      *             specified service interface
      */
 
-    public Object getService(String serviceId, Class serviceInterface, Module module);
+    public <T> T getService(String serviceId, Class<T>  serviceInterface, Module module);
 
     /**
      * Finds a service that implements the provided interface. Exactly one such service may exist or
@@ -61,8 +61,9 @@ public interface RegistryInfrastructure extends SymbolSource
      *            service points will be considered.
      * @throws org.ops4j.gaderian.ApplicationRuntimeException
      *             if either 0, or more than 1, service point is visible to the module
+     * @return The service
      */
-    public Object getService(Class serviceInterface, Module module);
+    public <T> T getService(Class<T> serviceInterface, Module module);
 
     /**
      * Returns the converted items contributed to the configuration point.
@@ -81,17 +82,18 @@ public interface RegistryInfrastructure extends SymbolSource
 
     /**
      * Returns true if the elements contributed to the given configuration point can be
-     * {@link #getConfigurationAsMap(String) retrieved as a Map}.
+     * {@link RegistryInfrastructure#getConfigurationAsMap(String, Module)} retrieved as a Map}.
      * 
      * @param configurationId
      *            the fully qualified id of the configuration
      * @param module
      *            the referencing module, used for visibility checks (null means no module, which
      *            requires that the configuration be public)
-     * @throws ApplicationRuntimeException
+     * @throws org.ops4j.gaderian.ApplicationRuntimeException
      *             if no visible configuration point with the given id exists
      * @see Module#isConfigurationMappable(String)
      * @since 1.1
+     * @return True if the configuration can be retrieved as a map
      */
     public boolean isConfigurationMappable(String configurationId, Module module);
 
@@ -157,6 +159,8 @@ public interface RegistryInfrastructure extends SymbolSource
 
     /**
      * Returns a named service-model factory
+     * @param name
+     * @return
      */
 
     public ServiceModelFactory getServiceModelFactory(String name);
@@ -172,21 +176,21 @@ public interface RegistryInfrastructure extends SymbolSource
      * @param constructor
      *            the name and optional initialization of a Translator
      * @return a {@link Translator} instance
-     * @throws ApplicationRuntimeException
+     * @throws org.ops4j.gaderian.ApplicationRuntimeException
      *             if the translator can not be constructed (i.e., the name is not known)
      */
     public Translator getTranslator(String constructor);
 
     /**
      * Returns the locale for which the registry was created.
+     * @return The locale
      */
-
     public Locale getLocale();
 
     /**
      * Returns the {@link org.ops4j.gaderian.ErrorHandler} for this Registry.
+     * @return The error handler for the registry
      */
-
     public ErrorHandler getErrorHander();
 
     /**
@@ -269,15 +273,16 @@ public interface RegistryInfrastructure extends SymbolSource
 
     public void cleanupThread();
 
-    /**
-     * @param serviceInterface
+    /** Retrieves all the service ids registered for the specified service interface.
+     * @param serviceInterface The service id to be retrieved
+     * @return The list of service ids
      */
-    public List getServiceIds(Class serviceInterface);
+    public List<String> getServiceIds(Class serviceInterface);
 
     /**
      * Returns the module with the corresponding module id.
      * 
-     * @param moduleId
+     * @param moduleId The module id
      * @return the module with the corresponding module id
      */
     public Module getModule(String moduleId);

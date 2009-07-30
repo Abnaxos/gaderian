@@ -73,7 +73,7 @@ public class TestServicesByInterface extends FrameworkTestCase
         {
             assertExceptionSubstring(
                 ex,
-                "There are multiple service points for interface gaderian.test.IMultipleService: "
+                "There are multiple service points visible for interface gaderian.test.IMultipleService: "
                     + "{gaderian.tests.serviceByInterface.multipleServiceOne,"
                     + " gaderian.tests.serviceByInterface.multipleServiceTwo}.");
         }
