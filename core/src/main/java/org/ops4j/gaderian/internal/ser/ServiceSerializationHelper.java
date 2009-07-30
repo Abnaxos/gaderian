@@ -28,8 +28,7 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
  */
 public class ServiceSerializationHelper
 {
-    private static final ThreadLocal _threadLocal = new ThreadLocal();
-
+    private static WeakReference _weakReference;
     /**
      * Returns the previously stored SSS.
      * 
@@ -40,12 +39,15 @@ public class ServiceSerializationHelper
     {
         ServiceSerializationSupport result = null;
 
-        WeakReference reference = (WeakReference) _threadLocal.get();
-        if (reference != null)
-            result = (ServiceSerializationSupport) reference.get();
+        if (_weakReference != null)
+        {
+            result = (ServiceSerializationSupport) _weakReference.get();
+        }
 
         if (result == null)
+        {
             throw new ApplicationRuntimeException(SerMessages.noSupportSet());
+        }
 
         return result;
     }
@@ -55,11 +57,8 @@ public class ServiceSerializationHelper
      * is logged (should be just one SSS per class loader).
      */
 
-    public static void setServiceSerializationSupport(
-            ServiceSerializationSupport serviceSerializationSupport)
+    public static void setServiceSerializationSupport(ServiceSerializationSupport serviceSerializationSupport)
     {
-        WeakReference reference = new WeakReference(serviceSerializationSupport);
-
-        _threadLocal.set(reference);
+        _weakReference = new WeakReference(serviceSerializationSupport);
     }
 }
