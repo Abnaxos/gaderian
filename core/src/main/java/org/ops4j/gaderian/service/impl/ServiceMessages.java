@@ -175,4 +175,13 @@ class ServiceMessages
     {
         return _formatter.format("thread-cleanup-exception", cause);
     }
+
+    /**
+     * @since 1.1
+     */
+    public static String unableToCreateClassWithFinalMethod(final Class beanClass, final MethodSignature methodSignature)
+    {
+        return _formatter.format("unable-to-create-class-final-method", beanClass.getName(),methodSignature.getName());
+    }
+
 }

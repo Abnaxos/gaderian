@@ -15,6 +15,7 @@
 package org.ops4j.gaderian.service;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 /**
  * A representation of a {@link java.lang.reflect.Method}, identifying the name, return type,
@@ -41,18 +42,27 @@ public class MethodSignature
 
     private Class[] _exceptionTypes;
 
+    private int _modifiers;
+
     public MethodSignature(Class returnType, String name, Class[] parameterTypes,
-            Class[] exceptionTypes)
+            Class[] exceptionTypes, final int modifiers)
     {
         _returnType = returnType;
         _name = name;
         _parameterTypes = parameterTypes;
         _exceptionTypes = exceptionTypes;
+        _modifiers = modifiers;
+    }
+
+    public MethodSignature(Class returnType, String name, Class[] parameterTypes,
+            Class[] exceptionTypes)
+    {
+        this(returnType, name, parameterTypes, exceptionTypes, 0);
     }
 
     public MethodSignature(Method m)
     {
-        this(m.getReturnType(), m.getName(), m.getParameterTypes(), m.getExceptionTypes());
+        this(m.getReturnType(), m.getName(), m.getParameterTypes(), m.getExceptionTypes(), m.getModifiers());
     }
 
     /**
@@ -67,6 +77,11 @@ public class MethodSignature
     public String getName()
     {
         return _name;
+    }
+
+    public boolean isFinal()
+    {
+        return Modifier.isFinal(_modifiers);
     }
 
     /**

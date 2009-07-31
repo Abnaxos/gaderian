@@ -27,6 +27,7 @@ import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.InterfaceFab;
 import org.ops4j.gaderian.service.InterfaceSynthesizer;
 import org.ops4j.gaderian.service.MethodSignature;
+import org.ops4j.gaderian.ApplicationRuntimeException;
 
 /**
  * @author Howard M. Lewis Ship
@@ -143,14 +144,14 @@ public class InterfaceSynthesizerImpl implements InterfaceSynthesizer
         op.processInterfaceQueue();
     }
 
-    Class createInterface(Class beanClass, Operation op)
+    Class createInterface(final Class beanClass, final Operation op)
     {
         String name = ClassFabUtils.generateClassName(beanClass);
 
-        return createInterface(name, op);
+        return createInterface(name, op, beanClass);
     }
 
-    private Class createInterface(String name, Operation op)
+    private Class createInterface(final String name, final Operation op, final Class beanClass)
     {
         InterfaceFab fab = _classFactory.newInterface(name);
 
@@ -166,6 +167,11 @@ public class InterfaceSynthesizerImpl implements InterfaceSynthesizer
         while (i.hasNext())
         {
             MethodSignature sig = (MethodSignature) i.next();
+
+            if (sig.isFinal())
+            {
+                throw new ApplicationRuntimeException(ServiceMessages.unableToCreateClassWithFinalMethod(beanClass,sig));
+            }
 
             fab.addMethod(sig);
         }

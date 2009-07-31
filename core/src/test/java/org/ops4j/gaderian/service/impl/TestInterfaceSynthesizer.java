@@ -19,6 +19,7 @@ import org.ops4j.gaderian.service.InterfaceFab;
 import org.ops4j.gaderian.service.MethodSignature;
 import org.ops4j.gaderian.test.GaderianTestCase;
 import org.ops4j.gaderian.test.TypeMatcher;
+import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.easymock.MockControl;
 
 /**
@@ -132,6 +133,34 @@ public class TestInterfaceSynthesizer extends GaderianTestCase
         is.setClassFactory(cf);
 
         is.synthesizeInterface(IgnoreStaticAndPrivateMethodsBean.class);
+
+        verifyControls();
+    }
+
+    /**
+     * Adds test for attempts to create a proxy for a class containing a final method
+     */
+    public void testHandleFinalMethods()
+    {
+        MockControl control = newControl(InterfaceFab.class);
+        InterfaceFab fab = (InterfaceFab) control.getMock();
+
+        ClassFactory cf = newClassFactory(fab);
+
+        replayControls();
+
+        InterfaceSynthesizerImpl is = new InterfaceSynthesizerImpl();
+        is.setClassFactory(cf);
+
+        try
+        {
+            is.synthesizeInterface(FinalMethodBean.class);
+            unreachable();
+        }
+        catch (ApplicationRuntimeException e)
+        {
+            assertEquals("Unable to create service for class 'org.ops4j.gaderian.service.impl.FinalMethodBean' due to method named 'finalMethod' being declared final",e.getMessage());
+        }
 
         verifyControls();
     }
