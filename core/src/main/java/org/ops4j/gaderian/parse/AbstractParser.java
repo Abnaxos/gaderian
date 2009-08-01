@@ -163,6 +163,12 @@ public abstract class AbstractParser extends DefaultHandler
      */
     protected Location getLocation()
     {
+        // If for some reason the _locator has not yet been initilized - empty file for example (GAD-12)
+        if (_locator == null)
+        {
+            return null;
+        }
+
         int line = _locator.getLineNumber();
         int column = _locator.getColumnNumber();
 

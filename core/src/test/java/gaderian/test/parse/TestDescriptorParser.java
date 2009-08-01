@@ -661,4 +661,19 @@ public class TestDescriptorParser extends FrameworkTestCase
         SubModuleDescriptor smd = (SubModuleDescriptor) l.get(0);
         assertEquals("class foo.bar.Blat", smd.getConditionalExpression());
     }
+
+    /** @since 1.1 */
+     public void testEmptyFile() throws Exception
+     {
+         try
+         {
+             parse("EmptyFile.xml");
+             unreachable();
+         }
+         catch (ApplicationRuntimeException e)
+         {
+             assertEquals("Unable to read descriptor file:/home/johan/forge/projects/gaderian-trunk/core/target/test-classes/gaderian/test/parse/EmptyFile.xml: Premature end of file.",e.getMessage());
+         }
+     }
+
 }

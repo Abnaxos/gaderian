@@ -141,7 +141,6 @@ public class XmlResourceProcessor
     {
         if (_saxParser == null)
             _saxParser = SAXParserFactory.newInstance().newSAXParser();
-
         return _saxParser;
     }
 
