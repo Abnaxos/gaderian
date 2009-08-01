@@ -94,14 +94,14 @@ public final class ModuleImpl extends BaseLocatable implements Module
         return _registry.containsService(serviceInterface, this);
     }
 
-    public Object getService(String serviceId, Class serviceInterface)
+    public <T> T getService(String serviceId, Class<T> serviceInterface)
     {
         String qualifiedId = IdUtils.qualify(_moduleId, serviceId);
 
         return _registry.getService(qualifiedId, serviceInterface, this);
     }
 
-    public Object getService(Class serviceInterface)
+    public <T> T getService(Class<T> serviceInterface)
     {
         return _registry.getService(serviceInterface, this);
     }
@@ -130,7 +130,7 @@ public final class ModuleImpl extends BaseLocatable implements Module
     {
         if (_messages == null)
         {
-            ThreadLocale threadLocale = (ThreadLocale) _registry.getService(
+            ThreadLocale threadLocale = _registry.getService(
                     Gaderian.THREAD_LOCALE_SERVICE,
                     ThreadLocale.class,
                     this);
@@ -214,7 +214,7 @@ public final class ModuleImpl extends BaseLocatable implements Module
         if (result == null)
             throw new ApplicationRuntimeException(ImplMessages.unableToConvertType(
                     type,
-                    _packageName));
+                    _packageName),getLocation(),null);
 
         return result;
     }

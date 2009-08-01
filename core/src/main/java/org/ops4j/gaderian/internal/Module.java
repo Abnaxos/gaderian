@@ -66,7 +66,7 @@ public interface Module extends Locatable, SymbolSource
      * @param serviceInterface
      *            type the result will be cast to
      */
-    public Object getService(String serviceId, Class serviceInterface);
+    public <T> T getService(String serviceId, Class<T> serviceInterface);
 
     /**
      * Finds a service that implements the provided interface. Exactly one such service may exist or
@@ -75,7 +75,7 @@ public interface Module extends Locatable, SymbolSource
      * @param serviceInterface
      *            used to locate the service
      */
-    public Object getService(Class serviceInterface);
+    public <T> T getService(Class<T> serviceInterface);
 
     /**
      * Returns the identified service extension point.

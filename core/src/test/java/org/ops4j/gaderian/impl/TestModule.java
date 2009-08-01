@@ -21,6 +21,8 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ClassResolver;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Locatable;
+import org.ops4j.gaderian.util.FileResource;
+import org.ops4j.gaderian.util.URLResource;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.test.GaderianTestCase;
 import org.easymock.MockControl;
@@ -109,6 +111,9 @@ public class TestModule extends GaderianTestCase
         module.setPackageName("org.ops4j.gaderian.order");
         module.setClassResolver(getClassResolver());
 
+        LocationImpl location = new LocationImpl(new URLResource("http://www.ops4j.org"),1,2);
+        module.setLocation(location);
+
         try
         {
             module.resolveType("Qbert");
@@ -119,6 +124,7 @@ public class TestModule extends GaderianTestCase
             assertEquals(
                     "Unable to convert type 'Qbert' to a Java class, either as is, or in package org.ops4j.gaderian.order.",
                     ex.getMessage());
+            assertEquals("bad location defined", location, ex.getLocation());
         }
     }
 }
