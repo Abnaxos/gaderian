@@ -197,7 +197,7 @@ public abstract class GaderianTestCase extends TestCase
      * @see #interceptLogging(String)
      */
 
-    protected List getInterceptedLogEvents()
+    protected List<LoggingEvent> getInterceptedLogEvents()
     {
         return _appender.getEvents();
     }

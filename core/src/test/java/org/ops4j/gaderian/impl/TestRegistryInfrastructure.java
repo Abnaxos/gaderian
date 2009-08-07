@@ -153,6 +153,38 @@ public class TestRegistryInfrastructure extends GaderianTestCase
 
     }
 
+     public void testGetServiceIdsWithConcreteClass()
+    {
+        RegistryInfrastructureImpl r = new RegistryInfrastructureImpl( null, null );
+        assertTrue( r.getServiceIds( ConcreteServiceClass.class ).isEmpty() );
+        final ModuleImpl module1 = new ModuleImpl();
+        module1.setClassResolver( new DefaultClassResolver() );
+        module1.setModuleId( "module1" );
+        r.addServicePoint( createServicePoint( module1, "module1.foo", ConcreteServiceClass.class, Visibility.PUBLIC ) );
+        r.addServicePoint( createServicePoint( module1, "module1.bar", ConcreteServiceClass.class, Visibility.PUBLIC ) );
+        r.addServicePoint( createServicePoint( module1, "module1.baz", ConcreteServiceClass.class, Visibility.PRIVATE ) );
+        r.addServicePoint( createServicePoint( module1, "module1.string", String.class, Visibility.PUBLIC ) );
+
+        assertEquals( new HashSet( Arrays.asList( new String[]{"module1.foo", "module1.bar"} ) ), new HashSet( r.getServiceIds( ConcreteServiceClass.class ) ) );
+        assertEquals( new HashSet( Arrays.asList( new String[]{"module1.string"} ) ), new HashSet( r.getServiceIds( String.class ) ) );
+
+        List serviceIds = r.getServiceIds( null );
+        assertNotNull( serviceIds );
+        assertEquals( 0, serviceIds.size() );
+
+        try
+        {
+            r.getService(ConcreteServiceClass.class,module1);
+            unreachable();
+        }
+        catch (Exception e)
+        {
+            assertEquals("Bad message","There are multiple service points visible for interface org.ops4j.gaderian.impl.ConcreteServiceClass: {module1.foo, module1.bar, module1.baz}.",e.getMessage());
+        }
+
+
+    }
+
     private ServicePointImpl createServicePoint( final ModuleImpl module, String id, Class serviceInterface, Visibility visibility )
     {
         final ServicePointImpl servicePoint2 = new ServicePointImpl();

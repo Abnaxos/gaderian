@@ -240,8 +240,8 @@ public abstract class AbstractServiceModelImpl implements ServiceModel
     {
         if (service instanceof RegistryShutdownListener)
         {
-            ShutdownCoordinator coordinator = ((ShutdownCoordinator) getServicePoint().getModule()
-                    .getService(ShutdownCoordinator.class));
+            ShutdownCoordinator coordinator = getServicePoint().getModule()
+                    .getService(ShutdownCoordinator.class);
 
             RegistryShutdownListener asListener = (RegistryShutdownListener) service;
             coordinator.addRegistryShutdownListener(asListener);

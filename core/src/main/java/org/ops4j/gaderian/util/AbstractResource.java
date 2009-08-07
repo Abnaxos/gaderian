@@ -113,4 +113,10 @@ public abstract class AbstractResource implements Resource
 
         return false;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return _path != null ? _path.hashCode() : 0;
+    }
 }

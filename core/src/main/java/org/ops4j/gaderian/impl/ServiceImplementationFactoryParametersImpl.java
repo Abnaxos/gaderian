@@ -61,6 +61,15 @@ public class ServiceImplementationFactoryParametersImpl extends AssemblyParamete
                 && _parameters.equals(p._parameters);
     }
 
+  @Override
+  public int hashCode()
+  {
+    int result = _servicePoint != null ? _servicePoint.hashCode() : 0;
+    result = 31 * result + (_invokingModule != null ? _invokingModule.hashCode() : 0);
+    result = 31 * result + (_parameters != null ? _parameters.hashCode() : 0);
+    return result;
+  }
+
     public List getParameters()
     {
         return _parameters;

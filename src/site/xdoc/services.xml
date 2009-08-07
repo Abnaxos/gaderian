@@ -386,7 +386,7 @@ int sum = service.add(4, 7);
 		</section>
     <section name="Bean Services">
 
-<p>In Gaderian 1.0, you always must have a service <em>interface</em>.  Starting in Gaderian 1.1, the
+<p>It is recommended that you always define a service <em>interface</em> for the contract for your service.  However, the
   interface attribute of the <a href="descriptor.html#service-point">&lt;service-point&gt;</a> descriptor element can be a simple class as well.</p>
 
   <p>
@@ -399,6 +399,15 @@ The class you specify must have a public, no-arguments constructor.  Your servic
   specialized service implementation factories, may not be compatible with bean services ... they are designed
   for interface services.
 </p>
+
+        <div class="frame note">
+            <div class="label">Note</div>
+            <div class="content">There is one caveat with using bean classes - in combination with the RegistryShutdownLister, 
+                the registryDidShutdown method is exposed as part of service interface (the bean).  However, calling this method
+                manually will only result in the service proxy being shutdown and the beans shutdown method will <b>not</b> be called.
+                In practise, this should not be an issue, since the lifecycle events should in general not be called manually.
+            </div>
+        </div>
 
     </section>
 		<section name="Frequently Asked Questions">

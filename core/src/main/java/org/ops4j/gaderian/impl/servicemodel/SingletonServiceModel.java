@@ -153,6 +153,10 @@ public final class SingletonServiceModel extends AbstractServiceModelImpl
 
         classFab.addField("_inner", serviceInterface);
         classFab.addField("_shutdown", boolean.class);
+
+        // GAD-15: If the class is a concrete class, it may still implement registry shutdown listener
+        // GAD-15: which means that this shutdown code will not be added to the proxy
+
         if (!RegistryShutdownListener.class.isAssignableFrom(serviceInterface))
         {
             classFab.addInterface(RegistryShutdownListener.class);
@@ -160,6 +164,16 @@ public final class SingletonServiceModel extends AbstractServiceModelImpl
             classFab.addMethod(Modifier.PUBLIC | Modifier.FINAL, new MethodSignature(void.class,
                     "registryDidShutdown", null, null), "{ _shutdown = true; }");
         }
+        else
+        {
+            // GAD-15: Means the service implements registry shut down listener
+            // GAD-15: If the service is concrete, we need to override the method
+            // GAD-15: This however will mean that the service method would not be called
+            // GAD-15: Only the proxy will be invalidated
+            classFab.addMethod(Modifier.PUBLIC | Modifier.FINAL, new MethodSignature(void.class,
+                    "registryDidShutdown", null, null), "{ _shutdown = true; }");
+        }
+
         classFab.addMethod(
                 Modifier.PUBLIC | Modifier.SYNCHRONIZED | Modifier.FINAL,
                 new MethodSignature(void.class, "_setInner", new Class[]

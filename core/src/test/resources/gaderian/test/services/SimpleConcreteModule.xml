@@ -16,17 +16,11 @@
 -->
 
 <module
-	id="gaderian.test.services"
-	version="0.0.1">
-	<service-point id="Simple" interface="gaderian.test.services.SimpleService">
-	  <create-instance class="gaderian.test.services.impl.SimpleServiceImpl"/>
-	</service-point>
-
-
-    <service-point id="SimpleShutdownAware" interface="gaderian.test.services.SimpleShutdownAwareService">
+        id="gaderian.test.services"
+        version="0.0.1">
+    <service-point id="SimpleShutdownAwareConcreteService" interface="gaderian.test.services.impl.SimpleShutdownAwareConcreteService">
         <invoke-factory>
-          <construct class="gaderian.test.services.impl.SimpleShutdownAwareServiceImpl"/>
+            <construct class="gaderian.test.services.impl.SimpleShutdownAwareConcreteService"/>
         </invoke-factory>
-	</service-point>
-
+    </service-point>
 </module>

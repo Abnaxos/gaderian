@@ -29,15 +29,15 @@ class StoreAppender extends AppenderSkeleton
 {
     ///CLOVER:OFF
 
-    private List _events = new ArrayList(0);
+    private List<LoggingEvent> _events = new ArrayList<LoggingEvent>(0);
 
     /**
      * Returns any accumulated events since the last invocations of this method.
      * @return List of {@link LoggingEvent}.
      */
-    public List getEvents()
+    public List<LoggingEvent> getEvents()
     {
-        List result = new ArrayList(_events);
+        List<LoggingEvent> result = new ArrayList<LoggingEvent>(_events);
 
         _events.clear();
 

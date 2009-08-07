@@ -30,11 +30,11 @@ public class DefaultsSymbolSource extends BaseLocatable implements SymbolSource
 {
     private List _defaults;
 
-    private Map _symbols = new HashMap();
+    private Map<String, String> _symbols = new HashMap<String, String>();
 
     public String valueForSymbol(String name)
     {
-        return (String) _symbols.get(name);
+        return _symbols.get(name);
     }
 
     public void initializeService()

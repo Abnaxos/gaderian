@@ -14,10 +14,14 @@
 
 package gaderian.test.services;
 
+import java.util.List;
+
 import gaderian.test.FrameworkTestCase;
+import gaderian.test.services.impl.SimpleShutdownAwareConcreteService;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
+import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * Tests shutdown on the registry and on deferred and threaded services.
@@ -49,6 +53,69 @@ public class TestShutdown extends FrameworkTestCase
             assertExceptionSubstring(ex, "The Gaderian Registry has been shutdown.");
         }
     }
+
+     public void testShutdownSingletonConcreteClass() throws Exception
+
+    {
+        Registry r = buildFrameworkRegistry("SimpleConcreteModule.xml");
+        SimpleShutdownAwareConcreteService s = (SimpleShutdownAwareConcreteService) r.getService(
+                "gaderian.test.services.SimpleShutdownAwareConcreteService",
+                SimpleShutdownAwareConcreteService.class);
+
+        assertEquals(11, s.add(4, 7));
+
+        interceptLogging("gaderian.test.services.SimpleShutdownAwareConcreteService");
+
+        r.shutdown();
+
+        final List<LoggingEvent> interceptedLogEvents = getInterceptedLogEvents();
+        // There should be 3 messages - instantiation, autowiring and the registry shutdown log message
+        assertEquals("bad number of intercepted log events", 1, interceptedLogEvents.size());
+
+        assertLoggedMessage("registryDidShutdown --- SimpleShutdownAwareConcreteService",interceptedLogEvents);
+
+        try
+        {
+            s.add(9, 5);
+            unreachable();
+        }
+        catch (ApplicationRuntimeException ex)
+        {
+            assertExceptionSubstring(ex, "The Gaderian Registry has been shutdown.");
+        }
+    }
+
+    public void testShutdownSingletonClassServiceInterfaceExtendingRegistryShutdownListener() throws Exception
+    {
+       Registry r = buildFrameworkRegistry("SimpleModule.xml");
+       SimpleShutdownAwareService s = (SimpleShutdownAwareService) r.getService(
+               "gaderian.test.services.SimpleShutdownAware",
+               SimpleShutdownAwareService.class);
+
+
+
+       assertEquals(11, s.add(4, 7));
+
+       interceptLogging("gaderian.test.services.SimpleShutdownAware");
+
+       r.shutdown();
+
+       final List<LoggingEvent> interceptedLogEvents = getInterceptedLogEvents();
+
+       assertEquals("bad number of intercepted log events", 1, interceptedLogEvents.size());
+       assertLoggedMessage("registryDidShutdown --- SimpleShutdownAware",interceptedLogEvents);
+
+       try
+       {
+           s.add(9, 5);
+           unreachable();
+       }
+       catch (ApplicationRuntimeException ex)
+       {
+           assertExceptionSubstring(ex, "The Gaderian Registry has been shutdown.");
+       }
+   }
+
 
     public void testRegistryShutdownUnrepeatable() throws Exception
     {
