@@ -139,10 +139,9 @@ public class LoggingInterceptorFactory implements ServiceInterceptorFactory
             methodFab.addCatch(exceptions[i], body);
         }
 
-        // Catch and log any runtime exceptions, in addition to the
+        // Catch and log any other exception, in addition to the
         // checked exceptions.
-
-        methodFab.addCatch(RuntimeException.class, body);
+        methodFab.addCatch(Throwable.class, body);
     }
 
     protected void addServiceMethods(InterceptorStack stack, ClassFab fab, List parameters)
