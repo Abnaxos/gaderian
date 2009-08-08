@@ -14,18 +14,19 @@
 
 package org.ops4j.gaderian.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.net.URL;
 
 /**
  * ClassLoader used to properly instantiate newly created classes.
- * 
+ *
  * @author Howard Lewis Ship / Essl Christian
  * @see org.ops4j.gaderian.service.impl.CtClassSource
  */
 class ClassFactoryClassLoader extends ClassLoader
 {
-    private List _loaders = new ArrayList();
+    private List<ClassLoader> _loaders = new CopyOnWriteArrayList<ClassLoader>();
 
     public ClassFactoryClassLoader(ClassLoader parent)
     {
@@ -45,24 +46,34 @@ class ClassFactoryClassLoader extends ClassLoader
      */
     protected synchronized Class findClass(String name) throws ClassNotFoundException
     {
-        int count = _loaders.size();
-        for (int i = 0; i < count; i++)
+      for (ClassLoader loader : _loaders)
+      {
+        try
         {
-            ClassLoader l = (ClassLoader) _loaders.get(i);
-
-            try
-            {
-                return l.loadClass(name);
-            }
-            catch (ClassNotFoundException ex)
-            {
-                //
-            }
+            return loader.loadClass(name);
+        }
+        catch (ClassNotFoundException ex)
+        {
+            //
         }
 
-        // Not found .. through the first exception
+      }
 
-        throw new ClassNotFoundException(name);
+      // Not found .. through the first exception
+      throw new ClassNotFoundException(name);
     }
+
+  protected URL findResource(String name)
+  {
+    for (ClassLoader loader : _loaders)
+    {
+      URL rv = loader.getResource(name);
+      if (rv != null)
+      {
+          return rv;
+      }
+    }
+    return super.findResource(name);
+  }
 
 }
