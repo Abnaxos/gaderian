@@ -672,7 +672,7 @@ public class TestDescriptorParser extends FrameworkTestCase
          }
          catch (ApplicationRuntimeException e)
          {
-             assertEquals("Unable to read descriptor file:/home/johan/forge/projects/gaderian-trunk/core/target/test-classes/gaderian/test/parse/EmptyFile.xml: Premature end of file.",e.getMessage());
+             assertRegexp("Unable to read descriptor .*test-classes/gaderian/test/parse/EmptyFile.xml: Premature end of file.",e.getMessage());
          }
      }
 
