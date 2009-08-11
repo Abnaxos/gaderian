@@ -53,7 +53,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     private void executeNonClassContribution(String name, Class objectClass, String message)
     {
-        List l = Collections.singletonList(build(name, objectClass));
+        List<BeanFactoryContribution> l = Collections.singletonList(build(name, objectClass));
 
         ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
 
@@ -102,7 +102,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testIncorrectType()
     {
-        List l = Collections.singletonList(build("array-list", ArrayList.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("array-list", ArrayList.class));
 
         ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
 
@@ -131,7 +131,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testTranslator()
     {
-        List l = Collections.singletonList(build("string", String.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("string", String.class));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
 
@@ -142,7 +142,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testPlain()
     {
-        List l = Collections.singletonList(build("string", String.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("string", String.class));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
 
@@ -154,7 +154,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testNonCache()
     {
-        List l = Collections.singletonList(build("buffer", StringBuffer.class, Boolean.FALSE));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("buffer", StringBuffer.class, Boolean.FALSE));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
 
@@ -166,7 +166,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testConstructFailure()
     {
-        List l = Collections.singletonList(build("integer", Integer.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("integer", Integer.class));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Number.class, l, true);
 
@@ -188,7 +188,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
     {
         BeanFactoryParameter p = new BeanFactoryParameter();
 
-        List l = Collections.singletonList(build("integer", Integer.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("integer", Integer.class));
 
         p.setContributions(l);
 
@@ -226,13 +226,13 @@ public class TestBeanFactoryImpl extends GaderianTestCase
                 "gaderian.utilities.test.NumberFactory",
                 BeanFactory.class);
 
-        assertEquals(new Integer(27), f.get("int,27"));
-        assertEquals(new Double(-22.5), f.get("double,-22.5"));
+        assertEquals(27, f.get("int,27"));
+        assertEquals(-22.5, f.get("double,-22.5"));
     }
 
     public void testContains()
     {
-        List l = Collections.singletonList(build("integer", Integer.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("integer", Integer.class));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Integer.class, l, true);
 
@@ -243,7 +243,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
     public void testContainsFailure()
     {
-        List l = Collections.singletonList(build("integer", Integer.class));
+        List<BeanFactoryContribution> l = Collections.singletonList(build("integer", Integer.class));
 
         BeanFactoryImpl f = new BeanFactoryImpl(null, Integer.class, l, true);
 
@@ -251,4 +251,94 @@ public class TestBeanFactoryImpl extends GaderianTestCase
 
         assertTrue(!contains);
     }
+
+
+    /** GAD-20 */
+    public void testNoArgConstructorHandling()
+    {
+
+        final List<BeanFactoryContribution> l = Collections.singletonList(build("simple", SimpleNoArgConstructorBean.class));
+
+        final BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
+
+        final SimpleNoArgConstructorBean simpleNoArgConstructorBean1 = (SimpleNoArgConstructorBean) f.get("simple,stringValue=fred");
+
+        final SimpleNoArgConstructorBean simpleNoArgConstructorBean2 = (SimpleNoArgConstructorBean) f.get("simple,stringValue=bob");
+
+        assertNotSame(simpleNoArgConstructorBean1,simpleNoArgConstructorBean2);
+
+        assertEquals("fred",simpleNoArgConstructorBean1.getStringValue());
+        assertEquals("bob", simpleNoArgConstructorBean2.getStringValue());
+
+    }
+
+    /** GAD-20 */
+    public void testNoArgConstructorHandlingWithPrimitiveProperty()
+    {
+
+        final List<BeanFactoryContribution> l = Collections.singletonList(build("simple", SimpleNoArgConstructorBean.class));
+
+        final BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
+
+        final SimpleNoArgConstructorBean simpleNoArgConstructorBean1 = (SimpleNoArgConstructorBean) f.get("simple,intValue=1");
+
+        final SimpleNoArgConstructorBean simpleNoArgConstructorBean2 = (SimpleNoArgConstructorBean) f.get("simple,intValue=2");
+
+        assertNotSame(simpleNoArgConstructorBean1, simpleNoArgConstructorBean2);
+
+        assertEquals(1,simpleNoArgConstructorBean1.getIntValue());
+        assertEquals(2, simpleNoArgConstructorBean2.getIntValue());
+    }
+
+    /** GAD-20 */
+    public void testNoArgConstructorHandlingInvalidInitializerPropertyName()
+    {
+        final List<BeanFactoryContribution> l = Collections.singletonList(build("simple", SimpleNoArgConstructorBean.class));
+
+        final BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
+
+        try
+        {
+            f.get("simple,badpropertyname=fred");
+            fail("could create with bad property name");
+        }
+        catch (ApplicationRuntimeException e)
+        {
+            // Should happen
+            assertEquals("Class 'org.ops4j.gaderian.utilities.factory.SimpleNoArgConstructorBean' does not define a property named 'badpropertyname' as indicated by the initializer 'badpropertyname=fred'.",e.getMessage());
+        }
+
+    }
+
+    /** GAD-20 */
+    public void testNoArgConstructorHandlingInvalidInitializer()
+    {
+        final List<BeanFactoryContribution> l = Collections.singletonList(build("simple", SimpleNoArgConstructorBean.class));
+
+        final BeanFactoryImpl f = new BeanFactoryImpl(null, Object.class, l, true);
+
+        try
+        {
+            f.get("simple,=badinitializer");
+            fail("could create with bad property name");
+        }
+        catch (ApplicationRuntimeException e)
+        {
+            // Should happen
+            assertEquals("Initializer '=badinitializer' is not formatted correctly for use as a property based intitializer, it should be 'propertyName=value' when no String constructor is available.", e.getMessage());
+        }
+
+        try
+        {
+            f.get("simple,badinitializer");
+            fail("could create with bad property name");
+        }
+        catch (ApplicationRuntimeException e)
+        {
+            // Should happen
+            assertEquals("Initializer 'badinitializer' is not formatted correctly for use as a property based intitializer, it should be 'propertyName=value' when no String constructor is available.", e.getMessage());
+        }
+
+    }
+
 }

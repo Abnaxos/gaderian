@@ -23,6 +23,8 @@ import java.util.Map;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Gaderian;
+import org.ops4j.gaderian.util.StringUtils;
+import org.ops4j.gaderian.util.PropertyUtils;
 import org.ops4j.gaderian.impl.BaseLocatable;
 import org.ops4j.gaderian.utilities.BeanFactory;
 
@@ -37,14 +39,13 @@ public class BeanFactoryImpl extends BaseLocatable implements BeanFactory
 
     private Class _vendType;
 
-    private Map _contributions = new HashMap();
+    private Map<String,BeanFactoryContribution> _contributions = new HashMap<String,BeanFactoryContribution>();
 
-    private Map _cache = new HashMap();
+    private Map<String,Object> _cache = new HashMap<String,Object>();
 
     private boolean _defaultCacheable;
 
-    public BeanFactoryImpl(ErrorLog errorLog, Class vendType, List contributions,
-            boolean defaultCacheable)
+    public BeanFactoryImpl(ErrorLog errorLog, Class vendType, List<BeanFactoryContribution> contributions, boolean defaultCacheable)
     {
         _errorLog = errorLog;
         _vendType = vendType;
@@ -62,31 +63,27 @@ public class BeanFactoryImpl extends BaseLocatable implements BeanFactory
         return _contributions.containsKey(name);
     }
 
-    private void processContributions(List list)
+    private void processContributions(List<BeanFactoryContribution> beanFactoryContributions)
     {
-        Iterator i = list.iterator();
 
-        while (i.hasNext())
+      for (final BeanFactoryContribution beanFactoryContribution : beanFactoryContributions)
+      {
+        Class beanClass = beanFactoryContribution.getBeanClass();
+
+        if (beanClass.isInterface() || beanClass.isArray() || beanClass.isPrimitive())
         {
-            BeanFactoryContribution c = (BeanFactoryContribution) i.next();
-
-            Class beanClass = c.getBeanClass();
-
-            if (beanClass.isInterface() || beanClass.isArray() || beanClass.isPrimitive())
-            {
-                _errorLog.error(FactoryMessages.invalidContributionClass(c), c.getLocation(), null);
-                continue;
-            }
-
-            if (!_vendType.isAssignableFrom(beanClass))
-            {
-                _errorLog.error(FactoryMessages.wrongContributionType(c, _vendType), c
-                        .getLocation(), null);
-                continue;
-            }
-
-            _contributions.put(c.getName(), c);
+          _errorLog.error(FactoryMessages.invalidContributionClass(beanFactoryContribution), beanFactoryContribution.getLocation(), null);
+          continue;
         }
+
+        if (!_vendType.isAssignableFrom(beanClass))
+        {
+          _errorLog.error(FactoryMessages.wrongContributionType(beanFactoryContribution, _vendType), beanFactoryContribution.getLocation(), null);
+          continue;
+        }
+
+        _contributions.put(beanFactoryContribution.getName(), beanFactoryContribution);
+      }
     }
 
     public synchronized Object get(String locator)
@@ -108,7 +105,7 @@ public class BeanFactoryImpl extends BaseLocatable implements BeanFactory
         String name = commax < 0 ? locator.trim() : locator.substring(0, commax);
         String initializer = commax < 0 ? null : locator.substring(commax + 1).trim();
 
-        BeanFactoryContribution c = (BeanFactoryContribution) _contributions.get(name);
+        BeanFactoryContribution c = _contributions.get(name);
 
         if (c == null)
             throw new ApplicationRuntimeException(FactoryMessages.unknownContribution(name));
@@ -130,12 +127,45 @@ public class BeanFactoryImpl extends BaseLocatable implements BeanFactory
             if (Gaderian.isBlank(initializer))
                 return beanClass.newInstance();
 
-            Constructor c = beanClass.getConstructor(new Class[]
-            { String.class });
+            try
+            {
+                // Attempt to construct the class using a string constructor (the default)
+                final Constructor c = beanClass.getConstructor(String.class);
+                return c.newInstance(initializer);
+            }
+            catch (NoSuchMethodException e)
+            {
+                // Class does not contain a string the constructor - attempt using empty constructor
+                // and property utils to initialize the bean with the corresponding value
 
-            return c.newInstance(new Object[]
-            { initializer });
+                final String[] splitInitializer = StringUtils.split('=',initializer);
+                if (splitInitializer.length != 2 || splitInitializer[0] == null || splitInitializer[0].length() == 0)
+                {
+                    throw new ApplicationRuntimeException(FactoryMessages.invalidInitializer(beanClass,initializer),contribution.getLocation(),null);
+                }
+
+                // Create the new instance
+                final Object o = beanClass.newInstance();
+
+                // Check if the property is writable
+                if (!PropertyUtils.isWritable(o, splitInitializer[0]))
+                {
+                    // Throw error
+                    throw new ApplicationRuntimeException(FactoryMessages.invalidInitializerProperty(beanClass, splitInitializer[0], initializer), contribution.getLocation(), null);
+                }
+                // It is writable - attempt to write it
+                PropertyUtils.smartWrite(o, splitInitializer[0], splitInitializer[1]);
+
+                // And finally return the new instance
+                return o;
+
+            }
         }
+        catch(ApplicationRuntimeException e)
+        {
+            throw e;
+        }
+
         catch (Exception ex)
         {
             throw new ApplicationRuntimeException(FactoryMessages

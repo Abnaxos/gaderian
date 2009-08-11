@@ -50,4 +50,21 @@ class FactoryMessages
     {
         return _formatter.format("invalid-bean-translator-format", inputValue);
     }
+
+
+    /**
+     * @since 1.1
+     */
+    public static String invalidInitializer(final Class beanClass, final String initializer)
+    {
+        return _formatter.format("invalid-bean-initializer", beanClass.getName(),initializer);
+    }
+
+    /**
+     * @since 1.1
+     */
+    public static String invalidInitializerProperty(final Class beanClass, final String propertyName, final String initializer)
+    {
+        return _formatter.format("invalid-bean-initializer-property", beanClass.getName(), propertyName, initializer);
+    }
 }

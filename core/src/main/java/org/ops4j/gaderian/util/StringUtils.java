@@ -35,31 +35,7 @@ public class StringUtils
      */
     public static String[] split(String input)
     {
-        if (input == null)
-            return new String[0];
-
-        List strings = new ArrayList();
-
-        int startx = 0;
-        int cursor = 0;
-        int length = input.length();
-
-        while (cursor < length)
-        {
-            if (input.charAt(cursor) == ',')
-            {
-                String item = input.substring(startx, cursor);
-                strings.add(item);
-                startx = cursor + 1;
-            }
-
-            cursor++;
-        }
-
-        if (startx < length)
-            strings.add(input.substring(startx));
-
-        return (String[]) strings.toArray(new String[strings.size()]);
+      return split(',', input);
     }
 
     /**
@@ -121,5 +97,33 @@ public class StringUtils
         
         return sbuf.toString();
     }
-    
+
+  public static String[] split(final char delimiter, final String input)
+  {
+    if (input == null)
+        return new String[0];
+
+    List<String> strings = new ArrayList<String>();
+
+    int startx = 0;
+    int cursor = 0;
+    int length = input.length();
+
+    while (cursor < length)
+    {
+        if (input.charAt(cursor) == delimiter)
+        {
+            String item = input.substring(startx, cursor);
+            strings.add(item);
+            startx = cursor + 1;
+        }
+
+        cursor++;
+    }
+
+    if (startx < length)
+        strings.add(input.substring(startx));
+
+    return strings.toArray(new String[strings.size()]);
+  }
 }

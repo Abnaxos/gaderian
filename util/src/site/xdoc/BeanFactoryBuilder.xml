@@ -23,27 +23,30 @@
 
         <section name="Bean Factory Builder Service">
 
-            <p>The
-                <a href="module-report/service/gaderian.utilities.BeanFactoryBuilder.html">
-                    BeanFactoryBuilder
-                </a>
-                services is used to construct a
-                <a href="apidocs/org/ops4j/gaderian/utilities/BeanFactory.html">BeanFactory</a>
-                instance. An BeanFactory will
-                <em>vend out</em>
-                instances of classes. A logical name is mapped to a particular Java class
-                to be instantiated.
-            </p>
 
-            <p>Client code can retrieve beans via the factory's
-                <code>get()</code>
-                method. Beans are retrieved using a<em>locator</em>, which consists of a
-                name and an optional initializer seperated by commas. The initializer is
-                provided to the bean via an alternate constructor that takes a single
-                string parameter. Initializers are used, typically, to initialize
-                properties of the bean, but the actual implementation is internal to the
-                bean class.
-            </p>
+      <p>The <a href="module-report/service/gaderian.utilities.BeanFactoryBuilder.html">
+      BeanFactoryBuilder</a> services is used to construct a
+      <a href="apidocs/org/ops4j/gaderian/utilities/BeanFactory.html">BeanFactory</a> instance. An BeanFactory will <em>vend out</em>
+      instances of classes. A logical name is mapped to a particular Java class
+      to be instantiated. </p>
+
+          <p> Client code can retrieve beans via the factory's <code>get()</code>
+      method. Beans are retrieved using a <em>locator</em>, which consists of a
+      name and an optional initializer seperated by a comma. The initializer is
+      provided to the bean via an alternate constructor that takes a single
+      string parameter (the default case).  In the case where the bean does <em>not</em> a constructor
+      which accepts a single string parameter, BeanFactory will attempt to use the default (empty) constructor and
+      populate the bean using a Java bean property.  The initializer in this case is used to determine the property and
+      value to use.  Initializers are used, typically, to initialize properties of the bean, but the actual
+      implementation is internal to the bean class. </p>
+
+       <p>The general format of the initializer string (when used as a constructor parameter) is
+           <code><em>name</em>[,<em>initializer</em>]</code>.  The initializer in this case is passed <em>as is</em> to
+           the constructor of the bean.
+           The initializer, if used in property based bean initialization, takes the following format
+           <code> <em>name</em>[,<em>propertyName=value</em>]</code>.  This instructs BeanFactory to create
+           an instance of the given class and then initialize the property named propertyName with the specified value.
+       </p>
 
             <subsection name="Usage">
 

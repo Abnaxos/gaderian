@@ -53,6 +53,26 @@ public class TestStringUtils extends GaderianTestCase
         assertListsEqual(new String[] { "alpha", "beta" }, StringUtils.split("alpha,beta"));
     }
 
+    public void testSplitWithDelimiter()
+    {
+        assertListsEqual(new String[]{"alpha", "beta"}, StringUtils.split('=',"alpha=beta"));
+    }
+
+    public void testSplitSingleWithDelimiter()
+    {
+        assertListsEqual(new String[]{"alpha"}, StringUtils.split('=',"alpha"));
+    }
+
+    public void testSplitNullWithDelimiter()
+    {
+        assertListsEqual(new String[0], StringUtils.split('=',null));
+    }
+
+    public void testSplitEmptyWithDelimiter()
+    {
+          assertListsEqual(new String[0], StringUtils.split('=',""));
+    }
+
     public void testSplitSingle()
     {
         assertListsEqual(new String[] { "alpha" }, StringUtils.split("alpha"));
@@ -65,7 +85,7 @@ public class TestStringUtils extends GaderianTestCase
 
     public void testSplitEmpty()
     {
-        assertListsEqual(new String[0], StringUtils.split(null));
+        assertListsEqual(new String[0], StringUtils.split(""));
     }
 
     public void testSplitTrailingComma()
