@@ -16,7 +16,6 @@ package org.ops4j.gaderian.impl;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -52,9 +51,9 @@ public class TranslatorManager
      * {@link org.ops4j.gaderian.schema.Translator}s. Loaded from the
      * <code>gaderian.Translators</code> configuration point;
      */
-    private Map _translatorClasses = new HashMap();
+    private Map<String,Class<? extends Translator>> _translatorClasses = new HashMap<String,Class<? extends Translator>>();
 
-    private Map _translatorsCache = new HashMap();
+    private Map<String,Translator> _translatorsCache = new HashMap<String,Translator>();
 
     private boolean _translatorsLoaded;
 
@@ -85,7 +84,7 @@ public class TranslatorManager
         if (!_translatorsLoaded && !_translatorsCache.containsKey(constructor))
             loadTranslators();
 
-        Translator result = (Translator) _translatorsCache.get(constructor);
+        Translator result = _translatorsCache.get(constructor);
 
         if (result == null)
         {
@@ -109,26 +108,24 @@ public class TranslatorManager
             initializer = constructor.substring(commax + 1);
         }
 
-        Class translatorClass = findTranslatorClass(name);
+        Class<? extends Translator> translatorClass = findTranslatorClass(name);
 
         // TODO: check for null class, meaning that the translator is a service.
 
         return createTranslator(translatorClass, initializer);
     }
 
-    private Translator createTranslator(Class translatorClass, String initializer)
+    private Translator createTranslator(Class<? extends Translator> translatorClass, String initializer)
     {
         try
         {
 
             if (initializer == null)
-                return (Translator) translatorClass.newInstance();
+                return translatorClass.newInstance();
 
-            Constructor c = translatorClass.getConstructor(new Class[]
-            { String.class });
+            Constructor<? extends Translator> c = translatorClass.getConstructor(String.class);
 
-            return (Translator) c.newInstance(new Object[]
-            { initializer });
+            return c.newInstance(initializer );
         }
         catch (Exception ex)
         {
@@ -138,9 +135,9 @@ public class TranslatorManager
         }
     }
 
-    private Class findTranslatorClass(String translatorName)
+    private Class<? extends Translator> findTranslatorClass(String translatorName)
     {
-        Class result = (Class) _translatorClasses.get(translatorName);
+        Class<? extends Translator> result = _translatorClasses.get(translatorName);
 
         if (result == null)
             throw new ApplicationRuntimeException(ImplMessages.unknownTranslatorName(
@@ -156,51 +153,49 @@ public class TranslatorManager
 
         _translatorsLoaded = true;
 
-        List contributions = _registry.getConfiguration(TRANSLATORS_CONFIGURATION_ID, null);
+        List<TranslatorContribution> contributions = _registry.getConfiguration(TRANSLATORS_CONFIGURATION_ID, null);
 
-        Map locations = new HashMap();
+        Map<String, Location> locations = new HashMap<String, Location>();
         locations.put("class", null);
 
-        Iterator i = contributions.iterator();
-        while (i.hasNext())
+      for (final TranslatorContribution contribution : contributions)
+      {
+
+        String name = contribution.getName();
+        Location oldLocation = locations.get(name);
+
+        if (oldLocation != null)
         {
-            TranslatorContribution c = (TranslatorContribution) i.next();
+          _errorHandler.error(LOG, ImplMessages.duplicateTranslatorName(name, oldLocation), contribution
+              .getLocation(), null);
 
-            String name = c.getName();
-            Location oldLocation = (Location) locations.get(name);
-
-            if (oldLocation != null)
-            {
-                _errorHandler.error(LOG, ImplMessages.duplicateTranslatorName(name, oldLocation), c
-                        .getLocation(), null);
-
-                continue;
-            }
-
-            locations.put(name, c.getLocation());
-
-            Translator t = c.getTranslator();
-
-            if (t != null)
-            {
-                _translatorsCache.put(name, t);
-                continue;
-            }
-
-            Class tClass = c.getTranslatorClass();
-
-            if (tClass == null)
-            {
-                _errorHandler.error(
-                        LOG,
-                        ImplMessages.incompleteTranslator(c),
-                        c.getLocation(),
-                        null);
-                continue;
-            }
-
-            _translatorClasses.put(name, tClass);
+          continue;
         }
+
+        locations.put(name, contribution.getLocation());
+
+        Translator t = contribution.getTranslator();
+
+        if (t != null)
+        {
+          _translatorsCache.put(name, t);
+          continue;
+        }
+
+        Class<? extends Translator> tClass = contribution.getTranslatorClass();
+
+        if (tClass == null)
+        {
+          _errorHandler.error(
+              LOG,
+              ImplMessages.incompleteTranslator(contribution),
+              contribution.getLocation(),
+              null);
+          continue;
+        }
+
+        _translatorClasses.put(name, tClass);
+      }
 
     }
 

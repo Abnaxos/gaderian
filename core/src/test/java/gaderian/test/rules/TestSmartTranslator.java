@@ -38,9 +38,9 @@ public class TestSmartTranslator extends GaderianTestCase
     {
         Translator t = new SmartTranslator();
 
-        Object result = t.translate(null, int.class, "-37", null);
+        int result = t.translate(null, int.class, "-37", null);
 
-        assertEquals(new Integer(-37), result);
+        assertEquals(-37, result);
     }
 
     public void testNullInput()
@@ -61,9 +61,9 @@ public class TestSmartTranslator extends GaderianTestCase
     {
         Translator t = new SmartTranslator("default=100");
 
-        Object result = t.translate(null, int.class, null, null);
+        int result = t.translate(null, int.class, null, null);
 
-        assertEquals(new Integer(100), result);
+        assertEquals(100, result);
     }
 
     /**
@@ -76,6 +76,18 @@ public class TestSmartTranslator extends GaderianTestCase
         Object result = t.translate(null, Double.class, "3.14", null);
 
         assertEquals(new Double("3.14"), result);
+    }
+
+   /**
+     * Test a wrapper type (Float).
+     */
+    public void testFloat()
+    {
+        Translator t = new SmartTranslator();
+
+        Float result = t.translate(null, Float.class, "3.14", null);
+
+        assertEquals(new Float("3.14"), result);
     }
 
     /**
@@ -143,4 +155,59 @@ public class TestSmartTranslator extends GaderianTestCase
             assertSame(l, ex.getLocation());
         }
     }
+
+
+    public void testByte()
+    {
+        Translator t = new SmartTranslator();
+
+        Byte result = t.translate(null,  Byte.class, "100", null);
+
+        assertEquals(new Byte((byte) 100), result);
+    }
+
+  public void testShort()
+  {
+      Translator t = new SmartTranslator();
+
+      Short result = t.translate(null, Short.class, "-37", null);
+
+      assertEquals(new Short((short) -37), result);
+  }
+
+  public void testInteger()
+  {
+      Translator t = new SmartTranslator();
+
+      Integer result = t.translate(null, Integer.class, "-37", null);
+
+      assertEquals(new Integer(-37), result);
+  }
+
+    public void testLong()
+    {
+        Translator t = new SmartTranslator();
+
+        Long result = t.translate(null, Long.class, "-37", null);
+
+        assertEquals(new Long(-37), result);
+    }
+
+   public void testPrimitiveLong()
+    {
+        Translator t = new SmartTranslator();
+
+        long result = t.translate(null, long.class, "-37", null);
+
+        assertEquals(-37L, result);
+    }
+  public void testBoolean()
+  {
+      Translator t = new SmartTranslator();
+
+      Boolean result = t.translate(null, Boolean.class, "true", null);
+
+      assertEquals(Boolean.TRUE, result);
+  }
+
 }

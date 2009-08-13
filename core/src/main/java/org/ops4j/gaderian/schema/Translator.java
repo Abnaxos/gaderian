@@ -55,10 +55,11 @@ public interface Translator
      * @param inputValue the value to be translated, either an attribute value or the content of the element
      * @param location the location of the inputValue; used to set the location of created objects,
      * or when reporting errors
+     * @return The translated type
      */
-    public Object translate(
+    public <T> T translate(
         Module contributingModule,
-        Class propertyType,
+        Class<T> propertyType,
         String inputValue,
         Location location);
 }

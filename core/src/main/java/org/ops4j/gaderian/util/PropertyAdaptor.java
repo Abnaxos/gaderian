@@ -119,7 +119,7 @@ public class PropertyAdaptor
 
         if (e == null)
         {
-            Object convertedValue = instantiateViaStringConstructor(target, value);
+            Object convertedValue = instantiateViaStringConstructor(value);
 
             if (convertedValue != null)
                 return convertedValue;
@@ -151,15 +151,13 @@ public class PropertyAdaptor
      * String argument.
      */
 
-    private Object instantiateViaStringConstructor(Object target, String value)
+    private Object instantiateViaStringConstructor(String value)
     {
         try
         {
-            Constructor c = _propertyType.getConstructor(new Class[]
-            { String.class });
+            Constructor c = _propertyType.getConstructor(String.class);
 
-            return c.newInstance(new Object[]
-            { value });
+            return c.newInstance(value);
         }
         catch (Exception ex)
         {

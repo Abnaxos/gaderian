@@ -17,6 +17,7 @@ package org.ops4j.gaderian.schema.rules;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import java.util.Map;
+import java.lang.reflect.Constructor;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
@@ -50,7 +51,7 @@ public class SmartTranslator implements Translator
         _default = (String) m.get("default");
     }
 
-    public Object translate(Module contributingModule, Class propertyType, String inputValue,
+    public <T> T translate(Module contributingModule, Class<T> propertyType, String inputValue,
             Location location)
     {
         // HIVEMIND-10: Inside JavaWebStart you (strangely) can't rely on
@@ -65,7 +66,7 @@ public class SmartTranslator implements Translator
         }
 
         if (propertyType.equals(String.class) || propertyType.equals(Object.class))
-            return inputValue;
+            return (T) inputValue;
 
         // TODO: This duplicates logic inside PropertyAdaptor.
 
@@ -73,13 +74,20 @@ public class SmartTranslator implements Translator
         {
             PropertyEditor e = PropertyEditorManager.findEditor(propertyType);
 
-            if (e == null)
-                throw new ApplicationRuntimeException(RulesMessages.noPropertyEditor(propertyType),
-                        location, null);
+          if (e == null)
+          {
+              Object convertedValue = instantiateViaStringConstructor(propertyType, inputValue);
+
+              if (convertedValue != null)
+                  return (T) convertedValue;
+
+              throw new ApplicationRuntimeException(RulesMessages.noPropertyEditor(
+                      propertyType));
+          }
 
             e.setAsText(inputValue);
 
-            return e.getValue();
+            return (T) e.getValue();
         }
         catch (Exception ex)
         {
@@ -88,6 +96,25 @@ public class SmartTranslator implements Translator
                     propertyType,
                     ex), location, ex);
 
+        }
+    }
+
+    /**
+     * Checks to see if this adaptor's property type has a public constructor that takes a single
+     * String argument.
+     */
+
+    private <T> T instantiateViaStringConstructor(Class<T> propertyType, String value)
+    {
+        try
+        {
+            Constructor<T> c = propertyType.getConstructor(String.class);
+
+            return c.newInstance(value);
+        }
+        catch (Exception ex)
+        {
+            return null;
         }
     }
 

@@ -29,7 +29,7 @@ import org.ops4j.gaderian.schema.Translator;
 public class TranslatorContribution extends BaseLocatable
 {
     private String _name;
-    private Class _translatorClass;
+    private Class<? extends Translator> _translatorClass;
     private Translator _translator;
 
     public String getName()
@@ -37,7 +37,7 @@ public class TranslatorContribution extends BaseLocatable
         return _name;
     }
 
-    public Class getTranslatorClass()
+    public Class<? extends Translator> getTranslatorClass()
     {
         return _translatorClass;
     }
@@ -47,7 +47,7 @@ public class TranslatorContribution extends BaseLocatable
         _name = name;
     }
 
-    public void setTranslatorClass(Class translatorClass)
+    public void setTranslatorClass(Class<? extends Translator> translatorClass)
     {
         _translatorClass = translatorClass;
     }
