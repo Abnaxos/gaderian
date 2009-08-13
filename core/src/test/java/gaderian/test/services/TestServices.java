@@ -31,6 +31,24 @@ import org.ops4j.gaderian.service.ThreadLocalStorage;
  */
 public class TestServices extends FrameworkTestCase
 {
+    public void testServiceWithCovariantReturnType() throws Exception
+    {
+      // Added for GAD-7
+
+        Registry r = buildFrameworkRegistry("SimpleCovariantModule.xml");
+
+        assertNotNull(r);
+
+        SimpleCovariantService s =
+            (SimpleCovariantService) r.getService("gaderian.test.services.SimpleCovariantService", SimpleCovariantService.class);
+
+        assertNotNull(s);
+
+      assertEquals(11L, s.add(4, 7));
+      assertEquals(1L, s.voidCall());
+      assertEquals(2L, s.add(1,1));
+    }
+
 
     public void testSimple() throws Exception
     {
