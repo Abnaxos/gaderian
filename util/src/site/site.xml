@@ -19,6 +19,7 @@
             <item name="Chain Factory" href="ChainFactory.html"/>
             <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
             <item name="EJB Proxy Factory" href="EJBProxyFactory.html"/>
+            <item name="Java Proxy Factory" href="JDKProxyFactory.html"/>
             <item name="Method Interceptor Factory" href="MethodInterceptorFactory.html"/>
             <item name="Name Lookup" href="NameLookup.html"/>
             <item name="Pipeline Factory" href="PipelineFactory.html"/>

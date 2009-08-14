@@ -462,4 +462,23 @@
       </element>
     </parameters-schema>
   </service-point>
+
+  <service-point id="JavaProxyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
+        Core service implementation factory that constructs proxies (plain Java proxies) for a specific service. Factory
+        parameters are used to specify the java.lang.reflect.InvocationHandler (defined as a Gaderian service) that
+        should be used for for each service invocation.
+        <parameters-schema>
+            <element name="impl">
+                <attribute name="service" required="true" translator="object"/>
+                <rules>
+                    <push-attribute attribute="service"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </parameters-schema>
+        <invoke-factory>
+            <construct class="org.ops4j.gaderian.utilities.impl.JavaProxyFactory"/>
+        </invoke-factory>
+    </service-point>
+
 </module>
