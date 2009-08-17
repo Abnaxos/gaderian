@@ -27,7 +27,7 @@ import org.ops4j.gaderian.util.ConstructorUtils;
  * Implementation of {@link org.ops4j.gaderian.service.impl.BuilderFacet} that stores a value. This
  * corresponds to the &lt;set&gt; type elements and all constructor parameter elements. The value is
  * not resolved until needed using a specified {@link Translator}.
- * 
+ *
  * @author Howard Lewis Ship
  */
 public class BuilderPropertyFacet extends BuilderFacet
@@ -69,12 +69,16 @@ public class BuilderPropertyFacet extends BuilderFacet
         Object facetValue = getFacetValue(assemblyParameters, targetType);
 
         if (facetValue == null)
+        {
             return !targetType.isPrimitive();
+        }
 
         return ConstructorUtils.isCompatible(targetType, facetValue.getClass());
     }
 
-    /** @since 1.1 */
+    /**
+     * @since 1.1
+     */
     public void setTranslator(String translatorName)
     {
         _translatorName = translatorName;

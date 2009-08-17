@@ -132,7 +132,7 @@ public class ConstructorUtils
         return false;
     }
 
-    public static Object invoke(Constructor c, Object[] parameters)
+    public static Object invoke(Constructor c, Object... parameters)
     {
         try
         {
@@ -150,9 +150,9 @@ public class ConstructorUtils
         }
     }
 
-    public static List getConstructorsOfLength(final Class clazz, final int length)
+    public static List<Constructor> getConstructorsOfLength(final Class clazz, final int length)
     {
-        List fixedLengthConstructors = new ArrayList(1);
+        List<Constructor> fixedLengthConstructors = new ArrayList<Constructor>(1);
     
         Constructor[] constructors = clazz.getDeclaredConstructors();
     

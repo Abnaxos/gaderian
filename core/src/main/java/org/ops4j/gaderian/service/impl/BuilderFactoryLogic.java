@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -32,12 +31,14 @@ import org.ops4j.gaderian.util.ConstructorUtils;
 /**
  * Created by {@link org.ops4j.gaderian.service.impl.BuilderFactory} for each service to be
  * created; encapsulates all the direct and indirect parameters used to construct a service.
- * 
+ *
  * @author Howard Lewis Ship
  */
 public class BuilderFactoryLogic
 {
-    /** @since 1.1 */
+    /**
+     * @since 1.1
+     */
     private ServiceImplementationFactoryParameters _factoryParameters;
 
     private String _serviceId;
@@ -46,8 +47,7 @@ public class BuilderFactoryLogic
 
     private Module _contributingModule;
 
-    public BuilderFactoryLogic(ServiceImplementationFactoryParameters factoryParameters,
-            BuilderParameter parameter)
+    public BuilderFactoryLogic(ServiceImplementationFactoryParameters factoryParameters, BuilderParameter parameter)
     {
         _factoryParameters = factoryParameters;
         _parameter = parameter;
@@ -80,8 +80,7 @@ public class BuilderFactoryLogic
 
         if (serviceClass.isInterface() || ((serviceClass.getModifiers() & Modifier.ABSTRACT) != 0))
         {
-            throw new ApplicationRuntimeException(ServiceMessages.absractClass(serviceClass.getName()),
-                    _parameter.getLocation(), null);
+            throw new ApplicationRuntimeException(ServiceMessages.absractClass(serviceClass.getName()), _parameter.getLocation(), null);
         }
 
         List parameters = _parameter.getParameters();
@@ -91,20 +90,22 @@ public class BuilderFactoryLogic
             return instantiateConstructorAutowiredInstance(serviceClass);
         }
 
-        return instantiateExplicitConstructorInstance(serviceClass, parameters);
+        final Object coreServiceInstance = instantiateExplicitConstructorInstance(serviceClass, parameters);
+
+        return coreServiceInstance;
     }
 
     private Object instantiateExplicitConstructorInstance(Class serviceClass, List builderParameters)
     {
-        int numberOfParams = builderParameters.size();
-        List constructorCandidates = ConstructorUtils.getConstructorsOfLength(
+        final int numberOfParams = builderParameters.size();
+
+        final List<Constructor> constructorCandidates = ConstructorUtils.getConstructorsOfLength(
                 serviceClass,
                 numberOfParams);
 
-        outer: for (Iterator candidates = constructorCandidates.iterator(); candidates.hasNext();)
+        outer:
+        for (final Constructor candidate : constructorCandidates)
         {
-            Constructor candidate = (Constructor) candidates.next();
-
             Class[] parameterTypes = candidate.getParameterTypes();
 
             Object[] parameters = new Object[parameterTypes.length];
@@ -114,7 +115,9 @@ public class BuilderFactoryLogic
                 BuilderFacet facet = (BuilderFacet) builderParameters.get(i);
 
                 if (!facet.isAssignableToType(_factoryParameters, parameterTypes[i]))
+                {
                     continue outer;
+                }
 
                 parameters[i] = facet.getFacetValue(_factoryParameters, parameterTypes[i]);
             }
@@ -122,35 +125,36 @@ public class BuilderFactoryLogic
             return ConstructorUtils.invoke(candidate, parameters);
         }
 
-        throw new ApplicationRuntimeException(ServiceMessages.unableToFindAutowireConstructor(),
-                _parameter.getLocation(), null);
+        throw new ApplicationRuntimeException(ServiceMessages.unableToFindAutowireConstructor(), _parameter.getLocation(), null);
     }
 
     private Object instantiateConstructorAutowiredInstance(Class serviceClass)
     {
-        List serviceConstructorCandidates = getOrderedServiceConstructors(serviceClass);
+        final List<Constructor> serviceConstructorCandidates = getOrderedServiceConstructors(serviceClass);
 
-        outer: for (Iterator candidates = serviceConstructorCandidates.iterator(); candidates
-                .hasNext();)
+        outer:
+        for (final Constructor candidate : serviceConstructorCandidates)
         {
-            Constructor candidate = (Constructor) candidates.next();
-
             Class[] parameterTypes = candidate.getParameterTypes();
 
             Object[] parameters = new Object[parameterTypes.length];
 
             for (int i = 0; i < parameters.length; i++)
             {
-                BuilderFacet facet = _parameter.getFacetForType(
-                        _factoryParameters,
-                        parameterTypes[i]);
+                BuilderFacet facet = _parameter.getFacetForType(_factoryParameters, parameterTypes[i]);
 
                 if (facet != null && facet.canAutowireConstructorParameter())
+                {
                     parameters[i] = facet.getFacetValue(_factoryParameters, parameterTypes[i]);
+                }
                 else if (_contributingModule.containsService(parameterTypes[i]))
+                {
                     parameters[i] = _contributingModule.getService(parameterTypes[i]);
+                }
                 else
+                {
                     continue outer;
+                }
             }
 
             return ConstructorUtils.invoke(candidate, parameters);
@@ -160,41 +164,44 @@ public class BuilderFactoryLogic
                 _parameter.getLocation(), null);
     }
 
-    private List getOrderedServiceConstructors(Class serviceClass)
+    private List<Constructor> getOrderedServiceConstructors(Class serviceClass)
     {
-        List orderedInterfaceConstructors = new ArrayList();
+        List<Constructor> orderedInterfaceConstructors = new ArrayList<Constructor>();
 
         Constructor[] constructors = serviceClass.getDeclaredConstructors();
 
-        outer: for (int i = 0; i < constructors.length; i++)
+        outer:
+        for (Constructor constructor : constructors)
         {
-            if (!Modifier.isPublic(constructors[i].getModifiers()))
+            if (!Modifier.isPublic(constructor.getModifiers()))
+            {
                 continue;
+            }
 
-            Class[] parameterTypes = constructors[i].getParameterTypes();
+            Class[] parameterTypes = constructor.getParameterTypes();
 
             if (parameterTypes.length > 0)
             {
-                Set seenTypes = new HashSet();
+                Set<Class> seenTypes = new HashSet<Class>();
 
-                for (int j = 0; j < parameterTypes.length; j++)
+                for (Class parameterType : parameterTypes)
                 {
-                    if (!parameterTypes[j].isInterface() || seenTypes.contains(parameterTypes[j]))
+                    if (!parameterType.isInterface() || seenTypes.contains(parameterType))
+                    {
                         continue outer;
-
-                    seenTypes.add(parameterTypes[j]);
+                    }
+                    seenTypes.add(parameterType);
                 }
             }
 
-            orderedInterfaceConstructors.add(constructors[i]);
+            orderedInterfaceConstructors.add(constructor);
         }
 
-        Collections.sort(orderedInterfaceConstructors, new Comparator()
+        Collections.sort(orderedInterfaceConstructors, new Comparator<Constructor>()
         {
-            public int compare(Object o1, Object o2)
+            public int compare(Constructor c1, Constructor c2)
             {
-                return ((Constructor) o2).getParameterTypes().length
-                        - ((Constructor) o1).getParameterTypes().length;
+                return c2.getParameterTypes().length - c1.getParameterTypes().length;
             }
         });
 
