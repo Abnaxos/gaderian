@@ -6,8 +6,9 @@ package org.ops4j.gaderian.annotations.lifecycle;
 public enum LifecycleEvent
 {
     INITIALIZE,
-    THREAD_START,
-    THREAD_COMPLETED,
+    ACTIVATE,
+    INVOCATION_COMPLETED,
+    PASSIVATE,
     SHUTDOWN_SIGNALLED,
     SHUTDOWN
 }

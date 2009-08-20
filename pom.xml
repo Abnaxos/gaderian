@@ -33,20 +33,6 @@
 
     <url>http://gaderian.ops4j.org/LATEST</url>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>OPS4J</id>
-            <url>http://repository.ops4j.org/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <repositories>
-        <repository>
-            <id>OPS4J</id>
-            <url>http://repository.ops4j.org/maven2/</url>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
