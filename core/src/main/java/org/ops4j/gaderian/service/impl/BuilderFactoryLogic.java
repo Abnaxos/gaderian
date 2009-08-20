@@ -83,6 +83,9 @@ public class BuilderFactoryLogic
             throw new ApplicationRuntimeException(ServiceMessages.absractClass(serviceClass.getName()), _parameter.getLocation(), null);
         }
 
+        // Allow the decorator to decorate for lifecycle calls etc
+        serviceClass = ClassDecorator.decorate(serviceClass, _parameter);
+
         List parameters = _parameter.getParameters();
 
         if (_parameter.getAutowireServices() && parameters.isEmpty())
@@ -91,6 +94,9 @@ public class BuilderFactoryLogic
         }
 
         final Object coreServiceInstance = instantiateExplicitConstructorInstance(serviceClass, parameters);
+
+        // Validate the constructed instance - annotations and the like
+        ServiceInstanceUtils.validate(coreServiceInstance);
 
         return coreServiceInstance;
     }
