@@ -11,7 +11,7 @@ import java.lang.annotation.ElementType;
  */
 @Documented
 @Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = ElementType.METHOD)
+@Target(value = {ElementType.METHOD, ElementType.FIELD})
 public @interface Symbol
 {
     String value();

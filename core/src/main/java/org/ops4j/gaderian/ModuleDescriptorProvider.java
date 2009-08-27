@@ -16,6 +16,8 @@ package org.ops4j.gaderian;
 
 import java.util.List;
 
+import org.ops4j.gaderian.parse.ModuleDescriptor;
+
 /**
  * ModuleDescriptorProviders are used by the {@link org.ops4j.gaderian.impl.RegistryBuilder} (see
  * {@link org.ops4j.gaderian.impl.RegistryBuilder#addModuleDescriptorProvider(ModuleDescriptorProvider)})
@@ -35,5 +37,5 @@ public interface ModuleDescriptorProvider
      * Returns a List of {@link org.ops4j.gaderian.parse.ModuleDescriptor module descriptors}. Any
      * referenced submodules must also be included in this List.
      */
-    public List getModuleDescriptors(ErrorHandler handler);
+    public List<ModuleDescriptor> getModuleDescriptors(ErrorHandler handler);
 }

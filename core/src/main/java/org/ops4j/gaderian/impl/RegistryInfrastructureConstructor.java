@@ -16,7 +16,6 @@ package org.ops4j.gaderian.impl;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -80,17 +79,17 @@ public class RegistryInfrastructureConstructor
      * Map of {@link ModuleDescriptor} keyed on module id.
      */
 
-    private Map _moduleDescriptors = new HashMap();
+    private Map<String, ModuleDescriptor> _moduleDescriptors = new HashMap<String, ModuleDescriptor>();
 
     /**
      * Map of {@link ModuleImpl} keyed on module id.
      */
-    private Map _modules = new HashMap();
+    private Map<String, ModuleImpl> _modules = new HashMap<String, ModuleImpl>();
 
     /**
      * Map of {@link Schema} keyed on fully qualified module id.
      */
-    private Map _schemas = new HashMap();
+    private Map<String, Schema> _schemas = new HashMap<String, Schema>();
 
     private ElementModel _assemblyElementModel;
 
@@ -98,13 +97,13 @@ public class RegistryInfrastructureConstructor
      * Map of {@link ServicePointImpl} keyed on fully qualified id.
      */
 
-    private Map _servicePoints = new HashMap();
+    private Map<String, ServicePointImpl> _servicePoints = new HashMap<String, ServicePointImpl>();
 
     /**
      * Map of {@link ConfigurationPointImpl} keyed on fully qualified id.
      */
 
-    private Map _configurationPoints = new HashMap();
+    private Map<String, ConfigurationPointImpl> _configurationPoints = new HashMap<String, ConfigurationPointImpl>();
 
     /**
      * Shutdown coordinator shared by all objects.
@@ -139,7 +138,7 @@ public class RegistryInfrastructureConstructor
 
         private void checkDependency(DependencyDescriptor dependency)
         {
-            ModuleDescriptor requiredModule = (ModuleDescriptor) _moduleDescriptors.get(dependency
+            ModuleDescriptor requiredModule = _moduleDescriptors.get(dependency
                     .getModuleId());
 
             if (requiredModule == null)
@@ -152,8 +151,7 @@ public class RegistryInfrastructureConstructor
                 return;
             }
 
-            if (dependency.getVersion() != null
-                    && !dependency.getVersion().equals(requiredModule.getVersion()))
+            if (dependency.getVersion() != null && !dependency.getVersion().equals(requiredModule.getVersion()))
             {
                 _errorHandler.error(
                         _log,
@@ -200,7 +198,7 @@ public class RegistryInfrastructureConstructor
 
         if (_modules.containsKey(id))
         {
-            Module existing = (Module) _modules.get(id);
+            Module existing = _modules.get(id);
 
             _errorHandler.error(_log, ImplMessages.duplicateModuleId(id, existing.getLocation(), md
                     .getLocation()), null, null);
@@ -219,13 +217,11 @@ public class RegistryInfrastructureConstructor
         if (size(md.getDependencies()) > 0)
             _assembly.addPostProcessor(new ModuleDependencyChecker(md));
 
-        for (Iterator schemas = md.getSchemas().iterator(); schemas.hasNext();)
+        for ( final SchemaImpl schema : md.getSchemas() )
         {
-            SchemaImpl schema = (SchemaImpl) schemas.next();
+            schema.setModule( module );
 
-            schema.setModule(module);
-
-            _schemas.put(IdUtils.qualify(id, schema.getId()), schema);
+            _schemas.put( IdUtils.qualify( id, schema.getId() ), schema );
         }
 
         _modules.put(id, module);
@@ -235,17 +231,15 @@ public class RegistryInfrastructureConstructor
 
     private void addServiceAndConfigurationPoints(RegistryInfrastructureImpl infrastructure)
     {
-        for (Iterator i = _moduleDescriptors.values().iterator(); i.hasNext();)
+        for ( final ModuleDescriptor md : _moduleDescriptors.values() )
         {
-            ModuleDescriptor md = (ModuleDescriptor) i.next();
-
             String id = md.getModuleId();
 
-            ModuleImpl module = (ModuleImpl) _modules.get(id);
+            ModuleImpl module = _modules.get( id );
 
-            addServicePoints(infrastructure, module, md);
+            addServicePoints( infrastructure, module, md );
 
-            addConfigurationPoints(infrastructure, module, md);
+            addConfigurationPoints( infrastructure, module, md );
         }
     }
 
@@ -262,7 +256,7 @@ public class RegistryInfrastructureConstructor
 
             String pointId = moduleId + "." + sd.getId();
 
-            ServicePoint existingPoint = (ServicePoint) _servicePoints.get(pointId);
+            ServicePoint existingPoint = _servicePoints.get(pointId);
 
             if (existingPoint != null)
             {
@@ -273,7 +267,9 @@ public class RegistryInfrastructureConstructor
             }
 
             if (_log.isDebugEnabled())
+            {
                 _log.debug("Creating service point " + pointId);
+            }
 
             // Choose which class to instantiate based on
             // whether the service is create-on-first-reference
@@ -319,8 +315,7 @@ public class RegistryInfrastructureConstructor
 
             String pointId = moduleId + "." + cpd.getId();
 
-            ConfigurationPoint existingPoint = (ConfigurationPoint) _configurationPoints
-                    .get(pointId);
+            ConfigurationPoint existingPoint = _configurationPoints.get(pointId);
 
             if (existingPoint != null)
             {
@@ -331,7 +326,9 @@ public class RegistryInfrastructureConstructor
             }
 
             if (_log.isDebugEnabled())
+            {
                 _log.debug("Creating configuration point " + pointId);
+            }
 
             ConfigurationPointImpl point = new ConfigurationPointImpl();
 
@@ -381,36 +378,34 @@ public class RegistryInfrastructureConstructor
     {
         // Add each module to the registry.
 
-        Iterator i = _modules.values().iterator();
-        while (i.hasNext())
+        for ( final ModuleImpl module : _modules.values() )
         {
-            ModuleImpl module = (ModuleImpl) i.next();
-
-            if (_log.isDebugEnabled())
-                _log.debug("Adding module " + module.getModuleId() + " to registry");
-
-            module.setRegistry(registry);
+            if ( _log.isDebugEnabled() )
+            {
+                _log.debug( "Adding module " + module.getModuleId() + " to registry" );
+            }
+            module.setRegistry( registry );
         }
     }
 
     private void addImplementationsAndContributions()
     {
-        for (Iterator i = _moduleDescriptors.values().iterator(); i.hasNext();)
+        for ( final ModuleDescriptor md : _moduleDescriptors.values() )
         {
-            ModuleDescriptor md = (ModuleDescriptor) i.next();
+            if ( _log.isDebugEnabled() )
+            {
+                _log.debug( "Adding contributions from module " + md.getModuleId() );
+            }
 
-            if (_log.isDebugEnabled())
-                _log.debug("Adding contributions from module " + md.getModuleId());
-
-            addImplementations(md);
-            addContributions(md);
+            addImplementations( md );
+            addContributions( md );
         }
     }
 
     private void addImplementations(ModuleDescriptor md)
     {
         String moduleId = md.getModuleId();
-        Module sourceModule = (Module) _modules.get(moduleId);
+        Module sourceModule = _modules.get(moduleId);
 
         List implementations = md.getImplementations();
         int count = size(implementations);
@@ -434,7 +429,7 @@ public class RegistryInfrastructureConstructor
     private void addContributions(ModuleDescriptor md)
     {
         String moduleId = md.getModuleId();
-        Module sourceModule = (Module) _modules.get(moduleId);
+        Module sourceModule = _modules.get(moduleId);
 
         List contributions = md.getContributions();
         int count = size(contributions);
@@ -449,8 +444,7 @@ public class RegistryInfrastructureConstructor
             String pointId = cd.getConfigurationId();
             String qualifiedId = IdUtils.qualify(moduleId, pointId);
 
-            ConfigurationPointImpl point = (ConfigurationPointImpl) _configurationPoints
-                    .get(qualifiedId);
+            ConfigurationPointImpl point = _configurationPoints.get(qualifiedId);
 
             if (point == null)
             {
@@ -482,7 +476,9 @@ public class RegistryInfrastructureConstructor
         final SchemaImpl result = findSchema(schema, module, schemaId, location);
 
         if (result != null && !result.getElementModel().contains(getAssemblyElementModel()))
+        {
             result.addElementModel(getAssemblyElementModel());
+        }
 
         return result;
     }
@@ -519,8 +515,9 @@ public class RegistryInfrastructureConstructor
         SchemaImpl schema = (SchemaImpl) _schemas.get(schemaId);
 
         if (schema == null)
-            _errorHandler
-                    .error(_log, ImplMessages.unableToResolveSchema(schemaId), reference, null);
+        {
+            _errorHandler.error(_log, ImplMessages.unableToResolveSchema(schemaId), reference, null);
+        }
         else if (!schema.visibleToModule(referencingModule))
         {
             _errorHandler.error(
@@ -538,7 +535,7 @@ public class RegistryInfrastructureConstructor
     {
         if (_assemblyElementModel == null)
         {
-            final Schema assemblySchema = (Schema) _schemas.get("gaderian.Assembly");
+            final Schema assemblySchema = _schemas.get("gaderian.Assembly");
 
             if (assemblySchema != null)
                 _assemblyElementModel = (ElementModel) assemblySchema.getElementModel().get(0);
@@ -603,9 +600,11 @@ public class RegistryInfrastructureConstructor
             InstanceBuilder builder, boolean isDefault)
     {
         if (_log.isDebugEnabled())
+        {
             _log.debug("Adding " + builder + " to service extension point " + pointId);
+        }
 
-        ServicePointImpl point = (ServicePointImpl) _servicePoints.get(pointId);
+        ServicePointImpl point = _servicePoints.get(pointId);
 
         if (point == null)
         {
@@ -645,9 +644,11 @@ public class RegistryInfrastructureConstructor
     private void addInterceptor(Module sourceModule, String pointId, InterceptorDescriptor id)
     {
         if (_log.isDebugEnabled())
+        {
             _log.debug("Adding " + id + " to service extension point " + pointId);
+        }
 
-        ServicePointImpl point = (ServicePointImpl) _servicePoints.get(pointId);
+        ServicePointImpl point = _servicePoints.get(pointId);
 
         String sourceModuleId = sourceModule.getModuleId();
 
@@ -688,15 +689,13 @@ public class RegistryInfrastructureConstructor
      */
     private void checkForMissingServices()
     {
-        Iterator i = _servicePoints.values().iterator();
-        while (i.hasNext())
+        for ( final ServicePointImpl servicePoint : _servicePoints.values() )
         {
-            ServicePointImpl point = (ServicePointImpl) i.next();
-
-            if (point.getServiceConstructor() != null)
+            if ( servicePoint.getServiceConstructor() != null )
+            {
                 continue;
-
-            _errorHandler.error(_log, ImplMessages.missingService(point), null, null);
+            }
+            _errorHandler.error( _log, ImplMessages.missingService( servicePoint ), null, null );
         }
     }
 
@@ -706,23 +705,22 @@ public class RegistryInfrastructureConstructor
 
     private void checkContributionCounts()
     {
-        Iterator i = _configurationPoints.values().iterator();
 
-        while (i.hasNext())
+        for ( final ConfigurationPointImpl configurationPoint : _configurationPoints.values() )
         {
-            ConfigurationPointImpl point = (ConfigurationPointImpl) i.next();
+            Occurances expected = configurationPoint.getExpectedCount();
 
-            Occurances expected = point.getExpectedCount();
+            int actual = configurationPoint.getContributionCount();
 
-            int actual = point.getContributionCount();
-
-            if (expected.inRange(actual))
+            if ( expected.inRange( actual ) )
+            {
                 continue;
+            }
 
-            _errorHandler.error(_log, ImplMessages.wrongNumberOfContributions(
-                    point,
+            _errorHandler.error( _log, ImplMessages.wrongNumberOfContributions(
+                    configurationPoint,
                     actual,
-                    expected), point.getLocation(), null);
+                    expected ), configurationPoint.getLocation(), null );
         }
 
     }
@@ -742,10 +740,14 @@ public class RegistryInfrastructureConstructor
     private boolean includeContribution(String expression, Module module, Location location)
     {
         if (expression == null)
+        {
             return true;
+        }
 
         if (_conditionalExpressionParser == null)
+        {
             _conditionalExpressionParser = new Parser();
+        }
 
         try
         {

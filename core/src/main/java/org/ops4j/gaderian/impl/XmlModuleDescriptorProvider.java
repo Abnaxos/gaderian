@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -56,12 +55,12 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
      * Set of all specified resources processed by this ModuleDescriptorProvider. Descriptors of
      * sub-modules are not included.
      */
-    private List _resources = new ArrayList();
+    private List<Resource> _resources = new ArrayList<Resource>();
 
     /**
      * List of parsed {@link ModuleDescriptor} instances. Also includes referenced sub-modules.
      */
-    private List _moduleDescriptors = new ArrayList();
+    private List<ModuleDescriptor> _moduleDescriptors = new ArrayList<ModuleDescriptor>();
 
     private ClassResolver _resolver;
 
@@ -110,21 +109,21 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
      * Constructs an XmlModuleDescriptorProvider loading all ModuleDescriptor identified by the
      * given List of {@link org.ops4j.gaderian.Resource} objects.
      */
-    public XmlModuleDescriptorProvider(ClassResolver resolver, List resources)
+    public XmlModuleDescriptorProvider(ClassResolver resolver, List<Resource> resources)
     {
         _resolver = resolver;
         _resources.addAll(resources);
     }
 
-    private List getDescriptorResources(String resourcePath, ClassResolver resolver)
+    private List<Resource> getDescriptorResources(String resourcePath, ClassResolver resolver)
     {
         if (LOG.isDebugEnabled())
             LOG.debug("Processing modules visible to " + resolver);
 
-        List descriptors = new ArrayList();
+        List<Resource> descriptors = new ArrayList<Resource>();
 
         ClassLoader loader = resolver.getClassLoader();
-        Enumeration e = null;
+        Enumeration<URL> e = null;
 
         try
         {
@@ -138,7 +137,7 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
 
         while (e.hasMoreElements())
         {
-            URL descriptorURL = (URL) e.nextElement();
+            URL descriptorURL = e.nextElement();
 
             descriptors.add(new URLResource(descriptorURL));
         }
@@ -146,17 +145,15 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
         return descriptors;
     }
 
-    public List getModuleDescriptors(ErrorHandler handler)
+    public List<ModuleDescriptor> getModuleDescriptors(ErrorHandler handler)
     {
         _errorHandler = handler;
 
         _processor = getResourceProcessor(_resolver, handler);
 
-        for (Iterator i = _resources.iterator(); i.hasNext();)
+        for ( final Resource resource : _resources )
         {
-            Resource resource = (Resource) i.next();
-
-            processResource(resource);
+            processResource( resource );
         }
 
         _processor = null;
@@ -186,31 +183,31 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
 
     private void processSubModules(ModuleDescriptor moduleDescriptor)
     {
-        List subModules = moduleDescriptor.getSubModules();
+        List<SubModuleDescriptor> subModules = moduleDescriptor.getSubModules();
 
         if (subModules == null)
             return;
 
-        for (Iterator i = subModules.iterator(); i.hasNext();)
+        for ( final SubModuleDescriptor subModule : subModules )
         {
-            SubModuleDescriptor smd = (SubModuleDescriptor) i.next();
+            Resource descriptorResource = subModule.getDescriptor();
 
-            Resource descriptorResource = smd.getDescriptor();
-
-            if (descriptorResource.getResourceURL() == null)
+            if ( descriptorResource.getResourceURL() == null )
             {
                 _errorHandler.error(
                         LOG,
-                        ImplMessages.subModuleDoesNotExist(descriptorResource),
-                        smd.getLocation(),
-                        null);
+                        ImplMessages.subModuleDoesNotExist( descriptorResource ),
+                        subModule.getLocation(),
+                        null );
                 continue;
             }
 
             // Only include the sub-module if the expression evaluates to true
-            if (includeSubModule(smd.getConditionalExpression(), moduleDescriptor
-                    .getClassResolver(), smd.getLocation()))
-                processResource(smd.getDescriptor());
+            if ( includeSubModule( subModule.getConditionalExpression(), moduleDescriptor
+                    .getClassResolver(), subModule.getLocation() ) )
+            {
+                processResource( subModule.getDescriptor() );
+            }
         }
     }
 

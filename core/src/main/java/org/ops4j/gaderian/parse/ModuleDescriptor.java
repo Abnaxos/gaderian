@@ -49,20 +49,20 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
 
     private String _packageName;
 
-    private List _servicePoints;
+    private List<ServicePointDescriptor> _servicePoints;
 
-    private List _implementations;
+    private List<ImplementationDescriptor> _implementations;
 
-    private List _configurationPoints;
+    private List<ConfigurationPointDescriptor> _configurationPoints;
 
-    private List _contributions;
+    private List<ContributionDescriptor> _contributions;
 
-    private List _subModules;
+    private List<SubModuleDescriptor> _subModules;
 
-    private List _dependencies;
+    private List<DependencyDescriptor> _dependencies;
 
     /** @since 1.1 */
-    private Map _schemas;
+    private Map<String, SchemaImpl> _schemas;
 
     private ClassResolver _resolver;
 
@@ -88,7 +88,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addServicePoint(ServicePointDescriptor service)
     {
         if (_servicePoints == null)
-            _servicePoints = new ArrayList();
+            _servicePoints = new ArrayList<ServicePointDescriptor>();
 
         _servicePoints.add(service);
     }
@@ -101,7 +101,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addImplementation(ImplementationDescriptor descriptor)
     {
         if (_implementations == null)
-            _implementations = new ArrayList();
+            _implementations = new ArrayList<ImplementationDescriptor>();
 
         _implementations.add(descriptor);
     }
@@ -114,7 +114,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addConfigurationPoint(ConfigurationPointDescriptor descriptor)
     {
         if (_configurationPoints == null)
-            _configurationPoints = new ArrayList();
+            _configurationPoints = new ArrayList<ConfigurationPointDescriptor>();
 
         _configurationPoints.add(descriptor);
     }
@@ -127,7 +127,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addContribution(ContributionDescriptor descriptor)
     {
         if (_contributions == null)
-            _contributions = new ArrayList();
+            _contributions = new ArrayList<ContributionDescriptor>();
 
         _contributions.add(descriptor);
     }
@@ -140,12 +140,12 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addSubModule(SubModuleDescriptor subModule)
     {
         if (_subModules == null)
-            _subModules = new ArrayList();
+            _subModules = new ArrayList<SubModuleDescriptor>();
 
         _subModules.add(subModule);
     }
 
-    public List getSubModules()
+    public List<SubModuleDescriptor> getSubModules()
     {
         return _subModules;
     }
@@ -153,12 +153,12 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addDependency(DependencyDescriptor dependency)
     {
         if (_dependencies == null)
-            _dependencies = new ArrayList();
+            _dependencies = new ArrayList<DependencyDescriptor>();
 
         _dependencies.add(dependency);
     }
 
-    public List getDependencies()
+    public List<DependencyDescriptor> getDependencies()
     {
         return _dependencies;
     }
@@ -172,7 +172,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     public void addSchema(SchemaImpl schema)
     {
         if (_schemas == null)
-            _schemas = new HashMap();
+            _schemas = new HashMap<String, SchemaImpl>();
 
         String schemaId = schema.getId();
 
@@ -192,7 +192,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     /** @since 1.1 */
     public Schema getSchema(String id)
     {
-        return _schemas == null ? null : (Schema) _schemas.get(id);
+        return _schemas == null ? null : _schemas.get(id);
     }
 
     /**
@@ -200,9 +200,9 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
      * 
      * @since 1.1
      */
-    public Collection getSchemas()
+    public Collection<SchemaImpl> getSchemas()
     {
-        return _schemas != null ? _schemas.values() : Collections.EMPTY_LIST;
+        return _schemas != null ? _schemas.values() : Collections.<SchemaImpl>emptyList();
     }
 
     public String getModuleId()

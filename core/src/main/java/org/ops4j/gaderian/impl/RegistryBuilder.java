@@ -15,7 +15,6 @@
 package org.ops4j.gaderian.impl;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -92,7 +91,7 @@ public final class RegistryBuilder
      * @since 1.1
      */
 
-    private Set _moduleDescriptorProviders;
+    private Set<ModuleDescriptorProvider> _moduleDescriptorProviders;
 
     /**
      * Contains most of the logic for actually creating the registry.
@@ -113,7 +112,7 @@ public final class RegistryBuilder
 
         _registryAssembly = new RegistryAssemblyImpl();
 
-        _moduleDescriptorProviders = new HashSet();
+        _moduleDescriptorProviders = new HashSet<ModuleDescriptorProvider>();
 
         _constructor = new RegistryInfrastructureConstructor(handler, LOG, _registryAssembly);
     }
@@ -136,11 +135,9 @@ public final class RegistryBuilder
      */
     public Registry constructRegistry(Locale locale)
     {
-        for (Iterator i = _moduleDescriptorProviders.iterator(); i.hasNext();)
+        for ( final ModuleDescriptorProvider moduleDescriptorProvider : _moduleDescriptorProviders )
         {
-            ModuleDescriptorProvider provider = (ModuleDescriptorProvider) i.next();
-
-            processModuleDescriptorProvider(provider);
+            processModuleDescriptorProvider( moduleDescriptorProvider );
         }
 
         // Process any deferred operations. Post processing is added by
@@ -158,14 +155,11 @@ public final class RegistryBuilder
 
     private void processModuleDescriptorProvider(ModuleDescriptorProvider provider)
     {
-        List descriptors = provider.getModuleDescriptors(_errorHandler);
+        List<ModuleDescriptor> descriptors = provider.getModuleDescriptors(_errorHandler);
 
-        Iterator i = descriptors.iterator();
-        while (i.hasNext())
+        for (final ModuleDescriptor descriptor : descriptors )
         {
-            ModuleDescriptor md = (ModuleDescriptor) i.next();
-
-            _constructor.addModuleDescriptor(md);
+            _constructor.addModuleDescriptor( descriptor );
         }
     }
 

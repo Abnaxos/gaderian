@@ -31,4 +31,6 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.TYPE)
 public @interface Module {
     String id();
+    String version() default "1.0";
+    String description() default "";
 }

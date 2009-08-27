@@ -67,7 +67,7 @@ public interface ServicePoint extends ExtensionPoint
      *            service interface (it could be a super-interface, for example).
      * @return the outermost interceptor for the service, or the core implementation if there are no
      *         interceptors.
-     * @throws org.apache.tapestry.ApplicationRuntimeException
+     * @throws org.ops4j.gaderian.ApplicationRuntimeException
      *             if there is any problem creating the service.
      */
     public Object getService(Class interfaceClass);

@@ -15,6 +15,12 @@ public class ClassDecorator
      */
     public static Class decorate( final Class serviceClass, final BuilderParameter parameter)
     {
+        // Is the class annotated with lifecycle annotations?
+
+        // Are the parameters defining lifecycle methods
+
+        // Does the class define any (default) lifecycle methods
+        
         return serviceClass;
     }
 }
