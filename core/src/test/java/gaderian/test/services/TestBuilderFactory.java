@@ -209,6 +209,7 @@ public class TestBuilderFactory extends GaderianTestCase
         trainGetService(module, StringHolder.class, h);
 
         trainGetClassResolver(module, getClassResolver());
+        trainGetClassResolver(module, getClassResolver());
 
         replayControls();
 
@@ -234,6 +235,9 @@ public class TestBuilderFactory extends GaderianTestCase
 
         trainGetLog(fp, log);
         trainGetServiceId(fp, "foo");
+
+        trainGetClassResolver(module, getClassResolver());
+
 
         fp.getInvokingModule();
         getControl(fp).setReturnValue(module, MockControl.ONE_OR_MORE);
@@ -283,10 +287,30 @@ public class TestBuilderFactory extends GaderianTestCase
     {
         Registry r = buildFrameworkRegistry("AutowireService.xml");
 
-        SetObjectFixture f = (SetObjectFixture) r.getService(SetObjectFixture.class);
+        SetObjectFixture f = r.getService(SetObjectFixture.class);
 
         assertNotNull(f.getClassFactory1());
         assertSame(f.getClassFactory1(), f.getClassFactory2());
     }
+
+    public void testRequiredAnnotation() throws Exception
+    {
+        Registry r = buildFrameworkRegistry("RequiredAnnotation.xml");
+
+        try
+        {
+            final RequiredAnnotation annotation = r.getService( RequiredAnnotation.class );
+            annotation.doIt();
+            unreachable();
+        }
+        catch ( ApplicationRuntimeException e )
+        {
+            // Should happen
+            assertEquals("bad message", "Unable to construct service gaderian.test.services.RequiredAnnotation: Error building service gaderian.test.services.RequiredAnnotation: Required field 'requiredList' is null", e.getMessage());
+        }
+
+
+    }
+
 
 }

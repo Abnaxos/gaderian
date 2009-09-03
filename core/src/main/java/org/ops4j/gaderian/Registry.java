@@ -124,7 +124,7 @@ public interface Registry extends SymbolSource
      *             interface
      */
 
-    public Object getService(String serviceId, Class serviceInterface);
+    public <T> T getService(String serviceId, Class<T> serviceInterface);
 
     /**
      * Convenience method to obtain a service with a single implementation from the registry.
@@ -139,7 +139,7 @@ public interface Registry extends SymbolSource
      * @see #getService(String, Class)
      */
 
-    public Object getService(Class serviceInterface);
+    public <T> T getService(Class<T> serviceInterface);
 
     /**
      * Returns the locale for which the registry was created.
@@ -181,7 +181,7 @@ public interface Registry extends SymbolSource
      * @return Returns an empty List if no matching service points exist.
      * @since 1.1
      */
-    public List getServiceIds(Class serviceInterface);
+    public List<String> getServiceIds(Class serviceInterface);
 
     /**
      * Returns the Messages object for the specified module.

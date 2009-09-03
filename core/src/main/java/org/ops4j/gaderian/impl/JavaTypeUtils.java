@@ -30,7 +30,7 @@ public class JavaTypeUtils
      * Mapping between a primitive type and its Java VM representation Used for the encoding of
      * array types
      */
-    private static Map PRIMITIVE_TYPE_CODES = new HashMap();
+    private static Map<String,String> PRIMITIVE_TYPE_CODES = new HashMap<String,String>();
 
     static
     {
@@ -47,7 +47,7 @@ public class JavaTypeUtils
     /**
      * Map from Java type name to Class.
      */
-    private static final Map PRIMITIVE_CLASSES = new HashMap();
+    private static final Map<String,Class> PRIMITIVE_CLASSES = new HashMap<String,Class>();
 
     static
     {
@@ -109,6 +109,6 @@ public class JavaTypeUtils
     
     public static Class getPrimtiveClass(String type)
     {
-        return (Class) PRIMITIVE_CLASSES.get(type);
+        return PRIMITIVE_CLASSES.get(type);
     }
 }

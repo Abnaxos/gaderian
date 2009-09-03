@@ -42,9 +42,9 @@ import org.ops4j.gaderian.util.PropertyUtils;
  */
 public class AssemblyInstructionImpl extends BaseLocatable implements AssemblyInstruction
 {
-    private List _properties = new ArrayList();
+    private List<BuilderFacet> _properties = new ArrayList<BuilderFacet>();
 
-    private List _events = new ArrayList();
+    private List<EventRegistration> _events = new ArrayList<EventRegistration>();
 
     private String _initializeMethod;
 

@@ -32,18 +32,15 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
  */
 class ClassAdaptor
 {
-    private final Map _propertyAdaptorMap = new HashMap();
+    private final Map<String, PropertyAdaptor> _propertyAdaptorMap = new HashMap<String, PropertyAdaptor>();
 
     ClassAdaptor(PropertyDescriptor[] properties)
     {
-        for (int i = 0; i < properties.length; i++)
+        for ( PropertyDescriptor d : properties )
         {
-            PropertyDescriptor d = properties[i];
-
-            String name = d.getName();
-
-            _propertyAdaptorMap.put(name, new PropertyAdaptor(name, d.getPropertyType(), d
-                    .getReadMethod(), d.getWriteMethod()));
+            final String name = d.getName();
+            _propertyAdaptorMap.put( name, new PropertyAdaptor( name, d.getPropertyType(), d
+                    .getReadMethod(), d.getWriteMethod() ) );
         }
     }
 
@@ -112,7 +109,7 @@ class ClassAdaptor
 
     public boolean isReadable(String propertyName)
     {
-        PropertyAdaptor result = (PropertyAdaptor) _propertyAdaptorMap.get(propertyName);
+        PropertyAdaptor result = _propertyAdaptorMap.get(propertyName);
 
         return result != null && result.isReadable();
     }
@@ -123,14 +120,14 @@ class ClassAdaptor
 
     public boolean isWritable(String propertyName)
     {
-        PropertyAdaptor result = (PropertyAdaptor) _propertyAdaptorMap.get(propertyName);
+        PropertyAdaptor result = _propertyAdaptorMap.get(propertyName);
 
         return result != null && result.isWritable();
     }
 
     PropertyAdaptor getPropertyAdaptor(Object target, String propertyName)
     {
-        PropertyAdaptor result = (PropertyAdaptor) _propertyAdaptorMap.get(propertyName);
+        PropertyAdaptor result = _propertyAdaptorMap.get(propertyName);
 
         if (result == null)
             throw new ApplicationRuntimeException(
@@ -142,18 +139,17 @@ class ClassAdaptor
     /**
      * Returns a List of the names of readable properties (properties with a non-null getter).
      */
-    public List getReadableProperties()
+    public List<String> getReadableProperties()
     {
-        List result = new ArrayList(_propertyAdaptorMap.size());
+        List<String> result = new ArrayList<String>(_propertyAdaptorMap.size());
 
-        Iterator i = _propertyAdaptorMap.values().iterator();
-
-        while (i.hasNext())
+        for ( final PropertyAdaptor propertyAdaptor : _propertyAdaptorMap.values() )
         {
-            PropertyAdaptor a = (PropertyAdaptor) i.next();
 
-            if (a.isReadable())
-                result.add(a.getPropertyName());
+            if ( propertyAdaptor.isReadable() )
+            {
+                result.add( propertyAdaptor.getPropertyName() );
+            }
         }
 
         return result;
@@ -162,18 +158,16 @@ class ClassAdaptor
     /**
      * Returns a List of the names of readable properties (properties with a non-null setter).
      */
-    public List getWriteableProperties()
+    public List<String> getWriteableProperties()
     {
-        List result = new ArrayList(_propertyAdaptorMap.size());
+        List<String> result = new ArrayList<String>(_propertyAdaptorMap.size());
 
-        Iterator i = _propertyAdaptorMap.values().iterator();
-
-        while (i.hasNext())
+        for ( final PropertyAdaptor propertyAdaptor : _propertyAdaptorMap.values() )
         {
-            PropertyAdaptor a = (PropertyAdaptor) i.next();
-
-            if (a.isWritable())
-                result.add(a.getPropertyName());
+            if ( propertyAdaptor.isWritable() )
+            {
+                result.add( propertyAdaptor.getPropertyName() );
+            }
         }
 
         return result;

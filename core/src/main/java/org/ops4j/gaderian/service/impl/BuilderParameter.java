@@ -28,7 +28,7 @@ import org.ops4j.gaderian.impl.BaseLocatable;
 /**
  * Parameter object used with {@link org.ops4j.gaderian.service.impl.BuilderFactory}.
  * <p>
- * A BuilderParameter is a wrapper around an {@link AssemblyInstruction}
+ * A BuilderParameter is a wrapper around an {@link org.ops4j.gaderian.service.impl.BuilderFacet}
  * 
  * @author Howard Lewis Ship
  */
@@ -36,10 +36,10 @@ public class BuilderParameter extends BaseLocatable
 {
     private String _className;
 
-    private List _parameters = new ArrayList();
+    private List<BuilderFacet> _parameters = new ArrayList();
 
     /** @since 1.1 */
-    private Map _typeFacetMap = new HashMap();
+    private Map<Class,BuilderFacet> _typeFacetMap = new HashMap<Class,BuilderFacet>();
 
     private AssemblyInstructionImpl _assemblyInstruction = new AssemblyInstructionImpl();
 
@@ -58,7 +58,7 @@ public class BuilderParameter extends BaseLocatable
         _parameters.add(facet);
     }
 
-    public List getParameters()
+    public List<BuilderFacet> getParameters()
     {
         return _parameters;
     }
@@ -107,7 +107,7 @@ public class BuilderParameter extends BaseLocatable
     public BuilderFacet getFacetForType(ServiceImplementationFactoryParameters factoryParameters,
             Class targetType)
     {
-        BuilderFacet result = (BuilderFacet) _typeFacetMap.get(targetType);
+        BuilderFacet result = _typeFacetMap.get(targetType);
 
         if (result == null)
         {

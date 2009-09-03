@@ -56,6 +56,9 @@ public class TestBuilderFactory extends GaderianTestCase
         MockControl mc = newControl(Module.class);
         Module module = (Module) mc.getMock();
 
+        module.getClassResolver();
+        mc.setReturnValue( getClassResolver() );
+
         MockControl errorLogc = newControl(ErrorLog.class);
         ErrorLog errorLog = (ErrorLog) errorLogc.getMock();
 

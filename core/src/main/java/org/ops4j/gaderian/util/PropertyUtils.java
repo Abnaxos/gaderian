@@ -30,7 +30,7 @@ import org.ops4j.gaderian.Gaderian;
  */
 public class PropertyUtils
 {
-    private static final Map _classAdaptors = new HashMap();
+    private static final Map<Class,ClassAdaptor> _classAdaptors = new HashMap<Class,ClassAdaptor>();
 
     // Prevent instantiation
     private PropertyUtils()

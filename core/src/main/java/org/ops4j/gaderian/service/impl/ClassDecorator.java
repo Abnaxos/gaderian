@@ -11,9 +11,10 @@ public class ClassDecorator
      *
      * @param serviceClass The class to decorate
      * @param parameter The builder factory parameters specified
+     * @param annotationsEnabled
      * @return The decorated instance (if at all required)
      */
-    public static Class decorate( final Class serviceClass, final BuilderParameter parameter)
+    public static Class decorate( final Class serviceClass, final BuilderParameter parameter, final boolean annotationsEnabled )
     {
         // Is the class annotated with lifecycle annotations?
 
