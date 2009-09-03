@@ -306,7 +306,7 @@ public class TestBuilderFactory extends GaderianTestCase
         catch ( ApplicationRuntimeException e )
         {
             // Should happen
-            assertEquals("bad message", "Unable to construct service gaderian.test.services.RequiredAnnotation: Error building service gaderian.test.services.RequiredAnnotation: Required field 'requiredList' is null", e.getMessage());
+            assertEquals("bad message", "Unable to construct service gaderian.test.services.RequiredAnnotation: Error building service gaderian.test.services.RequiredAnnotation: Required field 'requiredList' of service instance 'gaderian.test.services.impl.RequiredAnnotationImpl' is null", e.getMessage());
         }
 
 

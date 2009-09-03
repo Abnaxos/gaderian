@@ -10,18 +10,18 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
  */
 public class ServiceInstanceUtils
 {
-    public static void validate( final Object coreServiceInstance)
+    public static void validate( final Class serviceClass, final Object serviceInstance )
     {
-        final Field[] fields = coreServiceInstance.getClass().getDeclaredFields();
+        final Field[] fields = serviceInstance .getClass().getDeclaredFields();
 
         for ( Field field : fields )
         {
-            validateField(field, coreServiceInstance);
+            validateField(field, serviceClass, serviceInstance);
         }
 
     }
 
-    private static void validateField( final Field field, final Object coreServiceInstance )
+    private static void validateField( final Field field, final Class serviceClass, final Object serviceInstance )
     {
         if (field.isAnnotationPresent( Required.class ))
         {
@@ -32,9 +32,9 @@ public class ServiceInstanceUtils
                     // Attempt to access the value
                     field.setAccessible( true );
                 }
-                if (field.get( coreServiceInstance) == null)
+                if (field.get( serviceInstance ) == null)
                 {
-                    throw new ApplicationRuntimeException( "Required field '" + field.getName() + "' is null" );
+                    throw new ApplicationRuntimeException( ServiceMessages.requiredDependencyNotFulfilled(field.getName(), serviceClass ));
                 }
             }
             catch ( IllegalAccessException e )

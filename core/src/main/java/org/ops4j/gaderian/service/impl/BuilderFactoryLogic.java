@@ -107,7 +107,7 @@ public class BuilderFactoryLogic
         if ( _annotationsEnabled )
         {
             // Validate the constructed instance - annotations and the like
-            ServiceInstanceUtils.validate( coreServiceInstance );
+            ServiceInstanceUtils.validate( serviceClass, coreServiceInstance );
         }
         return coreServiceInstance;
     }

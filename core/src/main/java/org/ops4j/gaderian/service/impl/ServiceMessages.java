@@ -184,4 +184,8 @@ class ServiceMessages
         return _formatter.format("unable-to-create-class-final-method", beanClass.getName(),methodSignature.getName());
     }
 
+    public static String requiredDependencyNotFulfilled( final String fieldName, final Class serviceClass )
+    {
+        return _formatter.format( "required-dependency-not-fulfilled", serviceClass.getName(), fieldName);
+    }
 }
