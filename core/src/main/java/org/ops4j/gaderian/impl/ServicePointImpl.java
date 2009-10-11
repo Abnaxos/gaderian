@@ -122,11 +122,9 @@ public final class ServicePointImpl extends AbstractExtensionPoint implements
 
     private Class lookupDeclaredInterface()
     {
-        Class result = null;
-
         try
         {
-            result = getModule().resolveType(_serviceInterfaceName);
+            return getModule().resolveType(_serviceInterfaceName);
         }
         catch (Exception ex)
         {
@@ -134,8 +132,6 @@ public final class ServicePointImpl extends AbstractExtensionPoint implements
                     _serviceInterfaceName,
                     getExtensionPointId()), getLocation(), ex);
         }
-
-        return result;
     }
 
     private Class lookupServiceInterface()
@@ -218,7 +214,7 @@ public final class ServicePointImpl extends AbstractExtensionPoint implements
         return _service;
     }
 
-    public Object getService(Class serviceInterface)
+    public <T> T getService(Class<T> serviceInterface)
     {
         Object result = getService();
 
@@ -229,7 +225,7 @@ public final class ServicePointImpl extends AbstractExtensionPoint implements
                     serviceInterface), getLocation(), null);
         }
 
-        return result;
+        return (T)result;
     }
 
     public String getServiceModel()

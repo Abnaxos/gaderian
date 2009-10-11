@@ -26,6 +26,8 @@ public interface SymbolSource
 	/**
 	 * Returns the value for the symbol, if this source can provide one.
 	 * Returns null if the source can not provide a value.
-	 */
+     * @param name The name of the symbol
+     * @return The value of the symbol - null if this source can not provide one
+     */
 	public String valueForSymbol(String name);
 }

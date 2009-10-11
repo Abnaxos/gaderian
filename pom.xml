@@ -33,6 +33,16 @@
 
     <url>http://gaderian.ops4j.org/LATEST</url>
 
+    <mailingLists>
+      <mailingList>
+        <name>General OPS4J</name>
+        <subscribe>general-subscribe@lists.ops4j.org</subscribe>
+        <unsubscribe>general-unsubscribe@lists.ops4j.org</unsubscribe>
+        <post>general@lists.ops4j.org</post>
+        <archive>http://lists.ops4j.org/pipermail/general</archive>
+      </mailingList>
+    </mailingLists>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>

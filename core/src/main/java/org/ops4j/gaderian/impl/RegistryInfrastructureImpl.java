@@ -88,7 +88,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
      * Map of {@link ServiceModelFactory}, keyed on service model name, loaded from
      * <code>gaderian.ServiceModels</code> configuration point.
      */
-    private Map _serviceModelFactories;
+    private Map<String, ServiceModelFactory> _serviceModelFactories;
 
     private boolean _started = false;
 
@@ -196,14 +196,14 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         return possibleMatches;
     }
 
-    public Object getService(String serviceId, Class serviceInterface, Module module)
+    public <T> T getService(String serviceId, Class<T> serviceInterface, Module module)
     {
         ServicePoint point = getServicePoint(serviceId, module);
 
         return point.getService(serviceInterface);
     }
 
-    public Object getService(Class serviceInterface, Module module)
+    public <T> T getService(Class<T> serviceInterface, Module module)
     {
         String key = serviceInterface.getName();
 
@@ -446,7 +446,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         if (_serviceModelFactories == null)
             readServiceModelFactories();
 
-        ServiceModelFactory result = (ServiceModelFactory) _serviceModelFactories.get(name);
+        ServiceModelFactory result = _serviceModelFactories.get(name);
 
         if (result == null)
             throw new ApplicationRuntimeException(ImplMessages.unknownServiceModel(name));
@@ -456,19 +456,14 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
     private void readServiceModelFactories()
     {
-        List l = getConfiguration("gaderian.ServiceModels", null);
+        final List<ServiceModelContribution> serviceModelContributions = getConfiguration("gaderian.ServiceModels", null);
 
-        _serviceModelFactories = new HashMap();
+        _serviceModelFactories = new HashMap<String, ServiceModelFactory>();
 
-        Iterator i = l.iterator();
-
-        while (i.hasNext())
+        for ( ServiceModelContribution serviceModelContribution : serviceModelContributions )
         {
-            ServiceModelContribution smc = (ServiceModelContribution) i.next();
-
-            String name = smc.getName();
-
-            _serviceModelFactories.put(name, smc.getFactory());
+            String name = serviceModelContribution.getName();
+            _serviceModelFactories.put(name, serviceModelContribution.getFactory());
         }
     }
 

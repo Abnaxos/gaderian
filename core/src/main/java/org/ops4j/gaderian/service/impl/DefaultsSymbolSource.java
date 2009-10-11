@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.ops4j.gaderian.SymbolSource;
 import org.ops4j.gaderian.impl.BaseLocatable;
-
 /**
  * Implementation of {@link org.ops4j.gaderian.SymbolSource} driven off of an extension point.
  * 
@@ -28,31 +27,28 @@ import org.ops4j.gaderian.impl.BaseLocatable;
  */
 public class DefaultsSymbolSource extends BaseLocatable implements SymbolSource
 {
-    private List _defaults;
+    private List<FactoryDefault> _defaults;
 
     private Map<String, String> _symbols = new HashMap<String, String>();
 
     public String valueForSymbol(String name)
     {
-        return _symbols.get(name);
+        return _symbols.get( name );
     }
 
     public void initializeService()
     {
-        int count = _defaults.size();
-        for (int i = 0; i < count; i++)
+        for ( final FactoryDefault factoryDefault : _defaults )
         {
-            FactoryDefault fd = (FactoryDefault) _defaults.get(i);
-
-            String symbol = fd.getSymbol();
-            String value = fd.getValue();
-
+            final String symbol = factoryDefault.getSymbol();
+            final String value = factoryDefault.getValue();
             _symbols.put(symbol, value);
         }
     }
 
-    public void setDefaults(List list)
+    public void setDefaults(List<FactoryDefault> list)
     {
         _defaults = list;
     }
+
 }

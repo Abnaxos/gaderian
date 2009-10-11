@@ -25,7 +25,17 @@ public class FactoryDefault
 {
 	private String _symbol;
 	private String _value;
-	
+
+    public FactoryDefault()
+    {
+    }
+
+    public FactoryDefault( final String symbol, final String value )
+    {
+        _symbol = symbol;
+        _value = value;
+    }
+
     public String getSymbol()
     {
         return _symbol;

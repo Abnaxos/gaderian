@@ -55,6 +55,7 @@ public class SymbolExpander
      *            the text to scan
      * @param location
      *            the location to report errors (undefined symbols)
+     * @return The expanded symbol
      */
     public String expandSymbols(String text, Location location)
     {

@@ -70,7 +70,7 @@ public interface ServicePoint extends ExtensionPoint
      * @throws org.ops4j.gaderian.ApplicationRuntimeException
      *             if there is any problem creating the service.
      */
-    public Object getService(Class interfaceClass);
+    public <T> T getService(Class<T> interfaceClass);
 
     /**
      * Returns the {@link Schema} used to process any parameters passed to the service. Service

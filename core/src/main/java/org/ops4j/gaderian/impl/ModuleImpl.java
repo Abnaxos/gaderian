@@ -54,7 +54,7 @@ public final class ModuleImpl extends BaseLocatable implements Module
      *
      * @since 1.1.1
      */
-    private final Map _typeCache = new HashMap();
+    private final Map<String,Class> _typeCache = new HashMap<String,Class>();
 
     public List getConfiguration(String extensionPointId)
     {
@@ -192,7 +192,7 @@ public final class ModuleImpl extends BaseLocatable implements Module
 
     public synchronized Class resolveType(String type)
     {
-        Class result = (Class) _typeCache.get(type);
+        Class result = _typeCache.get(type);
 
         if (result == null)
         {
