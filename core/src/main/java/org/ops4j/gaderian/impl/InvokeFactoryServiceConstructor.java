@@ -32,7 +32,7 @@ import org.ops4j.gaderian.schema.Schema;
 /**
  * Constructs a new service by invoking methods on another service (which implements the
  * {@link org.ops4j.gaderian.ServiceImplementationFactory} interface.
- * 
+ *
  * @author Howard Lewis Ship
  */
 public final class InvokeFactoryServiceConstructor extends BaseLocatable implements
@@ -44,17 +44,25 @@ public final class InvokeFactoryServiceConstructor extends BaseLocatable impleme
 
     private Module _contributingModule;
 
-    /** List of {@link org.ops4j.gaderian.Element}, the raw XML parameters. */
+    /**
+     * List of {@link org.ops4j.gaderian.Element}, the raw XML parameters.
+     */
     private List _parameters;
 
-    /** The factory service to be invoked. */
+    /**
+     * The factory service to be invoked.
+     */
     private ServiceImplementationFactory _factory;
 
-    /** The parameters converted to objects as per the factory's parameter schema. */
+    /**
+     * The parameters converted to objects as per the factory's parameter schema.
+     */
     private List _convertedFactoryParameters;
 
-    /** The assembly instructions converted to objects as per the factory's parameter schema. */
-    private List _convertedAssemblyInstructions;
+    /**
+     * The assembly instructions converted to objects as per the factory's parameter schema.
+     */
+    private List<AssemblyInstruction> _convertedAssemblyInstructions;
 
     public Object constructCoreServiceImplementation()
     {
@@ -69,11 +77,9 @@ public final class InvokeFactoryServiceConstructor extends BaseLocatable impleme
 
             if (_convertedAssemblyInstructions != null)
             {
-                for (Iterator i = _convertedAssemblyInstructions.iterator(); i.hasNext();)
+                for ( final AssemblyInstruction convertedAssemblyInstruction : _convertedAssemblyInstructions )
                 {
-                    AssemblyInstruction parameter = (AssemblyInstruction) i.next();
-
-                    parameter.assemble(result, factoryParameters);
+                    convertedAssemblyInstruction.assemble( result, factoryParameters );
                 }
             }
 
@@ -93,18 +99,17 @@ public final class InvokeFactoryServiceConstructor extends BaseLocatable impleme
     {
         if (_factory == null)
         {
-            ServicePoint factoryPoint = _contributingModule.getServicePoint(_factoryServiceId);
+            final ServicePoint factoryPoint = retrieveServiceFactory();
 
-            Occurances expected = factoryPoint.getParametersCount();
+            final Occurances expected = factoryPoint.getParametersCount();
 
-            _factory = (ServiceImplementationFactory) factoryPoint
-                    .getService(ServiceImplementationFactory.class);
+            _factory = factoryPoint.getService(ServiceImplementationFactory.class);
 
-            Schema schema = factoryPoint.getParametersSchema();
+            final Schema schema = factoryPoint.getParametersSchema();
 
-            ErrorLog errorLog = _serviceExtensionPoint.getErrorLog();
+            final ErrorLog errorLog = _serviceExtensionPoint.getErrorLog();
 
-            SchemaProcessorImpl processor = new SchemaProcessorImpl(errorLog, schema);
+            final SchemaProcessorImpl processor = new SchemaProcessorImpl(errorLog, schema);
 
             processor.process(_parameters, _contributingModule);
 
@@ -116,24 +121,38 @@ public final class InvokeFactoryServiceConstructor extends BaseLocatable impleme
         }
     }
 
+    private ServicePoint retrieveServiceFactory()
+    {
+        try
+        {
+            return _contributingModule.getServicePoint(_factoryServiceId);
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationRuntimeException(ImplMessages.errorResolvingServiceImplementationFactory(_factoryServiceId, _contributingModule.getModuleId()), _contributingModule.getLocation(), e);
+        }
+    }
+
     /**
      * Extracts and removes the {@link AssemblyInstruction} objects from the converted parameter
      * elements.
      */
-    private List extractAssemblyInstructions(List parameters)
+    private List<AssemblyInstruction> extractAssemblyInstructions(List parameters)
     {
-        List result = null;
+        List<AssemblyInstruction> result = null;
 
         for (Iterator i = parameters.iterator(); i.hasNext();)
         {
-            Object parameter = (Object) i.next();
+            Object parameter = i.next();
 
             if (parameter instanceof AssemblyInstruction)
             {
                 if (result == null)
-                    result = new ArrayList();
+                {
+                    result = new ArrayList<AssemblyInstruction>();
+                }
 
-                result.add(parameter);
+                result.add( ( AssemblyInstruction ) parameter );
 
                 i.remove();
             }
@@ -150,7 +169,9 @@ public final class InvokeFactoryServiceConstructor extends BaseLocatable impleme
         int actual = _convertedFactoryParameters.size();
 
         if (expected.inRange(actual))
+        {
             return;
+        }
 
         String message = ImplMessages.wrongNumberOfParameters(_factoryServiceId, actual, expected);
 

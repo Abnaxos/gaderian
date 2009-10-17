@@ -69,6 +69,11 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     /** @since 1.1 */
     private ErrorHandler _errorHandler;
 
+    /** Defines the default service implementation factory id for this module
+     * @since Gaderian 1.1
+     */
+    private String _defaultServiceImplementationFactoryId;
+
     public ModuleDescriptor(ClassResolver resolver, ErrorHandler errorHandler)
     {
         _resolver = resolver;
@@ -81,11 +86,12 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
 
         builder.append("moduleId", _moduleId);
         builder.append("version", _version);
+        builder.append("_defaultServiceImplementationFactoryId", _defaultServiceImplementationFactoryId);
 
         return builder.toString();
     }
 
-    public void addServicePoint(ServicePointDescriptor service)
+    public void addServicePoint(final ServicePointDescriptor service)
     {
         if (_servicePoints == null)
             _servicePoints = new ArrayList<ServicePointDescriptor>();
@@ -98,7 +104,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _servicePoints;
     }
 
-    public void addImplementation(ImplementationDescriptor descriptor)
+    public void addImplementation(final ImplementationDescriptor descriptor)
     {
         if (_implementations == null)
             _implementations = new ArrayList<ImplementationDescriptor>();
@@ -111,7 +117,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _implementations;
     }
 
-    public void addConfigurationPoint(ConfigurationPointDescriptor descriptor)
+    public void addConfigurationPoint(final ConfigurationPointDescriptor descriptor)
     {
         if (_configurationPoints == null)
             _configurationPoints = new ArrayList<ConfigurationPointDescriptor>();
@@ -124,7 +130,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _configurationPoints;
     }
 
-    public void addContribution(ContributionDescriptor descriptor)
+    public void addContribution(final ContributionDescriptor descriptor)
     {
         if (_contributions == null)
             _contributions = new ArrayList<ContributionDescriptor>();
@@ -137,7 +143,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _contributions;
     }
 
-    public void addSubModule(SubModuleDescriptor subModule)
+    public void addSubModule(final SubModuleDescriptor subModule)
     {
         if (_subModules == null)
             _subModules = new ArrayList<SubModuleDescriptor>();
@@ -150,7 +156,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _subModules;
     }
 
-    public void addDependency(DependencyDescriptor dependency)
+    public void addDependency(final DependencyDescriptor dependency)
     {
         if (_dependencies == null)
             _dependencies = new ArrayList<DependencyDescriptor>();
@@ -169,14 +175,14 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
      * 
      * @since 1.1
      */
-    public void addSchema(SchemaImpl schema)
+    public void addSchema(final SchemaImpl schema)
     {
         if (_schemas == null)
             _schemas = new HashMap<String, SchemaImpl>();
 
-        String schemaId = schema.getId();
+        final String schemaId = schema.getId();
 
-        Schema existing = getSchema(schemaId);
+        final Schema existing = getSchema(schemaId);
 
         if (existing != null)
         {
@@ -190,7 +196,7 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
     }
 
     /** @since 1.1 */
-    public Schema getSchema(String id)
+    public Schema getSchema(final String id)
     {
         return _schemas == null ? null : _schemas.get(id);
     }
@@ -215,12 +221,12 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
         return _version;
     }
 
-    public void setModuleId(String string)
+    public void setModuleId(final String string)
     {
         _moduleId = string;
     }
 
-    public void setVersion(String string)
+    public void setVersion(final String string)
     {
         _version = string;
     }
@@ -244,8 +250,28 @@ public final class ModuleDescriptor extends BaseAnnotationHolder
 
     /** @since 1.1 */
 
-    public void setPackageName(String packageName)
+    public void setPackageName(final String packageName)
     {
         _packageName = packageName;
+    }
+
+    /** Returns the service identifier of the default service implementation factory to use within this module.  If
+     * this is not specified the default BuilderFactory from Gaderian will be used
+     * @return The service id of the service factory
+     * @since Gaderian 1.1
+     */
+    public String getDefaultServiceImplementationFactoryId()
+    {
+        return _defaultServiceImplementationFactoryId;
+    }
+
+    /** Sets the default service implementation factory as read from the module
+     *
+     * @param defaultServiceImplementationFactoryId The default service implementation factory id as read from the module
+     * @since Gaderian 1.1
+     */
+    public void setDefaultServiceImplementationFactoryId(final String defaultServiceImplementationFactoryId)
+    {
+        _defaultServiceImplementationFactoryId = defaultServiceImplementationFactoryId;
     }
 }

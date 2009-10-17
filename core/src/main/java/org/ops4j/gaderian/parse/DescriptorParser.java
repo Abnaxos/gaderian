@@ -504,24 +504,29 @@ public final class DescriptorParser extends AbstractParser
 
         md.setModuleId(getValidatedAttribute("id", MODULE_ID_PATTERN, "module-id-format"));
         md.setVersion(getValidatedAttribute("version", VERSION_PATTERN, "version-format"));
-
+        md.setDefaultServiceImplementationFactoryId(getAttribute("default-service-factory-id"));
+        
         String packageName = getAttribute("package");
         if (packageName == null)
+        {
             packageName = md.getModuleId();
-
+        }
         md.setPackageName(packageName);
 
         // And, this is what we ultimately return from the parse.
-
         _moduleDescriptor = md;
     }
 
     protected void push(String elementName, Object object, DescriptorParsingState state)
     {
         if (object instanceof AnnotationHolder)
+        {
             super.push(elementName, object, state, false);
+        }
         else
+        {
             super.push(elementName, object, state, true);
+        }
     }
 
     private ElementImpl buildLWDomElement(String elementName)
@@ -529,17 +534,14 @@ public final class DescriptorParser extends AbstractParser
         ElementImpl result = new ElementImpl();
         result.setElementName(elementName);
 
-        Iterator i = _attributes.entrySet().iterator();
-        while (i.hasNext())
+        for ( final Map.Entry<String, String> entry : _attributes.entrySet() )
         {
-            Map.Entry entry = (Map.Entry) i.next();
+            String name = entry.getKey();
+            String value = entry.getValue();
 
-            String name = (String) entry.getKey();
-            String value = (String) entry.getValue();
+            Attribute a = new AttributeImpl( name, value );
 
-            Attribute a = new AttributeImpl(name, value);
-
-            result.addAttribute(a);
+            result.addAttribute( a );
         }
 
         return result;
@@ -896,7 +898,7 @@ public final class DescriptorParser extends AbstractParser
 
         checkAttributes();
 
-        ifd.setFactoryServiceId(getAttribute("service-id", "gaderian.BuilderFactory"));
+        ifd.setFactoryServiceId(getAttribute("service-id", getServiceImplementationFactoryId()));
 
         String model = getAttribute("model", DEFAULT_SERVICE_MODEL);
 
@@ -906,6 +908,11 @@ public final class DescriptorParser extends AbstractParser
 
         sd.setInstanceBuilder(ifd);
 
+    }
+
+    private String getServiceImplementationFactoryId()
+    {
+        return _moduleDescriptor.getDefaultServiceImplementationFactoryId() == null ? "gaderian.BuilderFactory" : _moduleDescriptor.getDefaultServiceImplementationFactoryId(); 
     }
 
     private void enterInvokeParent(String elementName)
@@ -1116,7 +1123,7 @@ public final class DescriptorParser extends AbstractParser
         md.addSubModule(smd);
     }
 
-    private void enterDependency(String elementName)
+    private void enterDependency(final String elementName)
     {
         ModuleDescriptor md = (ModuleDescriptor) peekObject();
 

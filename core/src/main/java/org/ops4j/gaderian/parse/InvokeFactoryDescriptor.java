@@ -31,9 +31,7 @@ public final class InvokeFactoryDescriptor
 {
     private String _serviceModel;
 
-    public ServiceImplementationConstructor createConstructor(
-        ServicePoint point,
-        Module contributingModule)
+    public ServiceImplementationConstructor createConstructor( ServicePoint point, Module contributingModule )
     {
         InvokeFactoryServiceConstructor result = new InvokeFactoryServiceConstructor();
 
