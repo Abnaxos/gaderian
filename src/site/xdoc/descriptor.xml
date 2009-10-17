@@ -726,6 +726,15 @@
             module's id if not specified.
           </td>
         </tr>
+          <tr>
+          <td>default-service-factory-id</td>
+          <td>string</td>
+          <td>no</td>
+          <td>
+            The service id of the service implementation factory which should be considered the default factory for this
+              module. Defaults to 'gaderain.BuilderFactory' if not specified.
+          </td>
+        </tr>
       </table>
       <p>Contains:
         <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
