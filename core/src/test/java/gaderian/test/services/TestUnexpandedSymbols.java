@@ -20,7 +20,6 @@ public class TestUnexpandedSymbols extends FrameworkTestCase
         }
         catch ( ApplicationRuntimeException e )
         {
-            e.printStackTrace();
             assertEquals( "unexpected error", "Could not resolve value for symbol 'a'", e.getMessage() );
         }
     }
