@@ -3,7 +3,7 @@ package gaderian.test.services.impl;
 import org.ops4j.gaderian.*;
 
 /**
- * @author SafeNet Technologies B.V.
+ * @author Johan Lindquist
  * @version $Revision$
  */
 public class SimpleNewInstanceServiceImplementationFactory implements ServiceImplementationFactory
