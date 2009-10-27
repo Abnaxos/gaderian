@@ -45,7 +45,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testSmartFacet() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SmartFacet.xml");
+        Registry r = buildFrameworkRegistry("SmartFacet.xml", false );
 
         SimpleService s = (SimpleService) r.getService(
                 "gaderian.test.services.Simple",
@@ -56,7 +56,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testInitializeMethodFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("InitializeMethodFailure.xml");
+        Registry r = buildFrameworkRegistry("InitializeMethodFailure.xml", false );
 
         Runnable s = (Runnable) r.getService("gaderian.test.services.Runnable", Runnable.class);
 
@@ -71,7 +71,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testSetErrorHandler() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SetErrorHandler.xml");
+        Registry r = buildFrameworkRegistry("SetErrorHandler.xml", false );
 
         ErrorHandlerHolder h = (ErrorHandlerHolder) r.getService(
                 "gaderian.test.services.SetErrorHandler",
@@ -82,7 +82,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testConstructErrorHandler() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConstructErrorHandler.xml");
+        Registry r = buildFrameworkRegistry("ConstructErrorHandler.xml", false );
 
         ErrorHandlerHolder h = (ErrorHandlerHolder) r.getService(
                 "gaderian.test.services.ConstructErrorHandler",
@@ -93,7 +93,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testSetClassResolver() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SetClassResolver.xml");
+        Registry r = buildFrameworkRegistry("SetClassResolver.xml", false );
 
         ClassResolverHolder h = (ClassResolverHolder) r.getService(
                 "gaderian.test.services.SetClassResolver",
@@ -104,7 +104,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testConstructClassResolver() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConstructClassResolver.xml");
+        Registry r = buildFrameworkRegistry("ConstructClassResolver.xml", false );
 
         ClassResolverHolder h = (ClassResolverHolder) r.getService(
                 "gaderian.test.services.ConstructClassResolver",
@@ -275,7 +275,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testSetObject() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SetObject.xml");
+        Registry r = buildFrameworkRegistry("SetObject.xml", false );
 
         SetObjectFixture f = (SetObjectFixture) r.getService(SetObjectFixture.class);
 
@@ -285,7 +285,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testAutowireService() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AutowireService.xml");
+        Registry r = buildFrameworkRegistry("AutowireService.xml", false );
 
         SetObjectFixture f = r.getService(SetObjectFixture.class);
 
@@ -295,7 +295,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testRequiredAnnotation() throws Exception
     {
-        Registry r = buildFrameworkRegistry("RequiredAnnotation.xml");
+        Registry r = buildFrameworkRegistry("RequiredAnnotation.xml", false );
 
         try
         {

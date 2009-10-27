@@ -404,8 +404,13 @@ class ImplMessages
         return _formatter.format("no-symbol-source-implementation", name);
     }
 
-    public static String errorResolvingServiceImplementationFactory(final String factoryServiceId, final String definingModule)
+    static String errorResolvingServiceImplementationFactory(final String factoryServiceId, final String definingModule)
     {
         return _formatter.format("error-resolving-service-implementation-factory", factoryServiceId, definingModule);
+    }
+
+    static String errorResolvingValueForSymbol( final String name )
+    {
+        return _formatter.format("error-resolving-value-for-symbol", name);
     }
 }

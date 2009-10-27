@@ -38,7 +38,7 @@ public class TestConnectors extends GaderianTestCase
      */
     public void testMx4jHttpAdaptor() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("testConnectors.xml");
+        Registry registry = buildFrameworkRegistry("testConnectors.xml", false );
         Object service = registry.getService(HttpAdaptorMBean.class);
         assertNotNull(service);
 
@@ -55,7 +55,7 @@ public class TestConnectors extends GaderianTestCase
 
     public void testJsr160Connector() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("testConnectors.xml");
+        Registry registry = buildFrameworkRegistry("testConnectors.xml", false );
         Object service = registry.getService(JMXConnectorServerMBean.class);
         assertNotNull(service);
     }

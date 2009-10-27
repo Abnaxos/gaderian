@@ -26,7 +26,7 @@ public class TestRegistryImpl extends GaderianTestCase
 {
     public void testGetModuleMessages() throws Exception
     {
-        final Registry reg = buildFrameworkRegistry( "Privates.xml" );
+        final Registry reg = buildFrameworkRegistry( "Privates.xml", false );
         final Messages msgs = reg.getModuleMessages( "gaderian.test.privates" );
         assertEquals( "Test Message", msgs.getMessage( "test.message" ) );
     }

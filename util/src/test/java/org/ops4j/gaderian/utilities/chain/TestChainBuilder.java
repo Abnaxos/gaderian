@@ -192,7 +192,7 @@ public class TestChainBuilder extends GaderianTestCase
 
     public void testChainFactoryIntegration() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ChainFactoryIntegration.xml");
+        Registry r = buildFrameworkRegistry("ChainFactoryIntegration.xml", false );
 
         ChainInterface chain = (ChainInterface) r.getService(ChainInterface.class);
 

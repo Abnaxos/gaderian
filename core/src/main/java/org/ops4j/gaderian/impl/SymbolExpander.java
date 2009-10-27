@@ -19,6 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.SymbolSource;
+import org.ops4j.gaderian.ApplicationRuntimeException;
 
 /**
  * A simple parser used to identify symbols in a string and expand them via a
@@ -215,14 +216,21 @@ public class SymbolExpander
 
     private String expandSymbol(String name, Location location)
     {
-        String value = _source.valueForSymbol(name);
+        try
+        {
+            final String value = _source.valueForSymbol(name);
 
-        if (value != null)
-            return value;
+            if (value != null)
+                return value;
 
-        _errorHandler.error(LOG, ImplMessages.noSuchSymbol(name), location, null);
+            _errorHandler.error(LOG, ImplMessages.noSuchSymbol(name), location, null);
 
-        return "${" + name + "}";
+            return "${" + name + "}";
+        }
+        catch ( ApplicationRuntimeException e )
+        {
+            throw new ApplicationRuntimeException( ImplMessages.errorResolvingValueForSymbol(name),location,e);
+        }
     }
 
 }

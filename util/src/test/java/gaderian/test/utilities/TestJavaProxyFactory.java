@@ -32,7 +32,7 @@ public class TestJavaProxyFactory extends GaderianTestCase
 
     public void testJDKProxy() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("JavaProxyFactory.xml");
+        Registry registry = buildFrameworkRegistry("JavaProxyFactory.xml", false );
         SimpleService simpleService = (SimpleService) registry.getService(SimpleService.class);
         assertEquals(7, simpleService.add(4, 3));
         // Exercise several code paths where objects are ready or cached.

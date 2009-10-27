@@ -45,7 +45,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testEmpty() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Empty.xml");
+        Registry r = buildFrameworkRegistry("Empty.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Empty");
 
@@ -54,7 +54,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testSimple() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Simple.xml");
+        Registry r = buildFrameworkRegistry("Simple.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Simple");
 
@@ -74,7 +74,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testNullElement() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Null.xml");
+        Registry r = buildFrameworkRegistry("Null.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Null");
 
@@ -85,7 +85,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testAttributeDefaults() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AttributeDefaults.xml");
+        Registry r = buildFrameworkRegistry("AttributeDefaults.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.AttributeDefaults");
 
@@ -98,7 +98,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testNested() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Nested.xml");
+        Registry r = buildFrameworkRegistry("Nested.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Nested");
 
@@ -116,7 +116,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testStructured() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Structured.xml");
+        Registry r = buildFrameworkRegistry("Structured.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Structured");
 
@@ -136,7 +136,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testSetParent() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SetParent.xml");
+        Registry r = buildFrameworkRegistry("SetParent.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.SetParent");
 
@@ -169,7 +169,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
     {
         interceptLogging();
 
-        Registry r = buildFrameworkRegistry("BooleanTranslator.xml");
+        Registry r = buildFrameworkRegistry("BooleanTranslator.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.BooleanTranslator");
 
@@ -197,7 +197,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
     {
         interceptLogging();
 
-        Registry r = buildFrameworkRegistry("IntTranslator.xml");
+        Registry r = buildFrameworkRegistry("IntTranslator.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.IntTranslator");
 
@@ -237,7 +237,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testInstanceTranslator() throws Exception
     {
-        Registry r = buildFrameworkRegistry("InstanceTranslator.xml");
+        Registry r = buildFrameworkRegistry("InstanceTranslator.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.InstanceTranslator");
 
@@ -255,7 +255,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
     {
         interceptLogging();
 
-        Registry r = buildFrameworkRegistry("Symbols.xml");
+        Registry r = buildFrameworkRegistry("Symbols.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Symbols");
 
@@ -281,7 +281,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testNoSchema() throws Exception
     {
-        Registry r = buildFrameworkRegistry("NoSchema.xml");
+        Registry r = buildFrameworkRegistry("NoSchema.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.NoSchema");
 
@@ -303,7 +303,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testLocalized() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Localized.xml");
+        Registry r = buildFrameworkRegistry("Localized.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Localized");
         assertEquals(1, l.size());
@@ -316,7 +316,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testElementsProxyList() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Simple.xml");
+        Registry r = buildFrameworkRegistry("Simple.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Simple");
 
@@ -340,7 +340,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
         interceptLogging(RegistryBuilder.class.getName());
 
-        Registry r = buildFrameworkRegistry("TooFew.xml");
+        Registry r = buildFrameworkRegistry("TooFew.xml", false );
 
         r.getConfiguration("gaderian.test.config.TooFew");
 
@@ -352,7 +352,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
     {
         interceptLogging();
 
-        Registry r = buildFrameworkRegistry("TooMany.xml");
+        Registry r = buildFrameworkRegistry("TooMany.xml", false );
 
         r.getConfiguration("gaderian.test.config.TooMany");
 
@@ -361,7 +361,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testBadAttributes() throws Exception
     {
-        Registry r = buildFrameworkRegistry("BadAttributes.xml");
+        Registry r = buildFrameworkRegistry("BadAttributes.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.BadAttributes");
 
@@ -383,7 +383,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testBadElement() throws Exception
     {
-        Registry r = buildFrameworkRegistry("BadElement.xml");
+        Registry r = buildFrameworkRegistry("BadElement.xml", false );
 
         interceptLogging("gaderian.test.config");
 
@@ -396,7 +396,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testCustomRule() throws Exception
     {
-        Registry r = buildFrameworkRegistry("CustomRule.xml");
+        Registry r = buildFrameworkRegistry("CustomRule.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.CustomRule");
 
@@ -465,7 +465,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
 
     public void testShutdown() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Simple.xml");
+        Registry r = buildFrameworkRegistry("Simple.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Simple");
 
@@ -492,7 +492,7 @@ public class TestConfigurationPoint extends FrameworkTestCase
     {
         interceptLogging();
 
-        buildFrameworkRegistry("UnknownContribution.xml");
+        buildFrameworkRegistry("UnknownContribution.xml", false );
 
         assertLoggedMessagePattern("Module gaderian\\.test\\.config has contributed to unknown configuration point UnresolvedSchema\\. "
                 + "The contribution has been ignored\\.");

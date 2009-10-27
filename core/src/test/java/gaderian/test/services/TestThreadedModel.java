@@ -51,7 +51,7 @@ public class TestThreadedModel extends FrameworkTestCase
 
     public void testSingleThread() throws Exception
     {
-        Registry r = buildFrameworkRegistry("StringHolder.xml");
+        Registry r = buildFrameworkRegistry("StringHolder.xml", false );
 
         StringHolder h = (StringHolder) r.getService(
                 "gaderian.test.services.StringHolder",
@@ -96,7 +96,7 @@ public class TestThreadedModel extends FrameworkTestCase
      */
     public void testThreaded() throws Exception
     {
-        Registry r = buildFrameworkRegistry("StringHolder.xml");
+        Registry r = buildFrameworkRegistry("StringHolder.xml", false );
 
         StringHolder h = (StringHolder) r.getService(
                 "gaderian.test.services.StringHolder",
@@ -158,7 +158,7 @@ public class TestThreadedModel extends FrameworkTestCase
 
     public void testIgnoreRegistyShutdownListener() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ThreadedRegistryShutdown.xml");
+        Registry r = buildFrameworkRegistry("ThreadedRegistryShutdown.xml", false );
 
         StringHolder h = (StringHolder) r.getService(
                 "gaderian.test.services.ThreadedRegistryShutdown",
@@ -177,7 +177,7 @@ public class TestThreadedModel extends FrameworkTestCase
 
     public void testDiscardable() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ThreadedDiscardable.xml");
+        Registry r = buildFrameworkRegistry("ThreadedDiscardable.xml", false );
 
         StringHolder h = (StringHolder) r.getService(
                 "gaderian.test.services.ThreadedDiscardable",

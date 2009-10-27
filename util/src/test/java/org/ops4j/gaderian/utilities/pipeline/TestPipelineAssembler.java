@@ -305,7 +305,7 @@ public class TestPipelineAssembler extends GaderianTestCase
      */
     public void testFactoryWithServices() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Pipeline.xml");
+        Registry r = buildFrameworkRegistry("Pipeline.xml", false );
 
         StandardService s = (StandardService) r.getService(
                 "gaderian.utilities.test.Pipeline",
@@ -317,7 +317,7 @@ public class TestPipelineAssembler extends GaderianTestCase
 
     public void testFactoryWithObjects() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Pipeline.xml");
+        Registry r = buildFrameworkRegistry("Pipeline.xml", false );
 
         StandardService s = (StandardService) r.getService(
                 "gaderian.utilities.test.ObjectPipeline",

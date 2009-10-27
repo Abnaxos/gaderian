@@ -33,7 +33,7 @@ public class TestPooledServiceModel extends FrameworkTestCase
      */
     public void testManaged() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Pooled.xml");
+        Registry r = buildFrameworkRegistry("Pooled.xml", false );
 
         StringHolder s =
             (StringHolder) r.getService("gaderian.test.services.Managed", StringHolder.class);
@@ -61,7 +61,7 @@ public class TestPooledServiceModel extends FrameworkTestCase
 
     public void testUnmanaged() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Pooled.xml");
+        Registry r = buildFrameworkRegistry("Pooled.xml", false );
 
         StringHolder s =
             (StringHolder) r.getService("gaderian.test.services.Unmanaged", StringHolder.class);

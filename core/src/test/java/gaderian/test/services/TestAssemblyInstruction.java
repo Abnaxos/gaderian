@@ -45,7 +45,7 @@ public class TestAssemblyInstruction extends GaderianTestCase
 {
     public void testPropertyInjection() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AssemblyInstructions.xml");
+        Registry r = buildFrameworkRegistry("AssemblyInstructions.xml", false );
 
         SimpleService s = (SimpleService) r.getService(
                 "gaderian.test.services.SimpleAssembly",
@@ -56,7 +56,7 @@ public class TestAssemblyInstruction extends GaderianTestCase
 
     public void testEventListener() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AssemblyInstructions.xml");
+        Registry r = buildFrameworkRegistry("AssemblyInstructions.xml", false );
 
         ZapEventProducer p = (ZapEventProducer) r.getService(
                 "gaderian.test.services.ZapEventProducer",

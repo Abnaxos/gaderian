@@ -168,7 +168,7 @@ public class TestEventLinker extends GaderianTestCase
 
     public void testInsideBuilderFactory() throws Exception
     {
-        Registry r = buildFrameworkRegistry("EventRegister.xml");
+        Registry r = buildFrameworkRegistry("EventRegister.xml", false );
 
         ZapEventProducer p = (ZapEventProducer) r.getService(
                 "gaderian.test.services.ZapEventProducer",

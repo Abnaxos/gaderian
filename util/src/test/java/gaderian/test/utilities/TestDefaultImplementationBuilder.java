@@ -108,7 +108,7 @@ public class TestDefaultImplementationBuilder extends GaderianTestCase
 
     public void testModuleDescriptor() throws Exception
     {
-        Registry r = buildFrameworkRegistry("DefaultImplementationBuilder.xml");
+        Registry r = buildFrameworkRegistry("DefaultImplementationBuilder.xml", false );
 
         DefaultImplementationBuilder dib = (DefaultImplementationBuilder) r.getService(
                 "gaderian.utilities.DefaultImplementationBuilder",
@@ -147,7 +147,7 @@ public class TestDefaultImplementationBuilder extends GaderianTestCase
 
     public void testPlaceholderFactory() throws Exception
     {
-        Registry r = buildFrameworkRegistry("DefaultImplementationBuilder.xml");
+        Registry r = buildFrameworkRegistry("DefaultImplementationBuilder.xml", false );
 
         Runnable o = (Runnable) r.getService("gaderian.test.utilities.Runnable", Runnable.class);
 

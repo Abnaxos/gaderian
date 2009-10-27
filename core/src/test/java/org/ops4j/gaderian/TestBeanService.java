@@ -28,7 +28,7 @@ public class TestBeanService extends GaderianTestCase
 
     private void attempt(String name) throws Exception
     {
-        Registry reg = buildFrameworkRegistry("BeanService.xml");
+        Registry reg = buildFrameworkRegistry("BeanService.xml", false );
 
         Reverser r = (Reverser) reg.getService(name, Reverser.class);
 
@@ -69,7 +69,7 @@ public class TestBeanService extends GaderianTestCase
 
     public void testAutowireBeanServiceProperty() throws Exception
     {
-        Registry reg = buildFrameworkRegistry("BeanService.xml");
+        Registry reg = buildFrameworkRegistry("BeanService.xml", false );
         BeanA beanA = ( BeanA )reg.getService( BeanA.class );
         beanA.methodA();
     }

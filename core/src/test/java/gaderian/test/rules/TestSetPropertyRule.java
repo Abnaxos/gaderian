@@ -28,7 +28,7 @@ public class TestSetPropertyRule extends GaderianTestCase
 {
     public void testSuccess() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SetPropertyRule.xml");
+        Registry r = buildFrameworkRegistry("SetPropertyRule.xml", false );
 
         List l = r.getConfiguration("gaderian.test.rules.HonorRoll");
 

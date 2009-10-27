@@ -41,7 +41,7 @@ public class TestDependency extends FrameworkTestCase
 
         interceptLogging();
 
-        buildFrameworkRegistry(provider);
+        buildFrameworkRegistry(provider, false );
 
         assertLoggedMessage("Required module required.module does not exist.");
     }
@@ -63,7 +63,7 @@ public class TestDependency extends FrameworkTestCase
         provider.addModuleDescriptor(dependingModule);
         provider.addModuleDescriptor(requiredModule);
 
-        buildFrameworkRegistry(provider);
+        buildFrameworkRegistry(provider, false );
     }
 
     public void testVersionMismatch() throws Exception
@@ -85,7 +85,7 @@ public class TestDependency extends FrameworkTestCase
 
         interceptLogging();
 
-        buildFrameworkRegistry(provider);
+        buildFrameworkRegistry(provider, false );
 
         assertLoggedMessage("Version of required module required.module does not match expected version 1.0.0.");
     }

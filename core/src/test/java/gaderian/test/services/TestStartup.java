@@ -48,7 +48,7 @@ public class TestStartup extends FrameworkTestCase
 
     public void testStartupContribution() throws Exception
     {
-        Registry r = buildFrameworkRegistry("StartupContribution.xml");
+        Registry r = buildFrameworkRegistry("StartupContribution.xml", false );
 
         StartupRunnableFixture fixture =
             (StartupRunnableFixture) r.getService(

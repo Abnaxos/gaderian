@@ -41,7 +41,7 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
 
       public void testIntegrationWithGC() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SerIntegration.xml");
+        Registry r = buildFrameworkRegistry("SerIntegration.xml", false );
 
         final Object[] resultStorage = new Object[2];
 
@@ -53,7 +53,7 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
 
                 try
                 {
-                    Registry r = buildFrameworkRegistry("SerIntegration.xml");
+                    Registry r = buildFrameworkRegistry("SerIntegration.xml", false );
                     Adder a = (Adder) r.getService(Adder.class);
                     AdderWrapper aw1 = new AdderWrapper(a);
                     final byte[] data = serialize(aw1);
@@ -98,7 +98,7 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
                     }
 
                     // Boot another registry
-                    Registry r = buildFrameworkRegistry("SerIntegration.xml");
+                    Registry r = buildFrameworkRegistry("SerIntegration.xml", false );
 
 
                     AdderWrapper aw2 = (AdderWrapper) deserialize((byte[]) serviceDataHolder.get(0));
@@ -162,7 +162,7 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
 
     public void testIntegration() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SerIntegration.xml");
+        Registry r = buildFrameworkRegistry("SerIntegration.xml", false );
 
         Adder a = (Adder) r.getService(Adder.class);
 

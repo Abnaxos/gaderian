@@ -31,7 +31,7 @@ public class TestUniqueElementAttribute extends FrameworkTestCase
     {
         Registry r =
             buildFrameworkRegistry(
-                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" });
+                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" }, false );
 
         List elements = r.getConfiguration("gaderian.test.parse.MyExtensionPoint");
 
@@ -58,7 +58,7 @@ public class TestUniqueElementAttribute extends FrameworkTestCase
     {
         Registry r =
             buildFrameworkRegistry(
-                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" });
+                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" }, false );
 
         List elements = r.getConfiguration("gaderian.test.parse.MyExtensionPoint2");
 
@@ -72,7 +72,7 @@ public class TestUniqueElementAttribute extends FrameworkTestCase
     {
         Registry r =
             buildFrameworkRegistry(
-                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" });
+                new String[] { "UniqueAttributeDefinition.xml", "UniqueAttributeBroken.xml" }, false );
 
         List elements = r.getConfiguration("gaderian.test.parse.MyExtensionPoint3");
 

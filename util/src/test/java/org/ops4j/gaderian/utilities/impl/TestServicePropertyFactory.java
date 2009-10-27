@@ -250,7 +250,7 @@ public class TestServicePropertyFactory extends GaderianTestCase
 
     public void testIntegrated() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ServicePropertyFactory.xml");
+        Registry r = buildFrameworkRegistry("ServicePropertyFactory.xml", false );
 
         WonkSource source = (WonkSource) r.getService(WonkSource.class);
         Wonk wonkService = (Wonk) r.getService(Wonk.class);
@@ -277,7 +277,7 @@ public class TestServicePropertyFactory extends GaderianTestCase
      */
     public void testIntegratedTwoModules() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ServicePropertyFactoryMaster.xml");
+        Registry r = buildFrameworkRegistry("ServicePropertyFactoryMaster.xml", false );
 
         WonkSource source = (WonkSource) r.getService(WonkSource.class);
         Wonk wonkService = (Wonk) r.getService(Wonk.class);

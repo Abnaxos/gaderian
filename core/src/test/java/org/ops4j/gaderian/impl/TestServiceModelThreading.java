@@ -83,7 +83,7 @@ public class TestServiceModelThreading extends GaderianTestCase
 
     private void execute(String serviceId) throws Exception
     {
-        Registry r = buildFrameworkRegistry("ServiceModelThreading.xml");
+        Registry r = buildFrameworkRegistry("ServiceModelThreading.xml", false );
 
         Worker w = (Worker) r.getService(serviceId, Worker.class);
 

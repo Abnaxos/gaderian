@@ -282,7 +282,7 @@ public class TestStrategyFactory extends GaderianTestCase
 
     public void testIntegration() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AdapterFactoryIntegration.xml");
+        Registry r = buildFrameworkRegistry("AdapterFactoryIntegration.xml", false );
 
         ToStringStrategy ts = (ToStringStrategy) r.getService(ToStringStrategy.class);
 
@@ -291,7 +291,7 @@ public class TestStrategyFactory extends GaderianTestCase
 
     public void testParameterIndex() throws Exception
     {
-    	Registry r = buildFrameworkRegistry("ParameterIndexTest.xml");
+    	Registry r = buildFrameworkRegistry("ParameterIndexTest.xml", false );
     	LoggingStrategy loggingStrategy = ( LoggingStrategy )r.getService(LoggingStrategy.class);
     	Log log = ( Log )newMock( Log.class );
     	final Date now = new Date();

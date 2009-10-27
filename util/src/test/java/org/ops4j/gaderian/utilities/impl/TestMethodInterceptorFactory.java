@@ -29,28 +29,28 @@ public class TestMethodInterceptorFactory extends GaderianTestCase
 
     public void testWithInstanceMethodInterceptor() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("InstanceMethodInterceptor.xml");
+        Registry registry = buildFrameworkRegistry("InstanceMethodInterceptor.xml", false );
         final FortuneCookie cookie = (FortuneCookie) registry.getService(FortuneCookie.class);
         assertEquals( FortuneCookieImpl.FORTUNE + SuffixMethodInterceptor.SUFFIX, cookie.generateFortune());
     }
 
     public void testWithServiceMethodInterceptor() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ServiceMethodInterceptor.xml");
+        Registry registry = buildFrameworkRegistry("ServiceMethodInterceptor.xml", false );
         final FortuneCookie cookie = (FortuneCookie) registry.getService(FortuneCookie.class);
         assertEquals( FortuneCookieImpl.FORTUNE + SuffixMethodInterceptor.SUFFIX, cookie.generateFortune());
     }
 
     public void testWithMultipleMethodInterceptors() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("MultipleMethodInterceptors.xml");
+        Registry registry = buildFrameworkRegistry("MultipleMethodInterceptors.xml", false );
         final FortuneCookie cookie = (FortuneCookie) registry.getService(FortuneCookie.class);
         final String fortune = cookie.generateFortune();
         assertEquals( FortuneCookieImpl.FORTUNE + SuffixMethodInterceptor.SUFFIX + SuffixMethodInterceptor.SUFFIX, fortune);
     }
     public void testWithNonMethodInterceptor() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("NonMethodInterceptor.xml");
+        Registry registry = buildFrameworkRegistry("NonMethodInterceptor.xml", false );
         try
         {
             final FortuneCookie cookie = (FortuneCookie) registry.getService(FortuneCookie.class);

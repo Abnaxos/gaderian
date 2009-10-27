@@ -45,7 +45,7 @@ public class TestEJBProxyFactory extends GaderianTestCase
 
     public void testEJBProxy() throws Exception
     {
-        Registry r = buildFrameworkRegistry("EJBProxy.xml");
+        Registry r = buildFrameworkRegistry("EJBProxy.xml", false );
 
         SimpleHomeImpl home = new SimpleHomeImpl();
         FakeContext context = new FakeContext();
@@ -72,7 +72,7 @@ public class TestEJBProxyFactory extends GaderianTestCase
 
     public void testEJBProxyNameFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("EJBProxy.xml");
+        Registry r = buildFrameworkRegistry("EJBProxy.xml", false );
 
         FakeContext context = new FakeContext();
         context.setForceError(true);
@@ -103,7 +103,7 @@ public class TestEJBProxyFactory extends GaderianTestCase
 
     public void testEJBProxyRemoteFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("EJBProxy.xml");
+        Registry r = buildFrameworkRegistry("EJBProxy.xml", false );
 
         SimpleHomeImpl home = new SimpleHomeImpl();
         home.setForceError(true);

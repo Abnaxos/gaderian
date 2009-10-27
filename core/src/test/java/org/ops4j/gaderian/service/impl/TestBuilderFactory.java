@@ -104,7 +104,7 @@ public class TestBuilderFactory extends GaderianTestCase
 
     public void testListPropertyAutowire() throws Exception
     {
-        final Registry reg = buildFrameworkRegistry("ListProperty.xml");
+        final Registry reg = buildFrameworkRegistry("ListProperty.xml", false );
         ListPropertyBean bean = (ListPropertyBean) reg.getService(ListPropertyBean.class);
         assertNull(bean.getList());
 

@@ -28,7 +28,7 @@ public class TestSimpleModuleWithDefaultFactoryServiceId extends FrameworkTestCa
 {
     public void testSimpleModuleWithUnknownDefaultFactoryServiceId() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SimpleModuleWithUnknownDefaultServiceFactory.xml");
+        Registry r = buildFrameworkRegistry("SimpleModuleWithUnknownDefaultServiceFactory.xml", false );
 
         try
         {

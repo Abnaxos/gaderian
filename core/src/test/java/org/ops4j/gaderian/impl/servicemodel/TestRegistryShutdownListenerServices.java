@@ -25,7 +25,7 @@ public class TestRegistryShutdownListenerServices extends GaderianTestCase
 {
     private void executeShutdownListenerTest(String type) throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml");
+        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml", false );
         Simple simple = (Simple) registry.getService("gaderian.test." + type + "Simple", Simple.class);
         final Counter counter = new Counter();
         simple.setCounter(counter);
@@ -53,26 +53,26 @@ public class TestRegistryShutdownListenerServices extends GaderianTestCase
 
     public void testSingletonBeanRegistryShutdownListener() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml");
+        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml", false );
         RegistryShutdownBean bean = ( RegistryShutdownBean )registry.getService( "gaderian.test.registryShutdownBeanSingleton", RegistryShutdownBean.class );
         bean.someMethod();
     }
 
     public void testThreadedBeanRegistryShutdownListener() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml");
+        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml", false );
         RegistryShutdownBean bean = ( RegistryShutdownBean )registry.getService( "gaderian.test.registryShutdownBeanThreaded", RegistryShutdownBean.class );
         bean.someMethod();
     }
     public void testPooledBeanRegistryShutdownListener() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml");
+        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml", false );
         RegistryShutdownBean bean = ( RegistryShutdownBean )registry.getService( "gaderian.test.registryShutdownBeanPooled", RegistryShutdownBean.class );
         bean.someMethod();
     }
     public void testPrimitiveBeanRegistryShutdownListener() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml");
+        Registry registry = buildFrameworkRegistry("ShutdownListenerServices.xml", false );
         RegistryShutdownBean bean = ( RegistryShutdownBean )registry.getService( "gaderian.test.registryShutdownBeanPrimitive", RegistryShutdownBean.class );
         bean.someMethod();
     }

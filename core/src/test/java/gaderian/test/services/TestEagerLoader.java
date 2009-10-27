@@ -53,7 +53,7 @@ public class TestEagerLoader extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Loud");
 
-        buildFrameworkRegistry("EagerLoadSingleton.xml");
+        buildFrameworkRegistry("EagerLoadSingleton.xml", false );
 
         assertLoggedMessage("Instantiated.");
     }
@@ -62,7 +62,7 @@ public class TestEagerLoader extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Loud");
 
-        buildFrameworkRegistry("EagerLoadPrimitive.xml");
+        buildFrameworkRegistry("EagerLoadPrimitive.xml", false );
 
         assertLoggedMessage("Instantiated.");
     }
@@ -71,7 +71,7 @@ public class TestEagerLoader extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Loud");
 
-        buildFrameworkRegistry("EagerLoadThreaded.xml");
+        buildFrameworkRegistry("EagerLoadThreaded.xml", false );
 
         assertLoggedMessage("Instantiated.");
     }
@@ -80,7 +80,7 @@ public class TestEagerLoader extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Loud");
 
-        buildFrameworkRegistry("EagerLoadPooled.xml");
+        buildFrameworkRegistry("EagerLoadPooled.xml", false );
 
         assertLoggedMessage("Instantiated.");
     }

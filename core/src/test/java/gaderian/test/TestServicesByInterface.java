@@ -30,7 +30,7 @@ public class TestServicesByInterface extends FrameworkTestCase
     {
     	super.setUp();
     	
-        registry = buildFrameworkRegistry("servicesByInterface.xml");
+        registry = buildFrameworkRegistry("servicesByInterface.xml", false );
     }
 
     protected void tearDown() throws Exception

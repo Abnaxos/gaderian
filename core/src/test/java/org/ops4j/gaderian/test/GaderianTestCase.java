@@ -30,10 +30,7 @@ import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.ModuleDescriptorProvider;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.Resource;
-import org.ops4j.gaderian.impl.DefaultClassResolver;
-import org.ops4j.gaderian.impl.LocationImpl;
-import org.ops4j.gaderian.impl.RegistryBuilder;
-import org.ops4j.gaderian.impl.XmlModuleDescriptorProvider;
+import org.ops4j.gaderian.impl.*;
 import org.ops4j.gaderian.internal.ser.ServiceSerializationHelper;
 import org.ops4j.gaderian.util.ClasspathResource;
 import org.ops4j.gaderian.util.PropertyUtils;
@@ -381,36 +378,39 @@ public abstract class GaderianTestCase extends TestCase
     }
 
     /**
-     * Convienience method for invoking {@link #buildFrameworkRegistry(String[])} with only a single
+     * Convienience method for invoking {@link #buildFrameworkRegistry(String[],boolean)} with only a single
      * file.
      */
-    protected Registry buildFrameworkRegistry(String file) throws Exception
+    protected Registry buildFrameworkRegistry( String file, final boolean useStrictErrorHandler ) throws Exception
     {
         return buildFrameworkRegistry(new String[]
-        { file });
+        { file }, useStrictErrorHandler );
     }
 
     /**
      * Builds a minimal registry, containing only the specified files, plus the master module
      * descriptor (i.e., those visible on the classpath). Files are resolved using
      * {@link GaderianTestCase#getResource(String)}.
+     * @param files The files to process
+     * @param useStrictErrorHandler
+     * @return The constructed registry
+     * @throws Exception If an error occurs while building the registry
      */
-    protected Registry buildFrameworkRegistry(String[] files) throws Exception
+    protected Registry buildFrameworkRegistry( String[] files, final boolean useStrictErrorHandler ) throws Exception
     {
         ClassResolver resolver = getClassResolver();
 
-        List descriptorResources = new ArrayList();
-        for (int i = 0; i < files.length; i++)
+        List<Resource> descriptorResources = new ArrayList<Resource>();
+        for ( String file : files )
         {
-            Resource resource = getResource(files[i]);
+            Resource resource = getResource( file );
 
-            descriptorResources.add(resource);
+            descriptorResources.add( resource );
         }
 
-        ModuleDescriptorProvider provider = new XmlModuleDescriptorProvider(resolver,
-                descriptorResources);
+        ModuleDescriptorProvider provider = new XmlModuleDescriptorProvider(resolver, descriptorResources);
 
-        return buildFrameworkRegistry(provider);
+        return buildFrameworkRegistry(provider, useStrictErrorHandler );
     }
 
     /**
@@ -418,11 +418,11 @@ public abstract class GaderianTestCase extends TestCase
      * {@link org.ops4j.gaderian.ModuleDescriptorProvider}, plus the master module descriptor
      * (i.e., those visible on the classpath).
      */
-    protected Registry buildFrameworkRegistry(ModuleDescriptorProvider customProvider)
+    protected Registry buildFrameworkRegistry( ModuleDescriptorProvider customProvider, final boolean useStrictErrorHandler )
     {
         ClassResolver resolver = getClassResolver();
 
-        RegistryBuilder builder = new RegistryBuilder();
+        RegistryBuilder builder = (useStrictErrorHandler ? new RegistryBuilder(new StrictErrorHandler()) : new RegistryBuilder());
 
         builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver));
         builder.addModuleDescriptorProvider(customProvider);
@@ -472,7 +472,7 @@ public abstract class GaderianTestCase extends TestCase
      * Accesses the control for a previously created mock object. Iterates over the list of managed
      * controls until one is found whose mock object identity equals the mock object provided.
      *
-     * @param Mock
+     * @param mock
      *            object whose control is needed
      * @return the corresponding MockControl if found
      * @throws IllegalArgumentException

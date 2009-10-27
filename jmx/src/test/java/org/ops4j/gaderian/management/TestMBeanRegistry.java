@@ -73,7 +73,7 @@ public class TestMBeanRegistry extends GaderianTestCase
      */
     public void testContribution() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("testMBeanRegistry.xml");
+        Registry registry = buildFrameworkRegistry("testMBeanRegistry.xml", false );
         List mBeanList = registry.getConfiguration("gaderian.management.MBeans");
 
         // Training
@@ -154,7 +154,7 @@ public class TestMBeanRegistry extends GaderianTestCase
      */
     public void testRegistrationException() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("testMBeanRegistry.xml");
+        Registry registry = buildFrameworkRegistry("testMBeanRegistry.xml", false );
         List mBeanList = registry.getConfiguration("gaderian.management.MBeans");
 
         ServicePoint sp1 = ((MBeanRegistrationContribution) mBeanList.get(0)).getServicePoint();

@@ -29,7 +29,7 @@ public class TestInvokeParentRule extends FrameworkTestCase
 
     public void testInvokeFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("InvokeFailure.xml");
+        Registry r = buildFrameworkRegistry("InvokeFailure.xml", false );
 
         try
         {

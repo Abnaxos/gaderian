@@ -34,7 +34,7 @@ public class TestShutdown extends FrameworkTestCase
     public void testShutdownSingleton() throws Exception
 
     {
-        Registry r = buildFrameworkRegistry("SimpleModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleModule.xml", false );
         SimpleService s = (SimpleService) r.getService(
                 "gaderian.test.services.Simple",
                 SimpleService.class);
@@ -57,7 +57,7 @@ public class TestShutdown extends FrameworkTestCase
      public void testShutdownSingletonConcreteClass() throws Exception
 
     {
-        Registry r = buildFrameworkRegistry("SimpleConcreteModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleConcreteModule.xml", false );
         SimpleShutdownAwareConcreteService s = (SimpleShutdownAwareConcreteService) r.getService(
                 "gaderian.test.services.SimpleShutdownAwareConcreteService",
                 SimpleShutdownAwareConcreteService.class);
@@ -87,7 +87,7 @@ public class TestShutdown extends FrameworkTestCase
 
     public void testShutdownSingletonClassServiceInterfaceExtendingRegistryShutdownListener() throws Exception
     {
-       Registry r = buildFrameworkRegistry("SimpleModule.xml");
+       Registry r = buildFrameworkRegistry("SimpleModule.xml", false );
        SimpleShutdownAwareService s = (SimpleShutdownAwareService) r.getService(
                "gaderian.test.services.SimpleShutdownAware",
                SimpleShutdownAwareService.class);
@@ -119,7 +119,7 @@ public class TestShutdown extends FrameworkTestCase
 
     public void testRegistryShutdownUnrepeatable() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SimpleModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleModule.xml", false );
 
         r.shutdown();
 
@@ -146,7 +146,7 @@ public class TestShutdown extends FrameworkTestCase
 
     public void testShutdownThreaded() throws Exception
     {
-        Registry r = buildFrameworkRegistry("StringHolder.xml");
+        Registry r = buildFrameworkRegistry("StringHolder.xml", false );
 
         StringHolder h = (StringHolder) r.getService(
                 "gaderian.test.services.StringHolder",
@@ -173,7 +173,7 @@ public class TestShutdown extends FrameworkTestCase
 
     public void testSingletonCore() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Shutdown.xml");
+        Registry r = buildFrameworkRegistry("Shutdown.xml", false );
 
         Runnable s = (Runnable) r.getService("gaderian.test.services.Singleton", Runnable.class);
 
@@ -190,7 +190,7 @@ public class TestShutdown extends FrameworkTestCase
 
     public void testPrimitiveCore() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Shutdown.xml");
+        Registry r = buildFrameworkRegistry("Shutdown.xml", false );
 
         Runnable s = (Runnable) r.getService("gaderian.test.services.Primitive", Runnable.class);
 

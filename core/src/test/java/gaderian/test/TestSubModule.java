@@ -28,7 +28,7 @@ public class TestSubModule extends FrameworkTestCase
 {
     public void testNestedSubModule() throws Exception
     {
-        Registry r = buildFrameworkRegistry("OuterModule.xml");
+        Registry r = buildFrameworkRegistry("OuterModule.xml", false );
 
         SimpleService s = (SimpleService) r.getService(
                 "gaderian.test.outer.Simple",
@@ -42,14 +42,14 @@ public class TestSubModule extends FrameworkTestCase
     {
         interceptLogging();
 
-        buildFrameworkRegistry("MissingSubModule.xml");
+        buildFrameworkRegistry("MissingSubModule.xml", false );
 
         assertLoggedMessagePattern("Sub-module .*?/DoesNotExist\\.xml does not exist\\.");
     }
 
     public void testConditionalSubModuleIncluded() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConditionalIncludedSubmodule.xml");
+        Registry r = buildFrameworkRegistry("ConditionalIncludedSubmodule.xml", false );
         SimpleService s = (SimpleService) r.getService(
                 "gaderian.test.outer.Simple",
                 SimpleService.class);
@@ -58,7 +58,7 @@ public class TestSubModule extends FrameworkTestCase
 
     public void testConditionalSubModuleNotIncluded() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConditionalNotIncludedSubmodule.xml");
+        Registry r = buildFrameworkRegistry("ConditionalNotIncludedSubmodule.xml", false );
 
         try
         {

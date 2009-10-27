@@ -34,7 +34,7 @@ public class TestPerformanceMonitorFactory extends GaderianTestCase
      */
     public void testIntegration() throws Exception
     {
-        Registry registry = buildFrameworkRegistry("testPerformanceMonitorFactory.xml");
+        Registry registry = buildFrameworkRegistry("testPerformanceMonitorFactory.xml", false );
 
         // Get Calculator service so that interceptor gets created
         Calculator calculator = (Calculator) registry.getService(Calculator.class);

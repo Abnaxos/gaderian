@@ -123,7 +123,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
 
     public void testWrongType() throws Exception
     {
-        Registry r = buildFrameworkRegistry("WrongType.xml");
+        Registry r = buildFrameworkRegistry("WrongType.xml", false );
 
         interceptLogging();
 

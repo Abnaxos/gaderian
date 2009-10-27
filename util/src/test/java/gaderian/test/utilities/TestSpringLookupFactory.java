@@ -116,7 +116,7 @@ public class TestSpringLookupFactory extends GaderianTestCase
 
         BeanFactory beanFactory = new XmlBeanFactory(springBeansResource);
 
-        Registry r = buildFrameworkRegistry("SpringIntegration.xml");
+        Registry r = buildFrameworkRegistry("SpringIntegration.xml", false );
 
         SpringBeanFactoryHolder h = (SpringBeanFactoryHolder) r.getService(
                 "gaderian.utilities.DefaultSpringBeanFactoryHolder",

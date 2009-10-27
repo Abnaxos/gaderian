@@ -46,7 +46,7 @@ public class TestConfigurationTranslator extends FrameworkTestCase
 
     public void testConfigurationTranslator() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml");
+        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml", false );
 
         DatumHolder h = (DatumHolder) r.getService(
                 "gaderian.test.rules.ExtensionPointTranslator",
@@ -59,7 +59,7 @@ public class TestConfigurationTranslator extends FrameworkTestCase
 
     public void testFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml");
+        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml", false );
 
         interceptLogging("gaderian.test.rules");
 
@@ -77,7 +77,7 @@ public class TestConfigurationTranslator extends FrameworkTestCase
 
     public void testMappedConfigurationTranslator() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml");
+        Registry r = buildFrameworkRegistry("ConfigurationTranslator.xml", false );
 
         MappedDatumHolder h = (MappedDatumHolder) r.getService(
                 "gaderian.test.rules.MappedExtensionPointTranslator",

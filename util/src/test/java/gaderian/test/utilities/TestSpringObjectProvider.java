@@ -59,7 +59,7 @@ public class TestSpringObjectProvider extends GaderianTestCase
 
         BeanFactory beanFactory = new XmlBeanFactory(springBeansResource);
 
-        Registry r = buildFrameworkRegistry("SpringProvider.xml");
+        Registry r = buildFrameworkRegistry("SpringProvider.xml", false );
 
         SpringBeanFactoryHolder h = (SpringBeanFactoryHolder) r.getService(
                 "gaderian.utilities.DefaultSpringBeanFactoryHolder",

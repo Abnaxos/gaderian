@@ -89,19 +89,19 @@ public class TestLoggingInterceptorFactory extends GaderianTestCase
     }
 
     public void testJavassistProxies() throws Exception {
-		final Registry reg = buildFrameworkRegistry("generated.xml" );
+		final Registry reg = buildFrameworkRegistry("generated.xml", false );
 		final BeanInterface bean = ( BeanInterface )reg.getService( "generated.JavassistBeanInterface", BeanInterface.class );
 		bean.interfaceMethod();
 	}
 
 	public void testCglibProxies() throws Exception {
-		final Registry reg = buildFrameworkRegistry("generated.xml" );
+		final Registry reg = buildFrameworkRegistry("generated.xml", false );
 		final BeanInterface bean = ( BeanInterface )reg.getService( "generated.CglibBeanInterface", BeanInterface.class );
 		bean.interfaceMethod();
 	}
 
 	public void testJdkProxies() throws Exception {
-		final Registry reg = buildFrameworkRegistry("generated.xml" );
+		final Registry reg = buildFrameworkRegistry("generated.xml", false );
 		final BeanInterface bean = ( BeanInterface )reg.getService( "generated.JdkBeanInterface", BeanInterface.class );
 		bean.interfaceMethod();
 	}

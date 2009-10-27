@@ -169,7 +169,7 @@ public class TestLogManagementMBean extends GaderianTestCase
     {
         Logger logger = Logger.getLogger("package1.logger1");
 
-        Registry registry = buildFrameworkRegistry("testLogManagementMBean.xml");
+        Registry registry = buildFrameworkRegistry("testLogManagementMBean.xml", false );
 
         registry.getService(LogManagement.class);
 

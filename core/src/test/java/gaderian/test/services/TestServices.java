@@ -35,7 +35,7 @@ public class TestServices extends FrameworkTestCase
     {
       // Added for GAD-7
 
-        Registry r = buildFrameworkRegistry("SimpleCovariantModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleCovariantModule.xml", false );
 
         assertNotNull(r);
 
@@ -52,7 +52,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testSimple() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SimpleModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleModule.xml", false );
 
         assertNotNull(r);
 
@@ -68,7 +68,7 @@ public class TestServices extends FrameworkTestCase
      */
     public void testCache() throws Exception
     {
-        Registry r = buildFrameworkRegistry("SimpleModule.xml");
+        Registry r = buildFrameworkRegistry("SimpleModule.xml", false );
 
         assertNotNull(r);
 
@@ -82,7 +82,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testComplex() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ComplexModule.xml");
+        Registry r = buildFrameworkRegistry("ComplexModule.xml", false );
 
         SimpleService s =
             (SimpleService) r.getService("gaderian.test.services.Simple", SimpleService.class);
@@ -113,7 +113,7 @@ public class TestServices extends FrameworkTestCase
                     "SimpleModule.xml",
                     "AddSimpleInterceptors1.xml",
                     "AddSimpleInterceptors2.xml",
-                    "Tracker.xml" });
+                    "Tracker.xml" }, false );
 
         SimpleService s =
             (SimpleService) r.getService("gaderian.test.services.Simple", SimpleService.class);
@@ -132,7 +132,7 @@ public class TestServices extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Demo");
 
-        Registry r = buildFrameworkRegistry("TestLogging.xml");
+        Registry r = buildFrameworkRegistry("TestLogging.xml", false );
 
         DemoService s =
             (DemoService) r.getService("gaderian.test.services.Demo", DemoService.class);
@@ -175,7 +175,7 @@ public class TestServices extends FrameworkTestCase
     {
         interceptLogging("gaderian.test.services.Demo");
 
-        Registry r = buildFrameworkRegistry("LoggingMethodFilters.xml");
+        Registry r = buildFrameworkRegistry("LoggingMethodFilters.xml", false );
 
         DemoService s =
             (DemoService) r.getService("gaderian.test.services.Demo", DemoService.class);
@@ -215,7 +215,7 @@ public class TestServices extends FrameworkTestCase
      */
     public void testRecursiveService() throws Exception
     {
-        Registry r = buildFrameworkRegistry("RecursiveService.xml");
+        Registry r = buildFrameworkRegistry("RecursiveService.xml", false );
 
         try
         {
@@ -233,7 +233,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testServiceTranslator() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ServiceTranslator.xml");
+        Registry r = buildFrameworkRegistry("ServiceTranslator.xml", false );
 
         SimpleService ss =
             (SimpleService) r.getService("gaderian.test.services.Simple", SimpleService.class);
@@ -262,7 +262,7 @@ public class TestServices extends FrameworkTestCase
      */
     public void testToString() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ToString.xml");
+        Registry r = buildFrameworkRegistry("ToString.xml", false );
 
         ToString ts = (ToString) r.getService("gaderian.test.services.ToString", ToString.class);
 
@@ -278,7 +278,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testBuilderAccess() throws Exception
     {
-        Registry r = buildFrameworkRegistry("BuilderAccess.xml");
+        Registry r = buildFrameworkRegistry("BuilderAccess.xml", false );
 
         BuilderAccess s =
             (BuilderAccess) r.getService(
@@ -298,7 +298,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testBuilderAccessFailure() throws Exception
     {
-        Registry r = buildFrameworkRegistry("BuilderAccessFailure.xml");
+        Registry r = buildFrameworkRegistry("BuilderAccessFailure.xml", false );
 
         // interceptLogging("gaderian.test.services.BuilderAccessFailure");
 
@@ -323,7 +323,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testConstructorFactory() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConstructorFactory.xml");
+        Registry r = buildFrameworkRegistry("ConstructorFactory.xml", false );
 
         String[] servicesToTest =
             {
@@ -349,7 +349,7 @@ public class TestServices extends FrameworkTestCase
 
     public void testArrayResult() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ArrayResult.xml");
+        Registry r = buildFrameworkRegistry("ArrayResult.xml", false );
 
         ArrayService s =
             (ArrayService) r.getService("gaderian.test.services.ArrayResult", ArrayService.class);

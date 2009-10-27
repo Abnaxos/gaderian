@@ -220,7 +220,7 @@ public class TestBeanFactoryImpl extends GaderianTestCase
      */
     public void testIntegration() throws Exception
     {
-        Registry r = buildFrameworkRegistry("NumberFactory.xml");
+        Registry r = buildFrameworkRegistry("NumberFactory.xml", false );
 
         BeanFactory f = (BeanFactory) r.getService(
                 "gaderian.utilities.test.NumberFactory",

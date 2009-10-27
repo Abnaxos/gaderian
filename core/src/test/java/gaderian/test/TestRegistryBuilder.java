@@ -96,7 +96,7 @@ public class TestRegistryBuilder extends FrameworkTestCase
 
         interceptLogging();
 
-        buildFrameworkRegistry(provider);
+        buildFrameworkRegistry(provider, false );
 
         assertLoggedMessagePattern("Module " + duplicateModuleId + " is duplicated!");
     }
@@ -116,7 +116,7 @@ public class TestRegistryBuilder extends FrameworkTestCase
 
         interceptLogging();
 
-        buildFrameworkRegistry(provider);
+        buildFrameworkRegistry(provider, false );
 
         List interceptedEvents = getInterceptedLogEvents();
 

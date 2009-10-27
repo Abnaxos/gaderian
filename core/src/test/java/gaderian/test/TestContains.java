@@ -29,7 +29,7 @@ public class TestContains extends FrameworkTestCase
     {
     	super.setUp();
 
-        registry = buildFrameworkRegistry("contains.xml");
+        registry = buildFrameworkRegistry("contains.xml", false );
     }
 
     protected void tearDown() throws Exception

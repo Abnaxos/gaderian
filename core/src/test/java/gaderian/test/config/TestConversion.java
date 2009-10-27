@@ -33,7 +33,7 @@ public class TestConversion extends FrameworkTestCase
 {
     public void testBasics() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Basics.xml");
+        Registry r = buildFrameworkRegistry("Basics.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Basics");
 
@@ -54,7 +54,7 @@ public class TestConversion extends FrameworkTestCase
 
     public void testParentMethod() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ConversionParentMethod.xml");
+        Registry r = buildFrameworkRegistry("ConversionParentMethod.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.ConversionParentMethod");
 
@@ -75,7 +75,7 @@ public class TestConversion extends FrameworkTestCase
 
     public void testPropertyNameDefaultsToAttributeName() throws Exception
     {
-        Registry r = buildFrameworkRegistry("Basics2.xml");
+        Registry r = buildFrameworkRegistry("Basics2.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.Basics2");
 
@@ -96,7 +96,7 @@ public class TestConversion extends FrameworkTestCase
 
     public void testComplexAttributeName() throws Exception
     {
-        Registry r = buildFrameworkRegistry("ComplexAttributeName.xml");
+        Registry r = buildFrameworkRegistry("ComplexAttributeName.xml", false );
 
         List l = r.getConfiguration("gaderian.test.config.ComplexAttributeName");
 
@@ -111,7 +111,7 @@ public class TestConversion extends FrameworkTestCase
     {
         interceptLogging();
 
-        Registry r = buildFrameworkRegistry("ExtraAttributeNames.xml");
+        Registry r = buildFrameworkRegistry("ExtraAttributeNames.xml", false );
 
         assertLoggedMessagePattern(
             "Mappings for unknown attribute\\(s\\) \\[extra\\] "
@@ -138,7 +138,7 @@ public class TestConversion extends FrameworkTestCase
     {
         interceptLogging();
 
-		Registry r = buildFrameworkRegistry("DuplicateAttribute.xml");
+		Registry r = buildFrameworkRegistry("DuplicateAttribute.xml", false );
 
         assertLoggedMessagePattern(
             "Mapping for attribute item-name conflicts with a previous "
