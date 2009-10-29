@@ -15,13 +15,13 @@
 package org.ops4j.gaderian.impl.servicemodel;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * @author James Carman
  * @version 1.0
  */
-public class TestRegistryShutdownListenerServices extends GaderianTestCase
+public class TestRegistryShutdownListenerServices extends GaderianCoreTestCase
 {
     private void executeShutdownListenerTest(String type) throws Exception
     {

@@ -18,13 +18,13 @@ import java.util.LinkedList;
 
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * @author James Carman
  * @version 1.0
  */
-public class TestServiceImplementationFactoryParametersImpl extends GaderianTestCase
+public class TestServiceImplementationFactoryParametersImpl extends GaderianCoreTestCase
 {
     public void testGetFirstParameter()
     {

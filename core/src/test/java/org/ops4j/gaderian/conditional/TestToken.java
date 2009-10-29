@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian.conditional;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.conditional.Token} and
@@ -23,7 +23,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestToken extends GaderianTestCase
+public class TestToken extends GaderianCoreTestCase
 {
     public void testTokenTypeToString()
     {

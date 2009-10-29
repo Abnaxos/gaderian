@@ -17,14 +17,14 @@ package gaderian.test.rules;
 import java.util.List;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.schema.rules.SetPropertyRule}.
  *
  * @author Howard Lewis Ship
  */
-public class TestSetPropertyRule extends GaderianTestCase
+public class TestSetPropertyRule extends GaderianCoreTestCase
 {
     public void testSuccess() throws Exception
     {

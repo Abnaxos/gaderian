@@ -17,7 +17,7 @@ package org.ops4j.gaderian.utilities.pipeline;
 import java.lang.reflect.Method;
 
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 public class TestFilterMethodAnalyzer extends GaderianTestCase
 {
@@ -25,10 +25,10 @@ public class TestFilterMethodAnalyzer extends GaderianTestCase
     {
         Method[] methods = target.getMethods();
 
-        for (int i = 0; i < methods.length; i++)
+        for ( Method method : methods )
         {
-            if (methods[i].getName().equals(name))
-                return new MethodSignature(methods[i]);
+            if (method.getName().equals(name))
+                return new MethodSignature(method);
         }
 
         unreachable();

@@ -22,7 +22,7 @@ import org.ops4j.gaderian.impl.InterceptorStackImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.service.ClassFactory;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -31,7 +31,7 @@ import org.easymock.MockControl;
  * @author Howard Lewis Ship
  * @author James Carman
  */
-public class TestLoggingInterceptorFactory extends GaderianTestCase
+public class TestLoggingInterceptorFactory extends GaderianCoreTestCase
 {
     /**
      * A test for HIVEMIND-55 ... ensure that the LoggingInterceptor can work on

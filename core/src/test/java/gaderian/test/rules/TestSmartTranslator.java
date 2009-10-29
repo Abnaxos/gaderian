@@ -21,14 +21,14 @@ import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.schema.rules.SmartTranslator;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.schema.rules.SmartTranslator}.
  *
  * @author Howard Lewis Ship
  */
-public class TestSmartTranslator extends GaderianTestCase
+public class TestSmartTranslator extends GaderianCoreTestCase
 {
 
     /**

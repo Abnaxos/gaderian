@@ -21,7 +21,7 @@ import org.ops4j.gaderian.Occurances;
 import org.ops4j.gaderian.ServiceImplementationFactory;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -29,7 +29,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestInvokeFactoryServiceConstructor extends GaderianTestCase
+public class TestInvokeFactoryServiceConstructor extends GaderianCoreTestCase
 {
     public void testWrongNumberOfParameters()
     {

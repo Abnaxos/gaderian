@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.BeanFactory;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.factory.BeanFactoryImpl} and
@@ -34,7 +34,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestBeanFactoryImpl extends GaderianTestCase
+public class TestBeanFactoryImpl extends GaderianCoreTestCase
 {
     private BeanFactoryContribution build(String name, Class objectClass)
     {

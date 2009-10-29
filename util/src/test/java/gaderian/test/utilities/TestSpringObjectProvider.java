@@ -14,11 +14,11 @@
 
 package gaderian.test.utilities;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.Registry;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.SpringBeanFactoryHolder;
 import org.ops4j.gaderian.utilities.impl.SpringObjectProvider;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -27,7 +27,7 @@ import org.springframework.core.io.ClassPathResource;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestSpringObjectProvider extends GaderianTestCase
+public class TestSpringObjectProvider extends GaderianCoreTestCase
 {
     public void testBasic()
     {

@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian.conditional;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.conditional.Parser}.
@@ -22,7 +22,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestParser extends GaderianTestCase
+public class TestParser extends GaderianCoreTestCase
 {
     public void testSingleTerm()
     {

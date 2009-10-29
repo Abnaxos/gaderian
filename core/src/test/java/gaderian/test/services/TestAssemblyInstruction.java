@@ -32,7 +32,7 @@ import org.ops4j.gaderian.service.impl.BuilderFacet;
 import org.ops4j.gaderian.service.impl.BuilderLogFacet;
 import org.ops4j.gaderian.service.impl.BuilderMessagesFacet;
 import org.ops4j.gaderian.service.impl.BuilderServiceIdFacet;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -41,7 +41,7 @@ import org.easymock.MockControl;
  *
  * @author Knut Wannheden
  */
-public class TestAssemblyInstruction extends GaderianTestCase
+public class TestAssemblyInstruction extends GaderianCoreTestCase
 {
     public void testPropertyInjection() throws Exception
     {

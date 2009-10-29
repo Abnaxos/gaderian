@@ -18,9 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import org.ops4j.gaderian.utilities.util.StrategyRegistry;
-import org.ops4j.gaderian.utilities.util.StrategyRegistryImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
  * Tests the {@link org.ops4j.gaderian.utilities.util.StrategyRegistryImpl} class.

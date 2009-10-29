@@ -24,9 +24,10 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Gaderian;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -34,7 +35,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestServicePropertyFactory extends GaderianTestCase
+public class TestServicePropertyFactory extends GaderianCoreTestCase
 {
     private ServicePropertyFactory newFactory()
     {
@@ -252,8 +253,8 @@ public class TestServicePropertyFactory extends GaderianTestCase
     {
         Registry r = buildFrameworkRegistry("ServicePropertyFactory.xml", false );
 
-        WonkSource source = (WonkSource) r.getService(WonkSource.class);
-        Wonk wonkService = (Wonk) r.getService(Wonk.class);
+        WonkSource source = r.getService(WonkSource.class);
+        Wonk wonkService = r.getService(Wonk.class);
 
         Wonk wonk = (Wonk) newMock(Wonk.class);
 
@@ -279,8 +280,8 @@ public class TestServicePropertyFactory extends GaderianTestCase
     {
         Registry r = buildFrameworkRegistry("ServicePropertyFactoryMaster.xml", false );
 
-        WonkSource source = (WonkSource) r.getService(WonkSource.class);
-        Wonk wonkService = (Wonk) r.getService(Wonk.class);
+        WonkSource source = r.getService(WonkSource.class);
+        Wonk wonkService = r.getService(Wonk.class);
 
         Wonk wonk = (Wonk) newMock(Wonk.class);
 

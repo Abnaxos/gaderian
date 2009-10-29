@@ -18,14 +18,14 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.impl.RegistryBuilder;
 import org.ops4j.gaderian.service.BodyBuilder;
 import org.ops4j.gaderian.service.ClassFab;
 import org.ops4j.gaderian.service.MethodFab;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.chain.ChainBuilderImpl} and
@@ -34,7 +34,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestChainBuilder extends GaderianTestCase
+public class TestChainBuilder extends GaderianCoreTestCase
 {
     public void testDefaultforReturnType()
     {

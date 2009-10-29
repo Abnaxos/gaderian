@@ -16,7 +16,7 @@ package org.ops4j.gaderian.schema.rules;
 
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.Translator;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -25,7 +25,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestIdTranslators extends GaderianTestCase
+public class TestIdTranslators extends GaderianCoreTestCase
 {
     public void testNullId()
     {

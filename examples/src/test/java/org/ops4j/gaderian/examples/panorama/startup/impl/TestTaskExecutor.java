@@ -26,7 +26,7 @@ import org.ops4j.gaderian.impl.ModuleMessages;
 import org.ops4j.gaderian.internal.MessageFinder;
 import org.ops4j.gaderian.service.ThreadLocale;
 import org.ops4j.gaderian.service.impl.ThreadLocaleImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.test.*;
 import org.ops4j.gaderian.util.ClasspathResource;
 import org.easymock.MockControl;
@@ -42,7 +42,7 @@ import java.util.Locale;
  *
  * @author Howard Lewis Ship
  */
-public class TestTaskExecutor extends GaderianTestCase
+public class TestTaskExecutor extends GaderianCoreTestCase
 {
     private static List _tokens = new ArrayList();
 

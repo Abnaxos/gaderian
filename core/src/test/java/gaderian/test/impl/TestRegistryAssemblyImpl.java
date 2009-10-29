@@ -15,14 +15,14 @@
 package gaderian.test.impl;
 
 import org.ops4j.gaderian.impl.RegistryAssemblyImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Suite of tests for {@link TestRegistryAssemblyImpl}.
  *
  * @author Howard Lewis Ship
  */
-public class TestRegistryAssemblyImpl extends GaderianTestCase
+public class TestRegistryAssemblyImpl extends GaderianCoreTestCase
 {
     private static class TestRunnable implements Runnable
     {

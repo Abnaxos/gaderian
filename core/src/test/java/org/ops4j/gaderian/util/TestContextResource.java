@@ -20,7 +20,7 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 
 import org.ops4j.gaderian.Resource;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.util.ContextResource}.
@@ -28,7 +28,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestContextResource extends GaderianTestCase
+public class TestContextResource extends GaderianCoreTestCase
 {
     private ServletContext newContext()
     {

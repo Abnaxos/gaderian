@@ -36,7 +36,7 @@ import org.ops4j.gaderian.schema.rules.InvokeParentRule;
 import org.ops4j.gaderian.schema.rules.NullTranslator;
 import org.ops4j.gaderian.schema.rules.ReadAttributeRule;
 import org.ops4j.gaderian.schema.rules.ReadContentRule;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -45,7 +45,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestSchemaProcessor extends GaderianTestCase
+public class TestSchemaProcessor extends GaderianCoreTestCase
 {
 
     public void testGetContentTranslator()

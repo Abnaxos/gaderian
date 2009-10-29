@@ -21,14 +21,14 @@ import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.service.impl.MethodSignature} class.
  *
  * @author Howard Lewis Ship
  */
-public class TestMethodSignature extends GaderianTestCase
+public class TestMethodSignature extends GaderianCoreTestCase
 {
     private MethodSignature find(Class sourceClass, String methodName)
     {

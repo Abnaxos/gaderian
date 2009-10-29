@@ -23,7 +23,7 @@ import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
 import org.ops4j.gaderian.test.ArgumentMatcher;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.test.TypeMatcher;
 import org.easymock.MockControl;
 
@@ -33,7 +33,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestBuilderFactory extends GaderianTestCase
+public class TestBuilderFactory extends GaderianCoreTestCase
 {
     /**
      * Tests for errors when actually invoking the initializer method (as opposed to an error

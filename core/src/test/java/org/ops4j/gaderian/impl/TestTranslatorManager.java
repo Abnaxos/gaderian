@@ -20,7 +20,7 @@ import java.util.List;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -28,7 +28,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestTranslatorManager extends GaderianTestCase
+public class TestTranslatorManager extends GaderianCoreTestCase
 {
     protected RegistryInfrastructure createRegistryForContribution(TranslatorContribution tc)
     {

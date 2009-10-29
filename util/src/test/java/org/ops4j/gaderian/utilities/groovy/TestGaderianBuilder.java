@@ -18,20 +18,19 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-
+import org.easymock.MockControl;
+import org.easymock.internal.EqualsMatcher;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Resource;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.parse.DescriptorParser;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
-import org.easymock.internal.EqualsMatcher;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
 
-public class TestGaderianBuilder extends GaderianTestCase
+public class TestGaderianBuilder extends GaderianCoreTestCase
 {
     public void testBasicScript() throws Exception
     {

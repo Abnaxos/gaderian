@@ -18,7 +18,7 @@ import org.ops4j.gaderian.conditional.EvaluationContext;
 import org.ops4j.gaderian.conditional.Evaluator;
 import org.ops4j.gaderian.conditional.Node;
 import org.ops4j.gaderian.conditional.NodeImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -27,7 +27,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestNode extends GaderianTestCase
+public class TestNode extends GaderianCoreTestCase
 {
     public void testConstructorAndGetters()
     {

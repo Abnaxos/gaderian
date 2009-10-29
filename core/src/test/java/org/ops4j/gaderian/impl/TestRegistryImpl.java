@@ -16,13 +16,13 @@ package org.ops4j.gaderian.impl;
 
 import org.ops4j.gaderian.Messages;
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * @author James Carman
  * @since 1.1
  */
-public class TestRegistryImpl extends GaderianTestCase
+public class TestRegistryImpl extends GaderianCoreTestCase
 {
     public void testGetModuleMessages() throws Exception
     {

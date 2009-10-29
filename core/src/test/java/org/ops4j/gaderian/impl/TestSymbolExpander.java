@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.SymbolSource;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -27,7 +27,7 @@ import org.easymock.MockControl;
  * @author Howard Lewis Ship
  * @since 1.1
  */
-public class TestSymbolExpander extends GaderianTestCase
+public class TestSymbolExpander extends GaderianCoreTestCase
 {
     private class SymbolSourceFixture implements SymbolSource
     {

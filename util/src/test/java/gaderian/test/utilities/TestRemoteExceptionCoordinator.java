@@ -15,7 +15,7 @@
 package gaderian.test.utilities;
 
 import org.ops4j.gaderian.utilities.RemoteExceptionEvent;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 public class TestRemoteExceptionCoordinator extends GaderianTestCase
 {

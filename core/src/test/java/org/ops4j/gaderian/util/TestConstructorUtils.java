@@ -15,7 +15,7 @@
 package org.ops4j.gaderian.util;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.util.ConstructorUtils}. Alas (for the moment), just fills a
@@ -24,7 +24,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestConstructorUtils extends GaderianTestCase
+public class TestConstructorUtils extends GaderianCoreTestCase
 {
     public static class Troublemaker
     {

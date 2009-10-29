@@ -20,9 +20,9 @@ import java.util.List;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.parse.ModuleDescriptor;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
-public class TestGroovyModuleDescriptorProvider extends GaderianTestCase
+public class TestGroovyModuleDescriptorProvider extends GaderianCoreTestCase
 {
     public void testBasicScript() throws Exception
     {

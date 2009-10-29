@@ -17,7 +17,7 @@ package org.ops4j.gaderian.service.impl;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.InterfaceFab;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.test.TypeMatcher;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.easymock.MockControl;
@@ -25,7 +25,7 @@ import org.easymock.MockControl;
 /**
  * @author Howard M. Lewis Ship
  */
-public class TestInterfaceSynthesizer extends GaderianTestCase
+public class TestInterfaceSynthesizer extends GaderianCoreTestCase
 {
     private ClassFactory newClassFactory(InterfaceFab fab)
     {

@@ -19,14 +19,14 @@ import java.lang.reflect.Method;
 import junit.framework.AssertionFailedError;
 
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Base class for a number of tests related to {@link org.ops4j.gaderian.methodmatch.MethodMatcher}.
  *
  * @author Howard Lewis Ship
  */
-public abstract class AbstractMethodTestCase extends GaderianTestCase
+public abstract class AbstractMethodTestCase extends GaderianCoreTestCase
 {
     protected MethodSignature getMethodSignature(Class target, String name)
     {

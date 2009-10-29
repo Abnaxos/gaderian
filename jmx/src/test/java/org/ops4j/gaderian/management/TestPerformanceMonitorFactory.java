@@ -19,7 +19,7 @@ import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Test of {@link org.ops4j.gaderian.management.impl.PerformanceMonitorFactory}.
@@ -27,7 +27,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Achim Huegen
  * @since 1.1
  */
-public class TestPerformanceMonitorFactory extends GaderianTestCase
+public class TestPerformanceMonitorFactory extends GaderianCoreTestCase
 {
     /**
      * Tests the creation of a performance interceptor via the registry

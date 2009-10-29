@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian.util;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.StringUtils;
 
 /**
@@ -22,7 +22,7 @@ import org.ops4j.gaderian.util.StringUtils;
  *
  * @author Howard Lewis Ship
  */
-public class TestStringUtils extends GaderianTestCase
+public class TestStringUtils extends GaderianCoreTestCase
 {
     public void testCapitalize()
     {

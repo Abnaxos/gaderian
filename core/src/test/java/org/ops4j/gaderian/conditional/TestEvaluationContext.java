@@ -14,14 +14,14 @@
 
 package org.ops4j.gaderian.conditional;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.conditional.EvaluationContextImpl}.
  *
  * @author Howard M. Lewis Ship
  */
-public class TestEvaluationContext extends GaderianTestCase
+public class TestEvaluationContext extends GaderianCoreTestCase
 {
     public void testProperty()
     {

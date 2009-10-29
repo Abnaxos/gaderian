@@ -21,23 +21,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
+import org.easymock.MockControl;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
-import org.ops4j.gaderian.utilities.strategy.StrategyContribution;
-import org.ops4j.gaderian.utilities.strategy.StrategyMessages;
-import org.ops4j.gaderian.utilities.strategy.StrategyParameter;
-import org.ops4j.gaderian.utilities.strategy.StrategyFactory;
-import org.ops4j.gaderian.utilities.util.StrategyRegistry;
-import org.ops4j.gaderian.service.ClassFab;
-import org.ops4j.gaderian.service.ClassFabUtils;
-import org.ops4j.gaderian.service.ClassFactory;
-import org.ops4j.gaderian.service.MethodFab;
-import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.service.*;
 import org.ops4j.gaderian.test.*;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.utilities.util.StrategyRegistry;
 
 /**
  * Test for the {@link org.ops4j.gaderian.utilities.strategy.StrategyFactory} service
@@ -46,7 +37,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestStrategyFactory extends GaderianTestCase
+public class TestStrategyFactory extends GaderianCoreTestCase
 {
     private List buildContributions(Class registerClass, Object adapter, Location location)
     {

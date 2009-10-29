@@ -20,7 +20,7 @@ package org.ops4j.gaderian.test;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestArrayMatcher extends GaderianTestCase
+public class TestArrayMatcher extends GaderianCoreTestCase
 {
     private Object[] _expected = new String[]
     { "fred" };

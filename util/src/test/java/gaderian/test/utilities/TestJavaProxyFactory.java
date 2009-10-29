@@ -15,7 +15,7 @@
 package gaderian.test.utilities;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.impl.JavaProxyFactory}.
@@ -23,7 +23,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Johan Lindquist
  */
 
-public class TestJavaProxyFactory extends GaderianTestCase
+public class TestJavaProxyFactory extends GaderianCoreTestCase
 {
     protected void tearDown() throws Exception
     {

@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.Defense;
 
 /**
@@ -23,7 +23,7 @@ import org.ops4j.gaderian.util.Defense;
  * @author Howard Lewis Ship
  * @since 1.1
  */
-public class TestDefense extends GaderianTestCase
+public class TestDefense extends GaderianCoreTestCase
 {
     public void testNotNull()
     {

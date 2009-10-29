@@ -20,7 +20,7 @@ import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.rules.SmartTranslator;
 import org.ops4j.gaderian.service.ObjectProvider;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -28,7 +28,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestObjectTranslator extends GaderianTestCase
+public class TestObjectTranslator extends GaderianCoreTestCase
 {
 
     public void testWithoutPrefix()

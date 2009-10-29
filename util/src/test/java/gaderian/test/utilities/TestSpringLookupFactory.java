@@ -18,10 +18,10 @@ import java.util.List;
 
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.SpringBeanFactoryHolder;
 import org.ops4j.gaderian.utilities.impl.SpringBeanParameter;
 import org.ops4j.gaderian.utilities.impl.SpringLookupFactory;
-import org.ops4j.gaderian.test.GaderianTestCase;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -32,7 +32,7 @@ import org.springframework.core.io.ClassPathResource;
  *
  * @author Howard Lewis Ship
  */
-public class TestSpringLookupFactory extends GaderianTestCase
+public class TestSpringLookupFactory extends GaderianCoreTestCase
 {
     private SpringBeanParameter buildParameter(String beanName, BeanFactory f)
     {

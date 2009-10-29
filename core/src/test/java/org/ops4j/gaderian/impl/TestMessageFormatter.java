@@ -17,13 +17,13 @@ package org.ops4j.gaderian.impl;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * @author James Carman
  * @version 1.0
  */
-public class TestMessageFormatter extends GaderianTestCase
+public class TestMessageFormatter extends GaderianCoreTestCase
 {
 
     public void testWithNoPackage()

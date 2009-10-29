@@ -18,10 +18,10 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.Translator;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
-public class TestBuilderPropertyFacet extends GaderianTestCase
+public class TestBuilderPropertyFacet extends GaderianCoreTestCase
 {
     public void testCachingOfTranslatedValues() throws Exception
     {

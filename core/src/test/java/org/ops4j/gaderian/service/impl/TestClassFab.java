@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -35,7 +34,7 @@ import org.ops4j.gaderian.impl.BaseLocatable;
 import org.ops4j.gaderian.service.ClassFab;
 import org.ops4j.gaderian.service.MethodFab;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.PropertyUtils;
 
 /**
@@ -44,7 +43,7 @@ import org.ops4j.gaderian.util.PropertyUtils;
  *
  * @author Howard Lewis Ship
  */
-public class TestClassFab extends GaderianTestCase
+public class TestClassFab extends GaderianCoreTestCase
 {
     private CtClassSource _source;
 

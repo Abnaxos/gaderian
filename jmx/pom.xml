@@ -24,6 +24,12 @@
             <version>${project.version}</version>
             <classifier>tests</classifier>
         </dependency>
+         <dependency>
+            <groupId>org.ops4j.gaderian</groupId>
+            <artifactId>gaderian-test-util</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

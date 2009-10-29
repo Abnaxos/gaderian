@@ -21,7 +21,7 @@ import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.InterfaceFab;
 import org.ops4j.gaderian.service.MethodIterator;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.impl.InterfaceFabImpl}.
@@ -29,7 +29,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestInterfaceFab extends GaderianTestCase
+public class TestInterfaceFab extends GaderianCoreTestCase
 {
     private InterfaceFab newInterface(String name)
     {

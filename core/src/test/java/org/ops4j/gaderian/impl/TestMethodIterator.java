@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 
 import org.ops4j.gaderian.service.MethodIterator;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.MethodIterator}.
@@ -27,7 +27,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard Lewis Ship
  * @since 1.0
  */
-public class TestMethodIterator extends GaderianTestCase
+public class TestMethodIterator extends GaderianCoreTestCase
 {
     static interface Play extends Runnable
     {

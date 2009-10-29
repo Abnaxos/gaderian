@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
-import org.ops4j.gaderian.utilities.impl.DefaultImplementationBuilderImpl;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.utilities.impl.DefaultImplementationBuilderImpl;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.utilities.pipeline.PipelineAssembler} and
@@ -33,7 +33,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestPipelineAssembler extends GaderianTestCase
+public class TestPipelineAssembler extends GaderianCoreTestCase
 {
     private static class StandardInner implements StandardService
     {

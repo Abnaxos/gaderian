@@ -34,7 +34,7 @@ import org.ops4j.gaderian.ShutdownCoordinator;
 import org.ops4j.gaderian.events.RegistryShutdownListener;
 import org.ops4j.gaderian.service.ThreadCleanupListener;
 import org.ops4j.gaderian.service.ThreadEventNotifier;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -42,7 +42,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestGaderianFilter extends GaderianTestCase
+public class TestGaderianFilter extends GaderianCoreTestCase
 {
     private static class ThreadListenerFixture implements ThreadCleanupListener
     {

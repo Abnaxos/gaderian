@@ -19,7 +19,7 @@ import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.schema.rules.ServicePointTranslator;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -27,7 +27,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestServicePointTranslator extends GaderianTestCase
+public class TestServicePointTranslator extends GaderianCoreTestCase
 {
     public void testServicePointTranslator()
     {

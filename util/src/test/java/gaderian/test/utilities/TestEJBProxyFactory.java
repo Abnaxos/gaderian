@@ -14,18 +14,16 @@
 
 package gaderian.test.utilities;
 
+import java.rmi.RemoteException;
+import java.util.Map;
+import javax.naming.Context;
+
 import gaderian.test.utilities.impl.FakeContext;
 import gaderian.test.utilities.impl.NameLookupHack;
 import gaderian.test.utilities.impl.SimpleHomeImpl;
-
-import java.rmi.RemoteException;
-import java.util.Map;
-
-import javax.naming.Context;
-
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.impl.EJBProxyFactory}.
@@ -33,7 +31,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  */
 
-public class TestEJBProxyFactory extends GaderianTestCase
+public class TestEJBProxyFactory extends GaderianCoreTestCase
 {
     protected void tearDown() throws Exception
     {
@@ -79,7 +77,7 @@ public class TestEJBProxyFactory extends GaderianTestCase
 
         NameLookupHack._context = context;
 
-        SimpleRemote object = (SimpleRemote) r.getService(
+        SimpleRemote object = r.getService(
                 "gaderian.test.utilities.SimpleRemote",
                 SimpleRemote.class);
 

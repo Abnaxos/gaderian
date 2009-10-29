@@ -20,7 +20,7 @@ import java.util.Locale;
 
 import javax.servlet.ServletContext;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -29,7 +29,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestLocalizedContextResourceFinder extends GaderianTestCase
+public class TestLocalizedContextResourceFinder extends GaderianCoreTestCase
 {
     public void testFound() throws Exception
     {

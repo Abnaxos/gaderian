@@ -21,10 +21,10 @@ import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.schema.rules.NullTranslator;
 import org.ops4j.gaderian.schema.rules.PushAttributeRule;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
-public class TestPushAttributeRule extends GaderianTestCase
+public class TestPushAttributeRule extends GaderianCoreTestCase
 {
     public void testPushAttributeRule()
     {

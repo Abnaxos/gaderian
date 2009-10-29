@@ -15,7 +15,7 @@
 package org.ops4j.gaderian.impl;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests to verify that the service models work properly even under high-thread count concurrent
@@ -23,7 +23,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  *
  * @author Howard Lewis Ship
  */
-public class TestServiceModelThreading extends GaderianTestCase
+public class TestServiceModelThreading extends GaderianCoreTestCase
 {
     public static final int THREAD_COUNT = 150;
 

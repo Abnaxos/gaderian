@@ -14,20 +14,20 @@
 
 package org.ops4j.gaderian.utilities.factory;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.utilities.BeanFactory;
 import org.ops4j.gaderian.service.ObjectProvider;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.utilities.BeanFactory;
 
 /**
- * Tests for {@link org.ops4j.gaderian.utilities.factory.BeanObjectProvider}.
+ * Tests for {@link org.ops4j.gaderian.utilities.factory.BeanFactoryObjectProvider}.
  *
  * @author Howard Lewis Ship
  */
-public class TestBeanFactoryObjectProvider extends GaderianTestCase
+public class TestBeanFactoryObjectProvider extends GaderianCoreTestCase
 {
     public void testNullInput()
     {

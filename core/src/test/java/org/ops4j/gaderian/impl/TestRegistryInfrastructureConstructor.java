@@ -31,7 +31,7 @@ import org.ops4j.gaderian.parse.ModuleDescriptor;
 import org.ops4j.gaderian.schema.impl.SchemaImpl;
 import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
 import org.ops4j.gaderian.test.ArgumentMatcher;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.test.TypeMatcher;
 import org.easymock.MockControl;
 
@@ -41,7 +41,7 @@ import org.easymock.MockControl;
  * @author Knut Wannheden
  * @since 1.1
  */
-public class TestRegistryInfrastructureConstructor extends GaderianTestCase
+public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 {
     public void testFound()
     {

@@ -18,7 +18,7 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.impl.BaseLocatable;
 import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -27,7 +27,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestInstanceCreationUtils extends GaderianTestCase
+public class TestInstanceCreationUtils extends GaderianCoreTestCase
 {
     public static class Bean
     {

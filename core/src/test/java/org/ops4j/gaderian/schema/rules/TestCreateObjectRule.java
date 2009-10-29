@@ -20,7 +20,7 @@ import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
 import org.ops4j.gaderian.test.ArgumentMatcher;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -29,7 +29,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestCreateObjectRule extends GaderianTestCase
+public class TestCreateObjectRule extends GaderianCoreTestCase
 {
     private Module newModule(String className, Class result)
     {

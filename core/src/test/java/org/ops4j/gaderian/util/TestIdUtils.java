@@ -14,12 +14,12 @@
 
 package org.ops4j.gaderian.util;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.util.IdUtils}.
  */
-public class TestIdUtils extends GaderianTestCase
+public class TestIdUtils extends GaderianCoreTestCase
 {
     public void testQualifyId()
     {

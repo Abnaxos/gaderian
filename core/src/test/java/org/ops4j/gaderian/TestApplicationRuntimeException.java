@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests some features of {@link org.ops4j.gaderian.ApplicationRuntimeException}.
@@ -22,7 +22,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestApplicationRuntimeException extends GaderianTestCase
+public class TestApplicationRuntimeException extends GaderianCoreTestCase
 {
     public void testToStringNoLocation()
     {

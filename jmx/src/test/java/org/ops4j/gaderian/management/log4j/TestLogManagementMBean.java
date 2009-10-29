@@ -24,7 +24,7 @@ import javax.management.ObjectName;
 import junit.framework.AssertionFailedError;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.apache.log4j.Logger;
 import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
@@ -41,7 +41,7 @@ import org.ops4j.gaderian.management.log4j.LoggerMBean;
  * @author Achim Huegen
  * @since 1.1
  */
-public class TestLogManagementMBean extends GaderianTestCase
+public class TestLogManagementMBean extends GaderianCoreTestCase
 {
     private boolean isMatcherSet = false;
 

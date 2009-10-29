@@ -23,7 +23,7 @@ import javax.management.remote.JMXConnectorServerMBean;
 import mx4j.tools.adaptor.http.HttpAdaptorMBean;
 
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Test of MX4j http adaptor and jsr160 connectors
@@ -31,7 +31,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Achim Huegen
  * @since 1.1
  */
-public class TestConnectors extends GaderianTestCase
+public class TestConnectors extends GaderianCoreTestCase
 {
     /**
      * Tests the mx4j HttpAdaptor connector, that is predefined

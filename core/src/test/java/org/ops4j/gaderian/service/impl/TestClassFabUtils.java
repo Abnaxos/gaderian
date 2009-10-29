@@ -20,7 +20,7 @@ import org.ops4j.gaderian.service.ClassFab;
 import org.ops4j.gaderian.service.ClassFabUtils;
 import org.ops4j.gaderian.service.MethodFab;
 import org.ops4j.gaderian.service.MethodSignature;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -29,7 +29,7 @@ import org.easymock.MockControl;
  * @author Howard Lewis Ship
  * @author James Carman
  */
-public class TestClassFabUtils extends GaderianTestCase
+public class TestClassFabUtils extends GaderianCoreTestCase
 {
 
 

@@ -21,10 +21,9 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ClassResolver;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Locatable;
-import org.ops4j.gaderian.util.FileResource;
 import org.ops4j.gaderian.util.URLResource;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -32,7 +31,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestModule extends GaderianTestCase
+public class TestModule extends GaderianCoreTestCase
 {
 
     public void testGetServiceByInterface()

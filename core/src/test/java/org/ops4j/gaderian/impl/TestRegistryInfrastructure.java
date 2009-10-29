@@ -18,7 +18,7 @@ import org.ops4j.gaderian.internal.ConfigurationPoint;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.internal.Visibility;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 import java.sql.ResultSet;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author Howard Lewis Ship
  * @since 1.1
  */
-public class TestRegistryInfrastructure extends GaderianTestCase
+public class TestRegistryInfrastructure extends GaderianCoreTestCase
 {
     public void testGetMissingExtensionPoint()
     {

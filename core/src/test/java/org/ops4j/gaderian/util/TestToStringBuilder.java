@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian.util;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.ToStringBuilder;
 
 /**
@@ -22,7 +22,7 @@ import org.ops4j.gaderian.util.ToStringBuilder;
  *
  * @author Howard Lewis Ship
  */
-public class TestToStringBuilder extends GaderianTestCase
+public class TestToStringBuilder extends GaderianCoreTestCase
 {
     private int _originalDefaultMode;
 

@@ -1,13 +1,12 @@
 package org.ops4j.gaderian.service.impl;
 
-import junit.framework.TestCase;
 import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * @author Johan Lindquist
  */
-public class TestServiceInstanceUtils extends GaderianTestCase
+public class TestServiceInstanceUtils extends GaderianCoreTestCase
 {
     public void testNoAnnotationsNoValues()
     {

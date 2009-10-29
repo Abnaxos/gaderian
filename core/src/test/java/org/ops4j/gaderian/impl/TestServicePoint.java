@@ -24,7 +24,7 @@ import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServiceModel;
 import org.ops4j.gaderian.internal.ServiceModelFactory;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -34,7 +34,7 @@ import org.easymock.MockControl;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestServicePoint extends GaderianTestCase
+public class TestServicePoint extends GaderianCoreTestCase
 {
     private Module newModule()
     {

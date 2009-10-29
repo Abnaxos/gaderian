@@ -26,7 +26,7 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.impl.ModuleImpl;
 import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -34,7 +34,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestObjectProviders extends GaderianTestCase
+public class TestObjectProviders extends GaderianCoreTestCase
 {
     private Module newModule()
     {

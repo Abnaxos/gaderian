@@ -18,9 +18,9 @@ import java.io.Serializable;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorLog;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
 
 /**
  * Tests the {@link org.ops4j.gaderian.utilities.pipeline.BridgeBuilder} class.

@@ -24,6 +24,7 @@
 
     <modules>
         <module>annotations</module>
+        <module>test-util</module>
         <module>core</module>
         <module>util</module>
         <module>jmx</module>

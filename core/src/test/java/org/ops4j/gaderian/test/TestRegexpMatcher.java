@@ -22,7 +22,7 @@ import org.ops4j.gaderian.ApplicationRuntimeException;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestRegexpMatcher extends GaderianTestCase
+public class TestRegexpMatcher extends GaderianCoreTestCase
 {
     public void testMatching()
     {

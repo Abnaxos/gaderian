@@ -12,29 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.ClassResolver;
-import org.ops4j.gaderian.Location;
-import org.ops4j.gaderian.ModuleDescriptorProvider;
-import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.Resource;
-import org.ops4j.gaderian.impl.*;
-import org.ops4j.gaderian.internal.ser.ServiceSerializationHelper;
-import org.ops4j.gaderian.util.ClasspathResource;
-import org.ops4j.gaderian.util.PropertyUtils;
-import org.ops4j.gaderian.util.URLResource;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -50,24 +37,16 @@ import org.easymock.classextension.MockClassControl;
  */
 public abstract class GaderianTestCase extends TestCase
 {
-    // /CLOVER:OFF
-
-    /**
-     * An instance of {@link DefaultClassResolver} that can be used by tests.
-     */
-
-    private ClassResolver _classResolver;
-
     protected String _interceptedLoggerName;
 
     protected StoreAppender _appender;
 
     /** List of {@link org.easymock.MockControl}. */
 
-    private List _controls = new ArrayList();
+    private List<MockControl> _controls = new ArrayList<MockControl>();
 
     /** @since 1.1 */
-    interface MockControlFactory
+    protected interface MockControlFactory
     {
         public MockControl newControl(Class mockClass);
     }
@@ -91,7 +70,7 @@ public abstract class GaderianTestCase extends TestCase
     }
 
     /** @since 1.1 */
-    static class PlaceholderClassMockControlFactory implements MockControlFactory
+    public static class PlaceholderClassMockControlFactory implements MockControlFactory
     {
         public MockControl newControl(Class mockClass)
         {
@@ -118,20 +97,6 @@ public abstract class GaderianTestCase extends TestCase
         {
             _classMockControlFactory = new PlaceholderClassMockControlFactory();
         }
-    }
-
-    /**
-     * Returns the given file as a {@link Resource} from the classpath. Typically, this is to find
-     * files in the same folder as the invoking class.
-     */
-    protected Resource getResource(String file)
-    {
-        URL url = getClass().getResource(file);
-
-        if (url == null)
-            throw new NullPointerException("No resource named '" + file + "'.");
-
-        return new URLResource(url);
     }
 
     /**
@@ -200,8 +165,7 @@ public abstract class GaderianTestCase extends TestCase
     }
 
     /**
-     * Removes the appender that may have been setup by {@link #interceptLogging(String)}. Also,
-     * invokes {@link org.ops4j.gaderian.util.PropertyUtils#clearCache()}.
+     * Removes the appender that may have been setup by {@link #interceptLogging(String)}.
      */
     protected void tearDown() throws Exception
     {
@@ -217,9 +181,6 @@ public abstract class GaderianTestCase extends TestCase
             logger.removeAllAppenders();
         }
 
-        PropertyUtils.clearCache();
-
-        ServiceSerializationHelper.setServiceSerializationSupport(null);
     }
 
     /**
@@ -265,23 +226,6 @@ public abstract class GaderianTestCase extends TestCase
 
         throw new AssertionFailedError("\"" + actual + "\" does not contain regular expression["
                 + pattern + "].");
-    }
-
-    /**
-     * Digs down through (potentially) a stack of ApplicationRuntimeExceptions until it reaches the
-     * originating exception, which is returned.
-     */
-    protected Throwable findNestedException(ApplicationRuntimeException ex)
-    {
-        Throwable cause = ex.getRootCause();
-
-        if (cause == null || cause == ex)
-            return ex;
-
-        if (cause instanceof ApplicationRuntimeException)
-            return findNestedException((ApplicationRuntimeException) cause);
-
-        return cause;
     }
 
     /**
@@ -378,72 +322,8 @@ public abstract class GaderianTestCase extends TestCase
     }
 
     /**
-     * Convienience method for invoking {@link #buildFrameworkRegistry(String[],boolean)} with only a single
-     * file.
-     */
-    protected Registry buildFrameworkRegistry( String file, final boolean useStrictErrorHandler ) throws Exception
-    {
-        return buildFrameworkRegistry(new String[]
-        { file }, useStrictErrorHandler );
-    }
-
-    /**
-     * Builds a minimal registry, containing only the specified files, plus the master module
-     * descriptor (i.e., those visible on the classpath). Files are resolved using
-     * {@link GaderianTestCase#getResource(String)}.
-     * @param files The files to process
-     * @param useStrictErrorHandler
-     * @return The constructed registry
-     * @throws Exception If an error occurs while building the registry
-     */
-    protected Registry buildFrameworkRegistry( String[] files, final boolean useStrictErrorHandler ) throws Exception
-    {
-        ClassResolver resolver = getClassResolver();
-
-        List<Resource> descriptorResources = new ArrayList<Resource>();
-        for ( String file : files )
-        {
-            Resource resource = getResource( file );
-
-            descriptorResources.add( resource );
-        }
-
-        ModuleDescriptorProvider provider = new XmlModuleDescriptorProvider(resolver, descriptorResources);
-
-        return buildFrameworkRegistry(provider, useStrictErrorHandler );
-    }
-
-    /**
-     * Builds a registry, containing only the modules delivered by the specified
-     * {@link org.ops4j.gaderian.ModuleDescriptorProvider}, plus the master module descriptor
-     * (i.e., those visible on the classpath).
-     */
-    protected Registry buildFrameworkRegistry( ModuleDescriptorProvider customProvider, final boolean useStrictErrorHandler )
-    {
-        ClassResolver resolver = getClassResolver();
-
-        RegistryBuilder builder = (useStrictErrorHandler ? new RegistryBuilder(new StrictErrorHandler()) : new RegistryBuilder());
-
-        builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver));
-        builder.addModuleDescriptorProvider(customProvider);
-
-        return builder.constructRegistry(Locale.getDefault());
-    }
-
-    /**
-     * Builds a registry from exactly the provided resource; this registry will not include the
-     * <code>gaderian</code> module.
-     */
-    protected Registry buildMinimalRegistry(Resource l) throws Exception
-    {
-        RegistryBuilder builder = new RegistryBuilder();
-
-        return builder.constructRegistry(Locale.getDefault());
-    }
-
-    /**
      * Creates a <em>managed</em> control via
-     * {@link MockControl#createStrictControl(java.lang.Class)}. The created control is remembered,
+     * {@link MockControl#createStrictControl(Class)}. The created control is remembered,
      * and will be invoked by {@link #replayControls()}, {@link #verifyControls()}, etc.
      * <p>
      * The class to mock may be either an interface or a class. The EasyMock class extension
@@ -609,10 +489,9 @@ public abstract class GaderianTestCase extends TestCase
     protected void replayControls()
     {
         Iterator i = _controls.iterator();
-        while (i.hasNext())
+        for ( MockControl mockControl : _controls )
         {
-            MockControl c = (MockControl) i.next();
-            c.replay();
+            mockControl.replay();
         }
     }
 
@@ -620,78 +499,31 @@ public abstract class GaderianTestCase extends TestCase
      * Invokes {@link org.easymock.MockControl#verify()} and {@link MockControl#reset()} on all
      * controls created by {@link #newControl(Class)}.
      */
-
     protected void verifyControls()
     {
         Iterator i = _controls.iterator();
-        while (i.hasNext())
+        for ( MockControl mockControl : _controls )
         {
-            MockControl c = (MockControl) i.next();
-            c.verify();
-            c.reset();
+            mockControl.verify();
+            mockControl.reset();
         }
     }
 
     /**
      * Invokes {@link org.easymock.MockControl#reset()} on all controls.
      */
-
     protected void resetControls()
     {
         Iterator i = _controls.iterator();
-        while (i.hasNext())
+        for ( MockControl mockControl : _controls )
         {
-            MockControl c = (MockControl) i.next();
-            c.reset();
+            mockControl.reset();
         }
-    }
-
-    /**
-     * @deprecated To be removed in 1.2. Use {@link #newLocation()} instead.
-     */
-    protected Location fabricateLocation(int line)
-    {
-        String path = "/" + getClass().getName().replace('.', '/');
-
-        Resource r = new ClasspathResource(getClassResolver(), path);
-
-        return new LocationImpl(r, line);
-    }
-
-    private int _line = 1;
-
-    /**
-     * Returns a new {@link Location} instance. The resource is the test class, and the line number
-     * increments by one from one for each invocation (thus each call will get a unique instance not
-     * equal to any previously obtained instance).
-     *
-     * @since 1.1
-     */
-    protected Location newLocation()
-    {
-        return fabricateLocation(_line++);
-    }
-
-    /**
-     * Returns a {@link DefaultClassResolver}. Repeated calls in the same test return the same
-     * value.
-     *
-     * @since 1.1
-     */
-
-    protected ClassResolver getClassResolver()
-    {
-        if (_classResolver == null)
-            _classResolver = new DefaultClassResolver();
-
-        return _classResolver;
     }
 
     protected boolean matches(String input, String pattern) throws Exception
     {
-
         Pattern compiled = Pattern.compile(pattern);
-
         return compiled.matcher(input).matches();
     }
 

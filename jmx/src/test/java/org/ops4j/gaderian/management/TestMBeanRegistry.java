@@ -30,7 +30,7 @@ import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.events.RegistryShutdownListener;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.internal.ServicePoint;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.ArgumentsMatcher;
 import org.easymock.MockControl;
 import org.easymock.internal.AlwaysMatcher;
@@ -47,7 +47,7 @@ import org.ops4j.gaderian.management.impl.ObjectNameBuilderImpl;
  * @author Achim Huegen
  * @since 1.1
  */
-public class TestMBeanRegistry extends GaderianTestCase
+public class TestMBeanRegistry extends GaderianCoreTestCase
 {
     private ErrorHandler errorHandler;
 

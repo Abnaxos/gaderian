@@ -25,14 +25,14 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.util.PropertyUtils} class.
  *
  * @author Howard Lewis Ship
  */
-public class TestPropertyUtils extends GaderianTestCase
+public class TestPropertyUtils extends GaderianCoreTestCase
 {
     public static class Bean
     {

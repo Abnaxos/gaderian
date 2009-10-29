@@ -14,14 +14,14 @@
 
 package org.ops4j.gaderian.impl;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link ServiceInterceptorContributionImpl}.
  * @author James Carman
  * @since 1.1
  */
-public class TestServiceInterceptorContributionImpl extends GaderianTestCase
+public class TestServiceInterceptorContributionImpl extends GaderianCoreTestCase
 {
     private static final String NAME = "SomeName";
     private static final String FACTORY_ID = "SomeFactoryId";

@@ -17,13 +17,13 @@ package org.ops4j.gaderian.impl;
 import java.util.Locale;
 
 import org.ops4j.gaderian.internal.MessageFinder;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.ClasspathResource;
 
 /**
  * @author Howard M. Lewis Ship
  */
-public class TestMessageFinder extends GaderianTestCase
+public class TestMessageFinder extends GaderianCoreTestCase
 {
     private MessageFinder newFinder()
     {

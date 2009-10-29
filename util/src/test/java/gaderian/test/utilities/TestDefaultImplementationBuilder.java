@@ -14,15 +14,15 @@
 
 package gaderian.test.utilities;
 
+import org.easymock.MockControl;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.DefaultImplementationBuilder;
 import org.ops4j.gaderian.utilities.impl.DefaultImplementationBuilderImpl;
 import org.ops4j.gaderian.utilities.impl.PlaceholderFactory;
-import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.impl.DefaultImplementationBuilderImpl} and
@@ -30,7 +30,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestDefaultImplementationBuilder extends GaderianTestCase
+public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
 {
     private DefaultImplementationBuilder _builder;
 

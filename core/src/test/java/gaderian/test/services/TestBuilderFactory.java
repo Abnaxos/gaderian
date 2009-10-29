@@ -28,7 +28,7 @@ import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.service.impl.BuilderClassResolverFacet;
 import org.ops4j.gaderian.service.impl.BuilderFactoryLogic;
 import org.ops4j.gaderian.service.impl.BuilderParameter;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -36,7 +36,7 @@ import org.easymock.MockControl;
  *
  * @author Howard Lewis Ship
  */
-public class TestBuilderFactory extends GaderianTestCase
+public class TestBuilderFactory extends GaderianCoreTestCase
 {
     private Object execute(ServiceImplementationFactoryParameters fp, BuilderParameter p)
     {

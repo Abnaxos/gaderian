@@ -21,7 +21,7 @@ import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.service.EventLinker;
 import org.ops4j.gaderian.service.impl.EventLinkerImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.service.impl.EventLinkerImpl}class, used by the
@@ -29,7 +29,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  *
  * @author Howard Lewis Ship
  */
-public class TestEventLinker extends GaderianTestCase
+public class TestEventLinker extends GaderianCoreTestCase
 {
     public void testNoName()
     {

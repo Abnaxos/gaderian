@@ -20,7 +20,7 @@ package org.ops4j.gaderian.test;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestAggregateArgumentsMatcher extends GaderianTestCase
+public class TestAggregateArgumentsMatcher extends GaderianCoreTestCase
 {
     /**
      * Test when an argument is outside the array of argument matches provided to the aggregate

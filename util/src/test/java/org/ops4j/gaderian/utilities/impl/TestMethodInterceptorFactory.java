@@ -16,7 +16,7 @@ package org.ops4j.gaderian.utilities.impl;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link MethodInterceptorFactory}.
@@ -24,7 +24,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author James Carman
  * @since 1.1
  */
-public class TestMethodInterceptorFactory extends GaderianTestCase
+public class TestMethodInterceptorFactory extends GaderianCoreTestCase
 {
 
     public void testWithInstanceMethodInterceptor() throws Exception

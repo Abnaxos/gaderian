@@ -18,9 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.easymock.MockControl;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
- * Tests {@link GaderianTestCase}'s ability to generate a mock for a class
+ * Tests {@link GaderianCoreTestCase}'s ability to generate a mock for a class
  * as well as an interface.
  *
  * @author Howard M. Lewis Ship

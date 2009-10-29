@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian;
 
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Integration tests to prove that Gaderian supports JavaBeans classes as the "interface" of a
@@ -23,7 +23,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestBeanService extends GaderianTestCase
+public class TestBeanService extends GaderianCoreTestCase
 {
 
     private void attempt(String name) throws Exception

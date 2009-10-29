@@ -30,7 +30,7 @@ import org.ops4j.gaderian.parse.InterceptorDescriptor;
 import org.ops4j.gaderian.parse.ModuleDescriptor;
 import org.ops4j.gaderian.parse.XmlResourceProcessor;
 import org.ops4j.gaderian.service.ObjectProvider;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.easymock.MockControl;
 
 /**
@@ -38,7 +38,7 @@ import org.easymock.MockControl;
  *
  * @since 1.1
  */
-public class TestVisibility extends GaderianTestCase
+public class TestVisibility extends GaderianCoreTestCase
 {
     private static final Log LOG = LogFactory.getLog(TestVisibility.class);
 

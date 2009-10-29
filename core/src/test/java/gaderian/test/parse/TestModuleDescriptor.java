@@ -20,7 +20,7 @@ import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.impl.LocationImpl;
 import org.ops4j.gaderian.parse.ModuleDescriptor;
 import org.ops4j.gaderian.schema.impl.SchemaImpl;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.util.ClasspathResource;
 
 /**
@@ -28,7 +28,7 @@ import org.ops4j.gaderian.util.ClasspathResource;
  *
  * @author Knut Wannheden
  */
-public class TestModuleDescriptor extends GaderianTestCase
+public class TestModuleDescriptor extends GaderianCoreTestCase
 {
     public void testAddDupeSchema() throws Exception
     {

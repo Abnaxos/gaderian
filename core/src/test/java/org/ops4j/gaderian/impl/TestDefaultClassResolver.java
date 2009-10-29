@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ClassResolver;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.impl.DefaultClassResolver}.
@@ -29,7 +29,7 @@ import org.ops4j.gaderian.test.GaderianTestCase;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestDefaultClassResolver extends GaderianTestCase
+public class TestDefaultClassResolver extends GaderianCoreTestCase
 {
     public void testDefaultClassLoader()
     {

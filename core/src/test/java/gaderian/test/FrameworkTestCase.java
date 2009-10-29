@@ -25,14 +25,14 @@ import org.ops4j.gaderian.parse.DependencyDescriptor;
 import org.ops4j.gaderian.parse.ModuleDescriptor;
 import org.ops4j.gaderian.parse.ServicePointDescriptor;
 import org.ops4j.gaderian.parse.XmlResourceProcessor;
-import org.ops4j.gaderian.test.GaderianTestCase;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Base class for framework tests.
  *
  * @author Howard Lewis Ship
  */
-public abstract class FrameworkTestCase extends GaderianTestCase
+public abstract class FrameworkTestCase extends GaderianCoreTestCase
 {
 
     protected ClassResolver _resolver = new DefaultClassResolver();
