@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import org.easymock.MockControl;
+import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Registry;
@@ -55,11 +55,11 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
     {
         List<BeanFactoryContribution> l = Collections.singletonList(build(name, objectClass));
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el.error(message, null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BeanFactoryImpl f = new BeanFactoryImpl(el, Object.class, l, true);
 
@@ -73,7 +73,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
             assertEquals(FactoryMessages.unknownContribution(name), ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testInterfaceContribution()
@@ -104,7 +104,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
     {
         List<BeanFactoryContribution> l = Collections.singletonList(build("array-list", ArrayList.class));
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el
                 .error(
@@ -112,7 +112,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
                         null,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BeanFactoryImpl f = new BeanFactoryImpl(el, Map.class, l, true);
 
@@ -126,7 +126,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
             assertEquals(FactoryMessages.unknownContribution("array-list"), ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testTranslator()
@@ -192,17 +192,12 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
 
         p.setContributions(l);
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
-        fp.getParameters();
-        fpc.setReturnValue(Collections.singletonList(p));
+        expect(fp.getParameters()).andReturn(Collections.singletonList(p));
+        expect(fp.getErrorLog()).andReturn(createMock(ErrorLog.class));
 
-        fp.getErrorLog();
-        fpc.setReturnValue(newMock(ErrorLog.class));
-
-        replayControls();
+        replayAllRegisteredMocks();
 
         BeanFactoryBuilder b = new BeanFactoryBuilder();
 
@@ -212,7 +207,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
 
         assertEquals(new Integer(5), i);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**

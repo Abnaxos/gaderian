@@ -14,19 +14,16 @@
 
 package org.ops4j.gaderian.order;
 
-import gaderian.test.FrameworkTestCase;
-
 import java.util.List;
 
+import gaderian.test.FrameworkTestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import static org.easymock.EasyMock.*;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
+import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
-import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
-import org.ops4j.gaderian.test.ArgumentMatcher;
-import org.ops4j.gaderian.test.TypeMatcher;
-import org.easymock.MockControl;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.order.Orderer}.
@@ -39,7 +36,7 @@ public class TestOrderer extends FrameworkTestCase
 
     private ErrorHandler getErrorHandler()
     {
-        return (ErrorHandler) newMock(ErrorHandler.class);
+        return createMock(ErrorHandler.class);
     }
 
     public void testNoDependencies() throws Exception
@@ -51,14 +48,14 @@ public class TestOrderer extends FrameworkTestCase
         o.add("WILMA", "wilma", null, null);
         o.add("BETTY", "betty", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "FRED", "BARNEY", "WILMA", "BETTY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPrereq() throws Exception
@@ -70,14 +67,14 @@ public class TestOrderer extends FrameworkTestCase
         o.add("BETTY", "betty", null, null);
         o.add("WILMA", "wilma", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "WILMA", "FRED", "BETTY", "BARNEY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPostreq() throws Exception
@@ -89,14 +86,14 @@ public class TestOrderer extends FrameworkTestCase
         o.add("BETTY", "betty", null, null);
         o.add("WILMA", "wilma", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "FRED", "BARNEY", "BETTY", "WILMA" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPrePostreq() throws Exception
@@ -108,23 +105,23 @@ public class TestOrderer extends FrameworkTestCase
         o.add("BETTY", "betty", null, null);
         o.add("WILMA", "wilma", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "FRED", "WILMA", "BARNEY", "BETTY" }, l);
 
-        verifyControls();
+        verify();
     }
 
     public void testUnknownPrereq() throws Exception
     {
-        ErrorHandler eh = (ErrorHandler) newMock(ErrorHandler.class);
+        ErrorHandler eh =  createMock(ErrorHandler.class);
 
         eh.error(LOG, "Unknown cartoon character dependency 'charlie' (for 'fred').", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Orderer o = new Orderer(LOG, eh, "cartoon character");
 
@@ -138,16 +135,16 @@ public class TestOrderer extends FrameworkTestCase
         assertListsEqual(new Object[]
         { "FRED", "WILMA", "BARNEY", "BETTY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testUnknownPostreq() throws Exception
     {
-        ErrorHandler eh = (ErrorHandler) newMock(ErrorHandler.class);
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         eh.error(LOG, "Unknown cartoon character dependency 'dino' (for 'betty').", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Orderer o = new Orderer(LOG, eh, "cartoon character");
 
@@ -161,25 +158,20 @@ public class TestOrderer extends FrameworkTestCase
         assertListsEqual(new Object[]
         { "FRED", "WILMA", "BARNEY", "BETTY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testCyclePre() throws Exception
     {
-        MockControl c = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) c.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
-        eh.error(
-                LOG,
+        eh.error(eq(LOG),eq(
                 "Unable to order cartoon character 'wilma' due to dependency cycle:"
-                        + " A cycle has been detected from the initial object [wilma]",
-                null,
-                new ApplicationRuntimeException(""));
+                        + " A cycle has been detected from the initial object [wilma]"),
+                (Location)eq(null),
+                isA(ApplicationRuntimeException.class));
 
-        c.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-        { null, null, null, new TypeMatcher() }));
-
-        replayControls();
+        replayAllRegisteredMocks();
 
         Orderer o = new Orderer(LOG, eh, "cartoon character");
 
@@ -193,25 +185,21 @@ public class TestOrderer extends FrameworkTestCase
         assertListsEqual(new Object[]
         { "WILMA", "FRED", "BETTY", "BARNEY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testCyclePost() throws Exception
     {
-        MockControl c = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) c.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         eh
-                .error(
-                        LOG,
-                        "Unable to order cartoon character 'betty' due to dependency cycle: A cycle has been detected from the initial object [fred]",
-                        null,
-                        new ApplicationRuntimeException(""));
+                .error( eq(LOG),
+                        eq("Unable to order cartoon character 'betty' due to dependency cycle: A cycle has been detected from the initial object [fred]"),
+                        (Location)eq(null),
+                        isA(ApplicationRuntimeException.class));
 
-        c.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-        { null, null, null, new TypeMatcher() }));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Orderer o = new Orderer(LOG, eh, "cartoon character");
 
@@ -224,7 +212,7 @@ public class TestOrderer extends FrameworkTestCase
         assertListsEqual(new Object[]
         { "FRED", "BARNEY", "WILMA", "BETTY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testDupe() throws Exception
@@ -255,14 +243,14 @@ public class TestOrderer extends FrameworkTestCase
         o.add("WILMA", "wilma", "betty", null);
         o.add("BETTY", "betty", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "BETTY", "BARNEY", "WILMA", "FRED" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPreStartDupe() throws Exception
@@ -294,14 +282,14 @@ public class TestOrderer extends FrameworkTestCase
         o.add("WILMA", "wilma", null, "betty");
         o.add("BETTY", "betty", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         List l = o.getOrderedObjects();
 
         assertListsEqual(new Object[]
         { "BARNEY", "FRED", "WILMA", "BETTY" }, l);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPostStarDupe() throws Exception

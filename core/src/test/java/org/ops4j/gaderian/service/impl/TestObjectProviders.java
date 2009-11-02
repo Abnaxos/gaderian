@@ -14,20 +14,19 @@
 
 package org.ops4j.gaderian.service.impl;
 
-import gaderian.test.services.StringHolder;
-import gaderian.test.services.impl.StringHolderImpl;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import gaderian.test.services.StringHolder;
+import gaderian.test.services.impl.StringHolderImpl;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.impl.ModuleImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for several implementations of {@link org.ops4j.gaderian.service.ObjectProvider}.
@@ -50,13 +49,11 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
         String expected = "EXPECTED RESULT";
 
-        MockControl mc = newControl(Module.class);
-        Module m = (Module) mc.getMock();
+        Module m = createMock(Module.class);
 
-        m.getService("fred", Object.class);
-        mc.setReturnValue(expected);
+        expect(m.getService("fred", Object.class)).andReturn(expected);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object actual = p.provideObject(m, Location.class, "fred", null);
 
@@ -64,7 +61,7 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
         assertNull(p.provideObject(m, Location.class, "", null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testConfigurationObjectProvider()
@@ -74,19 +71,15 @@ public class TestObjectProviders extends GaderianCoreTestCase
         List expectedList = new ArrayList();
         Map expectedMap = new HashMap();
 
-        MockControl mc = newControl(Module.class);
-        Module m = (Module) mc.getMock();
+        Module m = createMock(Module.class);
 
-        m.getConfiguration("barney");
-        mc.setReturnValue(expectedList);
+        expect(m.getConfiguration("barney")).andReturn(expectedList);
 
-        m.isConfigurationMappable("barney");
-        mc.setReturnValue(true);
+        expect(m.isConfigurationMappable("barney")).andReturn( true );
 
-        m.getConfigurationAsMap("barney");
-        mc.setReturnValue(expectedMap);
+        expect(m.getConfigurationAsMap("barney")).andReturn(expectedMap);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object actual = p.provideObject(m, List.class, "barney", null);
 
@@ -96,7 +89,7 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
         assertSame(expectedMap, actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testInstanceProvider()
@@ -129,17 +122,15 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
     public void testServicePropertyObjectProvider()
     {
-        MockControl mc = newControl(Module.class);
-        Module m = (Module) mc.getMock();
+        Module m = createMock(Module.class);
 
         StringHolder h = new StringHolderImpl();
 
         h.setValue("abracadabra");
 
-        m.getService("MyService", Object.class);
-        mc.setReturnValue(h);
+        expect(m.getService("MyService", Object.class)).andReturn( h );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServicePropertyObjectProvider p = new ServicePropertyObjectProvider();
 
@@ -147,7 +138,7 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
         assertEquals(h.getValue(), result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testServicePropertyObjectProviderWithInvalidLocator()
@@ -169,13 +160,11 @@ public class TestObjectProviders extends GaderianCoreTestCase
 
     public void testClassProvider()
     {
-        MockControl control = newControl(Module.class);
-        Module module = (Module) control.getMock();
+        Module module = createMock(Module.class);
 
-        module.resolveType("List");
-        control.setReturnValue(List.class);
+        expect(module.resolveType("List")).andReturn(List.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertSame(List.class, new ClassObjectProvider().provideObject(
                 module,
@@ -183,7 +172,7 @@ public class TestObjectProviders extends GaderianCoreTestCase
                 "List",
                 null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     // TODO: Integration test that proves the XML is valid.

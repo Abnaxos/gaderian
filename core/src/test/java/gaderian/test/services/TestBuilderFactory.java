@@ -15,21 +15,14 @@
 package gaderian.test.services;
 
 import gaderian.test.services.impl.StringHolderImpl;
-
 import org.apache.commons.logging.Log;
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.ClassResolver;
-import org.ops4j.gaderian.ErrorHandler;
-import org.ops4j.gaderian.ErrorLog;
-import org.ops4j.gaderian.Messages;
-import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import static org.easymock.EasyMock.expect;
+import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.service.impl.BuilderClassResolverFacet;
 import org.ops4j.gaderian.service.impl.BuilderFactoryLogic;
 import org.ops4j.gaderian.service.impl.BuilderParameter;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for the standard {@link org.ops4j.gaderian.service.impl.BuilderFactory} service.
@@ -115,86 +108,73 @@ public class TestBuilderFactory extends GaderianCoreTestCase
 
     protected ServiceImplementationFactoryParameters newParameters()
     {
-        final MockControl control = MockControl
-                .createNiceControl(ServiceImplementationFactoryParameters.class);
-        addControl(control);
-        return (ServiceImplementationFactoryParameters) control.getMock();
+        return createMock(ServiceImplementationFactoryParameters.class);
     }
 
     protected Module newModule()
     {
-        final MockControl control = MockControl.createNiceControl(Module.class);
-        addControl(control);
-        return (Module) control.getMock();
+        return createMock(Module.class);
+
     }
 
     protected ErrorHandler newErrorHandler()
     {
-        return (ErrorHandler) newMock(ErrorHandler.class);
+        return createMock(ErrorHandler.class);
     }
 
     protected Log newLog()
     {
-        return (Log) newMock(Log.class);
+        return createMock(Log.class);
     }
 
     protected Messages newMessages()
     {
-        return (Messages) newMock(Messages.class);
+        return createMock(Messages.class);
     }
 
     protected ErrorLog newErrorLog()
     {
-        return (ErrorLog) newMock(ErrorLog.class);
+        return createMock(ErrorLog.class);
     }
 
     private void trainGetClassResolver(Module module, ClassResolver resolver)
     {
-        module.getClassResolver();
-        setReturnValue(module, resolver);
+        expect(module.getClassResolver()).andReturn(resolver);
     }
 
     private void trainResolveType(Module module, String typeName, Class type)
     {
-        module.resolveType(typeName);
-        setReturnValue(module, type);
+        expect(module.resolveType(typeName)).andReturn(type);
     }
 
     protected void trainGetServiceId(ServiceImplementationFactoryParameters fp, String serviceId)
     {
-        fp.getServiceId();
-        getControl(fp).setDefaultReturnValue(serviceId);
+        expect(fp.getServiceId()).andReturn(serviceId);
     }
 
     protected void trainGetLog(ServiceImplementationFactoryParameters fp, Log log)
     {
-        fp.getLog();
-        getControl(fp).setDefaultReturnValue(log);
+        expect(fp.getLog()).andReturn(log);
     }
 
     private void trainGetService(Module module, Class serviceInterface, Object service)
     {
-        module.getService(serviceInterface);
-        setReturnValue(module, service);
+        expect(module.getService(serviceInterface)).andReturn(service);
     }
 
     private void trainContainsService(Module module, Class serviceInterface, boolean containsService)
     {
-        module.containsService(serviceInterface);
-        setReturnValue(module, containsService);
+        expect(module.containsService(serviceInterface)).andReturn(containsService);
     }
 
     public void testAutowireConstructor() throws Exception
     {
         ServiceImplementationFactoryParameters fp = newParameters();
         Module module = newModule();
-        Log log = newLog();
 
-        trainGetLog(fp, log);
         trainGetServiceId(fp, "foo");
 
-        fp.getInvokingModule();
-        getControl(fp).setReturnValue(module, MockControl.ONE_OR_MORE);
+        expect(fp.getInvokingModule()).andReturn( module ).times( 2 );
 
         trainResolveType(
                 module,
@@ -211,7 +191,7 @@ public class TestBuilderFactory extends GaderianCoreTestCase
         trainGetClassResolver(module, getClassResolver());
         trainGetClassResolver(module, getClassResolver());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BuilderParameter parameter = new BuilderParameter();
 
@@ -224,23 +204,20 @@ public class TestBuilderFactory extends GaderianCoreTestCase
         assertSame(h, service.getStringHolder());
         assertSame(getClassResolver(), service.getClassResolver());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAutowireConstructorFailure() throws Exception
     {
         ServiceImplementationFactoryParameters fp = newParameters();
         Module module = newModule();
-        Log log = newLog();
 
-        trainGetLog(fp, log);
         trainGetServiceId(fp, "foo");
 
         trainGetClassResolver(module, getClassResolver());
 
 
-        fp.getInvokingModule();
-        getControl(fp).setReturnValue(module, MockControl.ONE_OR_MORE);
+        expect(fp.getInvokingModule()).andReturn(module).times(1);
 
         trainResolveType(
                 module,
@@ -251,7 +228,7 @@ public class TestBuilderFactory extends GaderianCoreTestCase
         trainContainsService(module, StringHolder.class, false);
         trainContainsService(module, StringHolder.class, false);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BuilderParameter parameter = new BuilderParameter();
 
@@ -270,7 +247,7 @@ public class TestBuilderFactory extends GaderianCoreTestCase
                     ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testSetObject() throws Exception

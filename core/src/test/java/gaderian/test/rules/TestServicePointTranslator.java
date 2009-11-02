@@ -14,32 +14,30 @@
 
 package gaderian.test.rules;
 
+import org.easymock.classextension.EasyMock;
 import org.ops4j.gaderian.impl.ServicePointImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.schema.rules.ServicePointTranslator;
-import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
  * Test for the {@link org.ops4j.gaderian.schema.rules.ServicePointTranslator}.
  *
  * @author Howard Lewis Ship
  */
-public class TestServicePointTranslator extends GaderianCoreTestCase
+public class TestServicePointTranslator extends GaderianTestCase
 {
     public void testServicePointTranslator()
     {
-        MockControl control = newControl(Module.class);
-        Module m = (Module) control.getMock();
+        Module m = createMock(Module.class);
 
         ServicePoint sp = new ServicePointImpl();
 
-        m.getServicePoint("Fred");
-        control.setReturnValue(sp);
+        EasyMock.expect(m.getServicePoint("Fred")).andReturn( sp );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Translator t = new ServicePointTranslator();
 
@@ -47,6 +45,6 @@ public class TestServicePointTranslator extends GaderianCoreTestCase
 
         assertSame(sp, result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

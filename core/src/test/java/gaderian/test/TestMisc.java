@@ -21,12 +21,7 @@ import java.util.List;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.SymbolSource;
-import org.ops4j.gaderian.impl.ContributionImpl;
-import org.ops4j.gaderian.impl.CreateClassServiceConstructor;
-import org.ops4j.gaderian.impl.InvokeFactoryServiceConstructor;
-import org.ops4j.gaderian.impl.ModuleImpl;
-import org.ops4j.gaderian.impl.ServicePointImpl;
-import org.ops4j.gaderian.impl.SystemPropertiesSymbolSource;
+import org.ops4j.gaderian.impl.*;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 
@@ -87,9 +82,9 @@ public class TestMisc extends FrameworkTestCase
 
     public void testCreateClassServiceConstructorAccessors()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = (Module) createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         CreateClassServiceConstructor c = new CreateClassServiceConstructor();
 
@@ -101,14 +96,14 @@ public class TestMisc extends FrameworkTestCase
 
         assertEquals("java.util.HashMap", c.getInstanceClassName());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testCreateClassServiceConstructorTwice()
     {
         Module m = newModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         CreateClassServiceConstructor c = new CreateClassServiceConstructor();
 

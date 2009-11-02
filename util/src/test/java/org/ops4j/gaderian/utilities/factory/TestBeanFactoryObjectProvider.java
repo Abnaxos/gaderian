@@ -14,7 +14,7 @@
 
 package org.ops4j.gaderian.utilities.factory;
 
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
@@ -79,24 +79,20 @@ public class TestBeanFactoryObjectProvider extends GaderianCoreTestCase
     {
         String result = "Obtained via BeanFactory.";
 
-        MockControl factoryControl = newControl(BeanFactory.class);
-        BeanFactory factory = (BeanFactory) factoryControl.getMock();
+        BeanFactory factory = createMock(BeanFactory.class);
 
-        MockControl moduleControl = newControl(Module.class);
-        Module module = (Module) moduleControl.getMock();
+        Module module = createMock(Module.class);
 
-        module.getService("factory", BeanFactory.class);
-        moduleControl.setReturnValue(factory);
+        expect(module.getService("factory", BeanFactory.class)).andReturn(factory);
 
-        factory.get("my-bean,initialized");
-        factoryControl.setReturnValue(result);
+        expect(factory.get("my-bean,initialized")).andReturn(result);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ObjectProvider op = new BeanFactoryObjectProvider();
 
         assertSame(result, op.provideObject(module, null, "factory:my-bean,initialized", null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

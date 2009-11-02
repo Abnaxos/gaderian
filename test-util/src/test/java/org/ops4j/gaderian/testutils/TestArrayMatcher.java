@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 /**
- * Tests for {@link org.ops4j.gaderian.test.ArrayMatcher}.
+ * Tests for {@link ArrayMatcher}.
  *
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestArrayMatcher extends GaderianCoreTestCase
+public class TestArrayMatcher extends GaderianTestCase
 {
     private Object[] _expected = new String[]
     { "fred" };

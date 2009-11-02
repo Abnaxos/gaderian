@@ -21,13 +21,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
-import org.easymock.MockControl;
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import static org.easymock.EasyMock.*;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
 import org.ops4j.gaderian.service.*;
-import org.ops4j.gaderian.test.*;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.util.StrategyRegistry;
 
 /**
@@ -39,259 +41,223 @@ import org.ops4j.gaderian.utilities.util.StrategyRegistry;
  */
 public class TestStrategyFactory extends GaderianCoreTestCase
 {
-    private List buildContributions(Class registerClass, Object adapter, Location location)
+    private List buildContributions( Class registerClass, Object adapter, Location location )
     {
         StrategyContribution c = new StrategyContribution();
 
-        c.setRegisterClass(registerClass);
-        c.setStrategy(adapter);
-        c.setLocation(location);
+        c.setRegisterClass( registerClass );
+        c.setStrategy( adapter );
+        c.setLocation( location );
 
-        return Collections.singletonList(c);
+        return Collections.singletonList( c );
     }
 
-    private StrategyParameter buildParameter(Class registerClass, Object adapter,
-            Location contributionLocation, Location parameterLocation)
+    private StrategyParameter buildParameter( Class registerClass, Object adapter,
+                                              Location contributionLocation, Location parameterLocation )
     {
         StrategyParameter result = new StrategyParameter();
 
-        result.setContributions(buildContributions(registerClass, adapter, contributionLocation));
-        result.setLocation(parameterLocation);
+        result.setContributions( buildContributions( registerClass, adapter, contributionLocation ) );
+        result.setLocation( parameterLocation );
 
         return result;
     }
 
-    private StrategyParameter buildParameter(Class registerClass, Object adapter)
+    private StrategyParameter buildParameter( Class registerClass, Object adapter )
     {
-        return buildParameter(registerClass, adapter, null, null);
+        return buildParameter( registerClass, adapter, null, null );
     }
 
     public void testBuildRegistry()
     {
-        StrategyRegistry ar = (StrategyRegistry) newMock(StrategyRegistry.class);
-        ToStringStrategy adapter = (ToStringStrategy) newMock(ToStringStrategy.class);
+        StrategyRegistry ar = createMock( StrategyRegistry.class );
+        ToStringStrategy adapter = createMock( ToStringStrategy.class );
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock( ServiceImplementationFactoryParameters.class );
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(ToStringStrategy.class);
+        expect( fp.getServiceInterface() ).andReturn( ToStringStrategy.class );
 
-        StrategyParameter p = buildParameter(Number.class, adapter);
+        StrategyParameter p = buildParameter( Number.class, adapter );
 
-        fp.getFirstParameter();
-        fpc.setReturnValue(p);
+        expect( fp.getFirstParameter() ).andReturn( p );
 
-        ar.register(Number.class, adapter);
+        ar.register( Number.class, adapter );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
-        new StrategyFactory().buildRegistry(fp, ar);
+        new StrategyFactory().buildRegistry( fp, ar );
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testBuildRegistryWrongAdapterType()
     {
         Location l = newLocation();
 
-        StrategyRegistry ar = (StrategyRegistry) newMock(StrategyRegistry.class);
-        ToStringStrategy adapter = (ToStringStrategy) newMock(ToStringStrategy.class);
+        StrategyRegistry ar = createMock( StrategyRegistry.class );
+        ToStringStrategy adapter = createMock( ToStringStrategy.class );
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock( ServiceImplementationFactoryParameters.class );
 
-        MockControl logc = newControl(ErrorLog.class);
-        ErrorLog log = (ErrorLog) logc.getMock();
+        ErrorLog log = createMock( ErrorLog.class );
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Runnable.class);
+        expect( fp.getServiceInterface() ).andReturn( Runnable.class );
 
-        StrategyParameter p = buildParameter(Number.class, adapter, l, null);
+        StrategyParameter p = buildParameter( Number.class, adapter, l, null );
 
-        fp.getFirstParameter();
-        fpc.setReturnValue(p);
+        expect( fp.getFirstParameter() ).andReturn( p );
 
-        fp.getErrorLog();
-        fpc.setReturnValue(log);
+        expect( fp.getErrorLog() ).andReturn( log );
 
-        log.error(
-                StrategyMessages.strategyWrongInterface(adapter, Number.class, Runnable.class),
-                l,
-                new ClassCastException());
-        logc.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-        { null, null, new TypeMatcher() }));
 
-        replayControls();
+        log.error( eq( StrategyMessages.strategyWrongInterface( adapter, Number.class, Runnable.class ) ),
+                eq( l ),
+                EasyMock.isA( ClassCastException.class ) );
 
-        new StrategyFactory().buildRegistry(fp, ar);
+        replayAllRegisteredMocks();
 
-        verifyControls();
+        new StrategyFactory().buildRegistry( fp, ar );
+
+        verifyAllRegisteredMocks();
     }
 
     public void testBuildImplementationClass()
     {
-        MockControl factoryControl = newControl(ClassFactory.class);
-        ClassFactory factory = (ClassFactory) factoryControl.getMock();
+        ClassFactory factory = createMock( ClassFactory.class );
 
-        MockControl cfc = newControl(ClassFab.class);
-        ClassFab cf = (ClassFab) cfc.getMock();
+        ClassFab cf = createMock( ClassFab.class );
 
-        MethodFab mf = (MethodFab) newMock(MethodFab.class);
+        MethodFab mf = createMock( MethodFab.class );
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock( ServiceImplementationFactoryParameters.class );
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(ToStringStrategy.class);
+        expect( fp.getServiceInterface() ).andReturn( ToStringStrategy.class );
         final StrategyParameter param = new StrategyParameter();
-        fp.getFirstParameter();
-        fpc.setReturnValue(param);
-        factory.newClass("NewClass", Object.class);
-        factoryControl.setReturnValue(cf);
+        expect( fp.getFirstParameter() ).andReturn( param );
+        expect( factory.newClass( "NewClass", Object.class ) ).andReturn( cf );
 
-        cf.addInterface(ToStringStrategy.class);
-        cf.addField("_registry", StrategyRegistry.class);
+        cf.addInterface( ToStringStrategy.class );
+        cf.addField( "_registry", StrategyRegistry.class );
 
-        cf.addConstructor(new Class[]
-        { StrategyRegistry.class }, null, "_registry = $1;");
-        cfc.setMatcher(new AggregateArgumentsMatcher(new ArrayMatcher()));
+        Capture<Class[]> classCapture = new Capture<Class[]>();
+        cf.addConstructor( capture( classCapture ), ( Class[] ) eq(null), eq("_registry = $1;") );
 
-        cf
-                .addMethod(
-                        Modifier.PRIVATE,
-                        new MethodSignature(ToStringStrategy.class, "_getStrategy", new Class[]
-                        { Object.class }, null),
-                        "return (org.ops4j.gaderian.utilities.strategy.ToStringStrategy) _registry.getStrategy($1.getClass());");
-        cfc.setReturnValue(mf);
+        expect( cf.addMethod(
+                Modifier.PRIVATE,
+                new MethodSignature( ToStringStrategy.class, "_getStrategy", new Class[]
+                        { Object.class }, null ),
+                "return (org.ops4j.gaderian.utilities.strategy.ToStringStrategy) _registry.getStrategy($1.getClass());" ) ).andReturn( mf );
 
+        expect( cf.addMethod( Modifier.PUBLIC, new MethodSignature( String.class, "toString", new Class[]
+                { Object.class }, null ), "return ($r) _getStrategy($1).toString($$);" ) ).andReturn( mf );
 
+        expect( fp.getServiceId() ).andReturn( "foo.Bar" );
 
-        cf.addMethod(Modifier.PUBLIC, new MethodSignature(String.class, "toString", new Class[]
-        { Object.class }, null), "return ($r) _getStrategy($1).toString($$);");
-        cfc.setReturnValue(mf);
-
-        fp.getServiceId();
-        fpc.setReturnValue("foo.Bar");
-
-        ClassFabUtils.addToStringMethod(cf, StrategyMessages.toString(
+        ClassFabUtils.addToStringMethod( cf, StrategyMessages.toString(
                 "foo.Bar",
-                ToStringStrategy.class));
-        cfc.setReturnValue(mf);
+                ToStringStrategy.class ) );
+        expectLastCall().andReturn( mf );
 
-        cf.createClass();
-        cfc.setReturnValue(String.class);
+        expect( cf.createClass() ).andReturn( String.class );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         StrategyFactory f = new StrategyFactory();
-        f.setClassFactory(factory);
+        f.setClassFactory( factory );
 
-        f.buildImplementationClass(fp, "NewClass");
+        f.buildImplementationClass( fp, "NewClass" );
 
-        verifyControls();
+        verifyAllRegisteredMocks();
+
+        Class[] value = classCapture.getValue();
+        assertNotNull(value);
+        assertEquals("unexpected constructor length", 1,value.length);
+
     }
 
     public void testBuildImplementationClassImproperMethod()
     {
         Location l = newLocation();
 
-        MockControl factoryControl = newControl(ClassFactory.class);
-        ClassFactory factory = (ClassFactory) factoryControl.getMock();
+        ClassFactory factory = createMock( ClassFactory.class );
 
-        MockControl cfc = newControl(ClassFab.class);
-        ClassFab cf = (ClassFab) cfc.getMock();
+        ClassFab cf = createMock( ClassFab.class );
 
-        MethodFab mf = (MethodFab) newMock(MethodFab.class);
+        MethodFab mf = createMock( MethodFab.class );
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock( ServiceImplementationFactoryParameters.class );
 
-        ErrorLog log = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog log = createMock( ErrorLog.class );
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Runnable.class);
+        expect(fp.getServiceInterface()).andReturn( Runnable.class );
         final StrategyParameter param = new StrategyParameter();
-        fp.getFirstParameter();
-        fpc.setReturnValue(param);
+        expect(fp.getFirstParameter()).andReturn( param );
 
-        factory.newClass("NewClass", Object.class);
-        factoryControl.setReturnValue(cf);
+        expect(factory.newClass( "NewClass", Object.class )).andReturn( cf );
 
-        cf.addInterface(Runnable.class);
-        cf.addField("_registry", StrategyRegistry.class);
+        cf.addInterface( Runnable.class );
+        cf.addField( "_registry", StrategyRegistry.class );
 
-        cf.addConstructor(new Class[]
-        { StrategyRegistry.class }, null, "_registry = $1;");
-        cfc.setMatcher(new AggregateArgumentsMatcher(new ArrayMatcher()));
+        Capture<Class[]> classCapture = new Capture<Class[]>();
+        cf.addConstructor( capture( classCapture ), ( Class[] ) eq(null), eq("_registry = $1;") );
 
-        cf.addMethod(
+
+        expect(cf.addMethod(
                 Modifier.PRIVATE,
-                new MethodSignature(Runnable.class, "_getStrategy", new Class[]
-                { Object.class }, null),
-                "return (java.lang.Runnable) _registry.getStrategy($1.getClass());");
-        cfc.setReturnValue(mf);
+                new MethodSignature( Runnable.class, "_getStrategy", new Class[]
+                        { Object.class }, null ),
+                "return (java.lang.Runnable) _registry.getStrategy($1.getClass());" )).andReturn( mf );
 
-        MethodSignature sig = new MethodSignature(void.class, "run", null, null);
+        MethodSignature sig = new MethodSignature( void.class, "run", null, null );
 
-        cf.addMethod(Modifier.PUBLIC, sig, "{  }");
-        cfc.setReturnValue(mf);
+        expect(cf.addMethod( Modifier.PUBLIC, sig, "{  }" )).andReturn( mf );
 
-        fp.getErrorLog();
-        fpc.setReturnValue(log);
+        expect(fp.getErrorLog()).andReturn( log );
 
-        fp.getFirstParameter();
         // Slight fudge: we return the location itself when we should return
         // an object with this location.
-        fpc.setReturnValue(l);
+        expect(fp.getFirstParameter()).andReturn( l );
 
-        log.error(StrategyMessages.improperServiceMethod(sig), l, null);
+        log.error( StrategyMessages.improperServiceMethod( sig ), l, null );
 
-        fp.getServiceId();
-        fpc.setReturnValue("foo.Bar");
+        expect(fp.getServiceId()).andReturn( "foo.Bar" );
 
-        ClassFabUtils.addToStringMethod(cf, StrategyMessages.toString("foo.Bar", Runnable.class));
-        cfc.setReturnValue(mf);
+        ClassFabUtils.addToStringMethod( cf, StrategyMessages.toString( "foo.Bar", Runnable.class ) );
+        expectLastCall().andReturn( mf );
+                              
+        expect(cf.createClass()).andReturn( String.class );
 
-        cf.createClass();
-
-        cfc.setReturnValue(String.class);
-
-        replayControls();
+        replayAllRegisteredMocks();
 
         StrategyFactory f = new StrategyFactory();
-        f.setClassFactory(factory);
+        f.setClassFactory( factory );
 
-        f.buildImplementationClass(fp, "NewClass");
+        f.buildImplementationClass( fp, "NewClass" );
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIntegration() throws Exception
     {
-        Registry r = buildFrameworkRegistry("AdapterFactoryIntegration.xml", false );
+        Registry r = buildFrameworkRegistry( "AdapterFactoryIntegration.xml", false );
 
-        ToStringStrategy ts = (ToStringStrategy) r.getService(ToStringStrategy.class);
+        ToStringStrategy ts = ( ToStringStrategy ) r.getService( ToStringStrategy.class );
 
-        assertEquals("5150", ts.toString(new Integer(5150)));
+        assertEquals( "5150", ts.toString( new Integer( 5150 ) ) );
     }
 
     public void testParameterIndex() throws Exception
     {
-    	Registry r = buildFrameworkRegistry("ParameterIndexTest.xml", false );
-    	LoggingStrategy loggingStrategy = ( LoggingStrategy )r.getService(LoggingStrategy.class);
-    	Log log = ( Log )newMock( Log.class );
-    	final Date now = new Date();
-    	log.debug( "Hello, World!" );
-    	log.debug( MessageFormat.format( "{0,date,MM/dd/yyyy}", new Object[] { now } ) );
-    	replayControls();
-    	loggingStrategy.log( log, "Hello, World!" );
-    	loggingStrategy.log( log, now );
+        Registry r = buildFrameworkRegistry( "ParameterIndexTest.xml", false );
+        LoggingStrategy loggingStrategy = ( LoggingStrategy ) r.getService( LoggingStrategy.class );
+        Log log = createMock( Log.class );
+        final Date now = new Date();
+        log.debug( "Hello, World!" );
+        log.debug( MessageFormat.format( "{0,date,MM/dd/yyyy}", new Object[]{ now } ) );
+        replayAllRegisteredMocks();
+        loggingStrategy.log( log, "Hello, World!" );
+        loggingStrategy.log( log, now );
 
-    	verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

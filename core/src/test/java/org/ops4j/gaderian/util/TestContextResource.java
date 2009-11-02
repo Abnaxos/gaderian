@@ -16,9 +16,9 @@ package org.ops4j.gaderian.util;
 
 import java.net.URL;
 import java.util.Locale;
-
 import javax.servlet.ServletContext;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.Resource;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
@@ -32,14 +32,14 @@ public class TestContextResource extends GaderianCoreTestCase
 {
     private ServletContext newContext()
     {
-        return (ServletContext) newMock(ServletContext.class);
+        return createMock(ServletContext.class);
     }
 
     public void testConstructor()
     {
         ServletContext context = newContext();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ContextResource r = new ContextResource(context, "/foo/bar/baz_en.html", Locale.ENGLISH);
 
@@ -51,17 +51,16 @@ public class TestContextResource extends GaderianCoreTestCase
 
         assertEquals(Locale.ENGLISH, r.getLocale());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testLocalizationExists() throws Exception
     {
         ServletContext context = newContext();
 
-        context.getResource("/foo/bar/baz_en.html");
-        setReturnValue(context, new URL("http://foo.com"));
+        expect(context.getResource("/foo/bar/baz_en.html")).andReturn(new URL("http://foo.com"));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ContextResource r1 = new ContextResource(context, "/foo/bar/baz.html");
 
@@ -70,20 +69,18 @@ public class TestContextResource extends GaderianCoreTestCase
         assertEquals("/foo/bar/baz_en.html", r2.getPath());
         assertEquals(Locale.ENGLISH, r2.getLocale());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testLocalizationSame() throws Exception
     {
         ServletContext context = newContext();
 
-        context.getResource("/foo/bar/baz_en.html");
-        setReturnValue(context, null);
+        expect(context.getResource("/foo/bar/baz_en.html")).andReturn(null);
 
-        context.getResource("/foo/bar/baz.html");
-        setReturnValue(context, new URL("http://foo.com"));
+        expect(context.getResource("/foo/bar/baz.html")).andReturn(new URL("http://foo.com"));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ContextResource r1 = new ContextResource(context, "/foo/bar/baz.html");
 
@@ -91,39 +88,37 @@ public class TestContextResource extends GaderianCoreTestCase
 
         assertSame(r2, r1);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testLocalizationMissing() throws Exception
     {
         ServletContext context = newContext();
 
-        context.getResource("/foo/bar/baz_en.html");
-        setReturnValue(context, null);
+        expect(context.getResource("/foo/bar/baz_en.html")).andReturn(null);
 
-        context.getResource("/foo/bar/baz.html");
-        setReturnValue(context, null);
+        expect(context.getResource("/foo/bar/baz.html")).andReturn(null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ContextResource r1 = new ContextResource(context, "/foo/bar/baz.html");
 
         assertNull(r1.getLocalization(Locale.ENGLISH));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetRelativeResource()
     {
         ServletContext context = newContext();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ContextResource r1 = new ContextResource(context, "/foo/bar/baz.html");
         Resource r2 = r1.getRelativeResource("baz.gif");
 
         assertEquals("/foo/bar/baz.gif", r2.getPath());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

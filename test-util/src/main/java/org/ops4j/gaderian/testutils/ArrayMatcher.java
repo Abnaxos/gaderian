@@ -12,21 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 /**
- * An {@link org.ops4j.gaderian.test.ArgumentMatcher} that only compares the <em>types</em> of
- * the two objects, not their actual values. This is useful for Throwable arguments, (since
- * Throwables rarely implement a useful <code>equals</code>). This allows a check that the right
- * type of exception was passed in (even if it doesn't check that the exception's message and other
- * properties are correct).
+ * Used when the arguments to compare are a non-primitive array type.
  * 
- * @author Howard Lewis Ship
+ * @author Howard M. Lewis Ship
+ * @since 1.1
  */
-public class TypeMatcher extends AbstractArgumentMatcher
+public class ArrayMatcher extends AbstractArgumentMatcher
 {
+
     public boolean compareArguments(Object expected, Object actual)
     {
-        return expected.getClass().equals(actual.getClass());
+        Object[] e = (Object[]) expected;
+        Object[] a = (Object[]) actual;
+
+        if (a == null)
+            return false;
+
+        if (e.length != a.length)
+            return false;
+
+        for (int i = 0; i < e.length; i++)
+        {
+            if (!e[i].equals(a[i]))
+                return false;
+        }
+
+        return true;
     }
+
 }

@@ -14,12 +14,15 @@
 
 package org.ops4j.gaderian.examples.panorama.startup.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 import org.apache.commons.logging.Log;
+import static org.easymock.EasyMock.*;
+import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.examples.panorama.startup.Executable;
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.ErrorLog;
-import org.ops4j.gaderian.Messages;
-import org.ops4j.gaderian.Resource;
 import org.ops4j.gaderian.impl.DefaultClassResolver;
 import org.ops4j.gaderian.impl.MessageFinderImpl;
 import org.ops4j.gaderian.impl.ModuleMessages;
@@ -27,18 +30,11 @@ import org.ops4j.gaderian.internal.MessageFinder;
 import org.ops4j.gaderian.service.ThreadLocale;
 import org.ops4j.gaderian.service.impl.ThreadLocaleImpl;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.ops4j.gaderian.test.*;
 import org.ops4j.gaderian.util.ClasspathResource;
-import org.easymock.MockControl;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
 
 
 /**
- * Tests for the {@link org.ops4j.examples.panorama.startup.impl.TaskExecutor} service.
+ * Tests for the {@link org.ops4j.gaderian.examples.panorama.startup.impl.TaskExecutor} service.
  *
  * @author Howard Lewis Ship
  */
@@ -91,16 +87,15 @@ public class TestTaskExecutor extends GaderianCoreTestCase
         t2.setId("second");
         t2.setTitle("Fixture #2");
 
-        List tasks = new ArrayList();
+        List<Task> tasks = new ArrayList<Task>();
         tasks.add(t1);
         tasks.add(t2);
 
-        MockControl logControl = newControl(Log.class);
-        Log log = (Log) logControl.getMock();
+        Log log = createMock(Log.class);
 
         TaskExecutor e = new TaskExecutor();
 
-        ErrorLog errorLog = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog errorLog = createMock(ErrorLog.class);
 
         e.setErrorLog(errorLog);
         e.setLog(log);
@@ -111,18 +106,18 @@ public class TestTaskExecutor extends GaderianCoreTestCase
 
         // Note the ordering; explicitly set, to check that ordering does
         // take place.
-        log.info("Executing task Fixture #2.");
-        log.info("Executing task Fixture #1.");
-        log.info("Executed 2 tasks \\(in \\d+ milliseconds\\)\\.");
-        logControl.setMatcher(new RegexpMatcher());
+        log.info(find("Executing task Fixture #2."));
 
-        replayControls();
+        log.info(find("Executing task Fixture #1."));
+        log.info(find("Executed 2 tasks \\(in \\d+ milliseconds\\)\\."));
+
+        replayAllRegisteredMocks();
         e.run();
 
         assertListsEqual(new String[]
                 {"f2", "f1"}, _tokens);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
 
     }
@@ -145,25 +140,19 @@ public class TestTaskExecutor extends GaderianCoreTestCase
 
         List tasks = Collections.singletonList(t);
 
-        MockControl logControl = newControl(Log.class);
-        Log log = (Log) logControl.getMock();
+        Log log = createMock(Log.class);
 
-        MockControl errorLogControl = newControl(ErrorLog.class);
-        ErrorLog errorLog = (ErrorLog) errorLogControl.getMock();
+        ErrorLog errorLog = createMock(ErrorLog.class);
 
         log.info("Executing task Failure.");
 
-        errorLog.error(
-                "Exception while executing task Failure: Failure!",
-                null,
-                new ApplicationRuntimeException(""));
-        errorLogControl.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-                {null, null, new TypeMatcher()}));
+        errorLog.error(eq("Exception while executing task Failure: Failure!"),
+                ( Location )eq(null),
+                isA(ApplicationRuntimeException.class));
 
-        log.info("Executed one task with one failure \\(in \\d+ milliseconds\\)\\.");
-        logControl.setMatcher(new AggregateArgumentsMatcher(new RegexpMatcher()));
+        log.info(find("Executed one task with one failure \\(in \\d+ milliseconds\\)\\."));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         TaskExecutor e = new TaskExecutor();
 
@@ -174,6 +163,6 @@ public class TestTaskExecutor extends GaderianCoreTestCase
 
         e.run();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

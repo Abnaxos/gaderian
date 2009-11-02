@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.MockControl;
-import org.ops4j.gaderian.testutils.GaderianTestCase;
+import org.easymock.EasyMock;
 
 /**
- * Tests {@link GaderianCoreTestCase}'s ability to generate a mock for a class
+ * Tests {@link GaderianTestCase}'s ability to generate a mock for a class
  * as well as an interface.
  *
  * @author Howard M. Lewis Ship
@@ -36,20 +35,20 @@ public class TestMockClass extends GaderianTestCase
 
         try
         {
-            MockControl c = newControl(ArrayList.class);
-            List l = (List) c.getMock();
+            List l = createMock( ArrayList.class );
+            
 
-            l.size();
-            c.setReturnValue(5);
+            EasyMock.expect(l.size()).andReturn(5);
+            
 
-            replayControls();
+            replayAllRegisteredMocks();
 
             // We're not actually testing the List, we're testing the ability to create a mock
             // for ArrayList
 
             assertEquals(5, l.size());
 
-            verifyControls();
+            verifyAllRegisteredMocks();
         }
         catch (Error err)
         {
@@ -59,24 +58,4 @@ public class TestMockClass extends GaderianTestCase
         }
     }
 
-    /**
-     * Test the placeholder, which is used when the easymockclassextension is not available.
-     */
-
-    public void testPlaceholder()
-    {
-        MockControlFactory f = new PlaceholderClassMockControlFactory();
-
-        try
-        {
-            f.newControl(ArrayList.class);
-            unreachable();
-        }
-        catch (RuntimeException ex)
-        {
-            assertEquals(
-                    "Unable to instantiate EasyMock control for class java.util.ArrayList; ensure that easymockclassextension-1.1.jar and cglib-full-2.0.1.jar are on the classpath.",
-                    ex.getMessage());
-        }
-    }
 }

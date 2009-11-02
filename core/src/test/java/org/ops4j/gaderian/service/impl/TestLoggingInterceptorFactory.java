@@ -17,13 +17,13 @@ package org.ops4j.gaderian.service.impl;
 import java.util.Collections;
 
 import org.apache.commons.logging.Log;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.impl.InterceptorStackImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.impl.LoggingInterceptorFactory}.
@@ -41,27 +41,23 @@ public class TestLoggingInterceptorFactory extends GaderianCoreTestCase
     {
         ClassFactory cf = new ClassFactoryImpl();
 
-        Runnable r = (Runnable) newMock(Runnable.class);
-        MockControl logControl = newControl(Log.class);
-        Log log = (Log) logControl.getMock();
+        Runnable r = (Runnable) createMock(Runnable.class);
+        Log log = createMock(Log.class);
 
         LoggingInterceptorFactory f = new LoggingInterceptorFactory();
         f.setFactory(cf);
 
-        MockControl spControl = newControl(ServicePoint.class);
-        ServicePoint sp = (ServicePoint) spControl.getMock();
+        ServicePoint sp = createMock(ServicePoint.class);
 
-        Module module = (Module)newMock(Module.class);
+        Module module = createMock(Module.class);
 
         // Training
 
-        sp.getServiceInterface();
-        spControl.setReturnValue(Runnable.class);
+        expect(sp.getServiceInterface()).andReturn(Runnable.class);
 
-        sp.getExtensionPointId();
-        spControl.setReturnValue("foo.bar");
+        expect(sp.getExtensionPointId()).andReturn("foo.bar");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         InterceptorStackImpl is = new InterceptorStackImpl(log, sp, r);
 
@@ -69,23 +65,22 @@ public class TestLoggingInterceptorFactory extends GaderianCoreTestCase
 
         Runnable ri = (Runnable) is.peek();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         // Training
 
-        log.isDebugEnabled();
-        logControl.setReturnValue(true);
+        expect(log.isDebugEnabled()).andReturn(true);
 
         log.debug("BEGIN run()");
         log.debug("END run()");
 
         r.run();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ri.run();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testJavassistProxies() throws Exception {

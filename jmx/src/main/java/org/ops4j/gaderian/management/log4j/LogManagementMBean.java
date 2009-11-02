@@ -15,26 +15,19 @@
 package org.ops4j.gaderian.management.log4j;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import javax.management.*;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.JMException;
-import javax.management.MBeanAttributeInfo;
-import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
-import javax.management.ObjectName;
-
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.util.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.helpers.OptionConverter;
 import org.apache.log4j.spi.LoggerRepository;
+import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.management.ObjectNameBuilder;
 import org.ops4j.gaderian.management.mbeans.AbstractDynamicMBean;
+import org.ops4j.gaderian.util.StringUtils;
 
 /**
  * MBean that manages MBeans for Log4j Loggers. New MBeans can be added by specifying the Logger
@@ -58,9 +51,9 @@ public class LogManagementMBean extends AbstractDynamicMBean implements LogManag
 
     private LoggerRepository _loggerRepository;
 
-    private List _loggerContributions;
+    private List<LoggerContribution> _loggerContributions;
 
-    public LogManagementMBean(ObjectNameBuilder objectNameBuilder, List loggerContributions)
+    public LogManagementMBean(ObjectNameBuilder objectNameBuilder, List<LoggerContribution> loggerContributions)
     {
         _objectNameBuilder = objectNameBuilder;
         _loggerRepository = LogManager.getLoggerRepository();
@@ -152,13 +145,10 @@ public class LogManagementMBean extends AbstractDynamicMBean implements LogManag
      */
     protected void addConfiguredLoggerMBeans()
     {
-        for (Iterator iterContributions = _loggerContributions.iterator(); iterContributions
-                .hasNext();)
+        for ( final LoggerContribution contribution : _loggerContributions )
         {
-            LoggerContribution contribution = (LoggerContribution) iterContributions.next();
             String loggerPattern = contribution.getLoggerPattern();
-
-            addLoggerMBeansForPattern(loggerPattern);
+            addLoggerMBeansForPattern( loggerPattern );
         }
     }
 

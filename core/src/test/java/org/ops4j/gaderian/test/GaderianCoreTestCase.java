@@ -16,32 +16,16 @@ package org.ops4j.gaderian.test;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.ClassResolver;
-import org.ops4j.gaderian.Location;
-import org.ops4j.gaderian.ModuleDescriptorProvider;
-import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.Resource;
-import org.ops4j.gaderian.testutils.GaderianTestCase;
+import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.impl.*;
 import org.ops4j.gaderian.internal.ser.ServiceSerializationHelper;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.util.ClasspathResource;
 import org.ops4j.gaderian.util.PropertyUtils;
 import org.ops4j.gaderian.util.URLResource;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
-import org.easymock.MockControl;
-import org.easymock.classextension.MockClassControl;
 
 /**
  * Contains some support for creating Gaderian tests; this is useful enough that has been moved into
@@ -169,18 +153,6 @@ public abstract class GaderianCoreTestCase extends GaderianTestCase
         return builder.constructRegistry(Locale.getDefault());
     }
 
-    /**
-     * @deprecated To be removed in 1.2. Use {@link #newLocation()} instead.
-     */
-    protected Location fabricateLocation(int line)
-    {
-        String path = "/" + getClass().getName().replace('.', '/');
-
-        Resource r = new ClasspathResource(getClassResolver(), path);
-
-        return new LocationImpl(r, line);
-    }
-
     private int _line = 1;
 
     /**
@@ -192,7 +164,11 @@ public abstract class GaderianCoreTestCase extends GaderianTestCase
      */
     protected Location newLocation()
     {
-        return fabricateLocation(_line++);
+        String path = "/" + getClass().getName().replace('.', '/');
+
+        Resource r = new ClasspathResource(getClassResolver(), path);
+
+        return new LocationImpl(r, _line++);
     }
 
     /**

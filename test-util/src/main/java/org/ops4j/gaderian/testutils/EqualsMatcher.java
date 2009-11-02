@@ -12,36 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
-
+package org.ops4j.gaderian.testutils;
 
 /**
- * Used when the arguments to compare are a non-primitive array type.
- * 
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class ArrayMatcher extends AbstractArgumentMatcher
+public class EqualsMatcher extends AbstractArgumentMatcher
 {
 
+    /**
+     * Simple matcher based on <code>equals()</code>.
+     */
     public boolean compareArguments(Object expected, Object actual)
     {
-        Object[] e = (Object[]) expected;
-        Object[] a = (Object[]) actual;
-
-        if (a == null)
-            return false;
-
-        if (e.length != a.length)
-            return false;
-
-        for (int i = 0; i < e.length; i++)
-        {
-            if (!e[i].equals(a[i]))
-                return false;
-        }
-
-        return true;
+        return expected.equals(actual);
     }
 
 }

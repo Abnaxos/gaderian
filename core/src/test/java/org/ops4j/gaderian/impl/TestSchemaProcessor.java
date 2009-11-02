@@ -14,16 +14,11 @@
 
 package org.ops4j.gaderian.impl;
 
+import java.util.*;
+
 import gaderian.test.services.StringHolder;
 import gaderian.test.services.impl.StringHolderImpl;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
@@ -31,13 +26,8 @@ import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.schema.impl.AttributeModelImpl;
 import org.ops4j.gaderian.schema.impl.ElementModelImpl;
 import org.ops4j.gaderian.schema.impl.SchemaImpl;
-import org.ops4j.gaderian.schema.rules.CreateObjectRule;
-import org.ops4j.gaderian.schema.rules.InvokeParentRule;
-import org.ops4j.gaderian.schema.rules.NullTranslator;
-import org.ops4j.gaderian.schema.rules.ReadAttributeRule;
-import org.ops4j.gaderian.schema.rules.ReadContentRule;
+import org.ops4j.gaderian.schema.rules.*;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.schema.SchemaProcessor} and
@@ -50,8 +40,7 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
     public void testGetContentTranslator()
     {
-        MockControl control = newControl(Module.class);
-        Module m = (Module) control.getMock();
+        Module m = createMock(Module.class);
 
         ElementModelImpl em = new ElementModelImpl();
 
@@ -79,16 +68,13 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         List elements = Collections.singletonList(element);
 
-        m.resolveType("gaderian.test.services.impl.StringHolderImpl");
-        control.setReturnValue(StringHolderImpl.class);
+        expect(m.resolveType("gaderian.test.services.impl.StringHolderImpl")).andReturn(StringHolderImpl.class);
 
-        m.expandSymbols("flintstone", null);
-        control.setReturnValue("flintstone");
+        expect(m.expandSymbols("flintstone", null)).andReturn("flintstone");
 
-        m.getTranslator("smart");
-        control.setReturnValue(new NullTranslator());
+        expect(m.getTranslator("smart")).andReturn(new NullTranslator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         p.process(elements, m);
 
@@ -99,13 +85,12 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         assertEquals("flintstone", h.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetContentTranslatorUnspecified()
     {
-        MockControl control = newControl(Module.class);
-        Module m = (Module) control.getMock();
+        Module m = createMock(Module.class);
 
         ElementModelImpl em = new ElementModelImpl();
 
@@ -133,13 +118,11 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         List elements = Collections.singletonList(element);
 
-        m.resolveType("gaderian.test.services.impl.StringHolderImpl");
-        control.setReturnValue(StringHolderImpl.class);
+        expect(m.resolveType("gaderian.test.services.impl.StringHolderImpl")).andReturn(StringHolderImpl.class);
 
-        m.expandSymbols("flintstone", null);
-        control.setReturnValue("flintstone");
+        expect(m.expandSymbols("flintstone", null)).andReturn("flintstone");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         p.process(elements, m);
 
@@ -150,13 +133,12 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         assertEquals("flintstone", h.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetAttributeTranslator()
     {
-        MockControl control = newControl(Module.class);
-        Module m = (Module) control.getMock();
+        final Module m = createMock(Module.class);
 
         ElementModelImpl em = new ElementModelImpl();
 
@@ -189,16 +171,11 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         List elements = Collections.singletonList(element);
 
-        m.resolveType("gaderian.test.services.impl.StringHolderImpl");
-        control.setReturnValue(StringHolderImpl.class);
+        expect(m.resolveType("gaderian.test.services.impl.StringHolderImpl")).andReturn(StringHolderImpl.class);
+        expect(m.expandSymbols("wilma", null)).andReturn("wilma");
+        expect(m.getTranslator("service")).andReturn(new NullTranslator());
 
-        m.expandSymbols("wilma", null);
-        control.setReturnValue("wilma");
-
-        m.getTranslator("service");
-        control.setReturnValue(new NullTranslator());
-
-        replayControls();
+        replayAllRegisteredMocks();
 
         p.process(elements, m);
 
@@ -209,7 +186,7 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         assertEquals("wilma", h.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -269,8 +246,7 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
         SchemaImpl schema = new SchemaImpl();
         schema.addElementModel(em);
 
-        MockControl control = newControl(Module.class);
-        Module m = (Module) control.getMock();
+        Module m = createMock(Module.class);
 
         schema.setModule(m);
 
@@ -283,29 +259,22 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         List elements = Collections.singletonList(element);
 
-        m.getTranslator("cartoon");
-        control.setReturnValue(new NullTranslator());
+        expect(m.getTranslator("cartoon")).andReturn(new NullTranslator());
 
-        m.resolveType("StringHolderImpl");
-        control.setReturnValue(StringHolderImpl.class);
+        expect(m.resolveType("StringHolderImpl")).andReturn(StringHolderImpl.class);
 
-        m.expandSymbols("${fred}", null);
-        control.setReturnValue("fred");
+        expect(m.expandSymbols("${fred}", null)).andReturn("fred");
 
-        m.expandSymbols("${flintstone}", null);
-        control.setReturnValue("flintstone");
+        expect(m.expandSymbols("${flintstone}", null)).andReturn("flintstone");
 
-        MockControl tControl = newControl(Translator.class);
-        Translator t = (Translator) tControl.getMock();
+        Translator t = createMock(Translator.class);
 
-        m.getTranslator("cartoon");
-        control.setReturnValue(t);
+        expect(m.getTranslator("cartoon")).andReturn(t);
 
         Object flintstoneKey = new Object();
-        t.translate(m, Object.class, "flintstone", element.getLocation());
-        tControl.setReturnValue(flintstoneKey);
+        expect(t.translate(m, Object.class, "flintstone", element.getLocation())).andReturn(flintstoneKey);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         p.process(elements, m);
 
@@ -316,7 +285,7 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         assertEquals("fred", h.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -350,11 +319,8 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
         SchemaImpl schema = new SchemaImpl();
         schema.addElementModel(em);
 
-        MockControl control1 = newControl(Module.class);
-        Module m1 = (Module) control1.getMock();
-
-        MockControl control2 = newControl(Module.class);
-        Module m2 = (Module) control2.getMock();
+        Module m1 = createMock(Module.class);
+        Module m2 = createMock(Module.class);
 
         schema.setModule(m1);
 
@@ -376,51 +342,37 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
 
         List elements2 = Collections.singletonList(element2);
 
-        MockControl tControl1 = newControl(Translator.class);
-        Translator t1 = (Translator) tControl1.getMock();
+        Translator t1 = createMock(Translator.class);
 
-        m1.getTranslator("qualified-id");
-        control1.setReturnValue(t1);
+        expect(m1.getTranslator("qualified-id")).andReturn(t1);
 
         String flintstoneKeyModule1 = "m1.flintstone";
-        t1.translate(m1, Object.class, "flintstone", element1.getLocation());
-        tControl1.setReturnValue(flintstoneKeyModule1);
+        expect(t1.translate(m1, Object.class, "flintstone", element1.getLocation())).andReturn(flintstoneKeyModule1);
 
-        m1.resolveType("StringHolderImpl");
-        control1.setReturnValue(StringHolderImpl.class);
+        expect(m1.resolveType("StringHolderImpl")).andReturn(StringHolderImpl.class);
 
-        m1.expandSymbols("flintstone", location1);
-        control1.setReturnValue("flintstone");
+        expect(m1.expandSymbols("flintstone", location1)).andReturn("flintstone");
 
-        m1.getTranslator("qualified-id");
-        control1.setReturnValue(t1);
+        expect(m1.getTranslator("qualified-id")).andReturn(t1);
 
-        t1.translate(m1, String.class, "flintstone", element1.getLocation());
-        tControl1.setReturnValue(flintstoneKeyModule1);
+        expect(t1.translate(m1, String.class, "flintstone", element1.getLocation())).andReturn(flintstoneKeyModule1);
 
-        m1.resolveType("StringHolderImpl");
-        control1.setReturnValue(StringHolderImpl.class);
+        expect(m1.resolveType("StringHolderImpl")).andReturn(StringHolderImpl.class);
 
-        MockControl tControl2 = newControl(Translator.class);
-        Translator t2 = (Translator) tControl2.getMock();
+        Translator t2 = createMock(Translator.class);
 
-        m2.getTranslator("qualified-id");
-        control2.setReturnValue(t2);
+        expect(m2.getTranslator("qualified-id")).andReturn(t2);
 
         String flintstoneKeyModule2 = "m2.flintstone";
-        t2.translate(m2, Object.class, "flintstone", element2.getLocation());
-        tControl2.setReturnValue(flintstoneKeyModule2);
+        expect(t2.translate(m2, Object.class, "flintstone", element2.getLocation())).andReturn(flintstoneKeyModule2);
 
-        m2.expandSymbols("flintstone", location2);
-        control2.setReturnValue("flintstone");
+        expect(m2.expandSymbols("flintstone", location2)).andReturn("flintstone");
 
-        m2.getTranslator("qualified-id");
-        control2.setReturnValue(t2);
+        expect(m2.getTranslator("qualified-id")).andReturn(t2);
 
-        t2.translate(m2, String.class, "flintstone", element2.getLocation());
-        tControl2.setReturnValue(flintstoneKeyModule2);
+        expect(t2.translate(m2, String.class, "flintstone", element2.getLocation())).andReturn(flintstoneKeyModule2);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         p.process(elements1, m1);
         p.process(elements2, m2);
@@ -439,7 +391,7 @@ public class TestSchemaProcessor extends GaderianCoreTestCase
         assertTrue(keys.contains(flintstoneKeyModule1));
         assertTrue(keys.contains(flintstoneKeyModule2));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetAttributeDefault()

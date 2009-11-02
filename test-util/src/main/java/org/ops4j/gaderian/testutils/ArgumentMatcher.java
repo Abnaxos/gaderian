@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 /**
- * Used with {@link org.ops4j.gaderian.test.AggregateArgumentsMatcher} to provide matching logic
+ * Used with {@link org.ops4j.gaderian.testutils.AggregateArgumentsMatcher} to provide matching logic
  * for a single argument.
  * 
  * @author Howard M. Lewis Ship

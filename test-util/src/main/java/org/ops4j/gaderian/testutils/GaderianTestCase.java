@@ -15,19 +15,17 @@
 package org.ops4j.gaderian.testutils;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
-import org.easymock.MockControl;
-import org.easymock.classextension.MockClassControl;
+import org.easymock.classextension.EasyMock;
+import static org.easymock.classextension.EasyMock.*;
 
 /**
  * Contains some support for creating Gaderian tests; this is useful enough that has been moved into
@@ -39,64 +37,46 @@ public abstract class GaderianTestCase extends TestCase
 {
     protected String _interceptedLoggerName;
 
-    protected StoreAppender _appender;
+    private StoreAppender _appender;
 
-    /** List of {@link org.easymock.MockControl}. */
+    /** List containing the current list of mock objects which have been registered with this test case **/
+    private List<Object> _registeredMocks = new ArrayList<Object>();
 
-    private List<MockControl> _controls = new ArrayList<MockControl>();
 
-    /** @since 1.1 */
-    protected interface MockControlFactory
+    /** Creates a EasyMock mock object for the specified class
+     * @param clazz The class (type) to create the mock for.  This may be either an interface or
+     * class (easymock class extensions are used for this).
+     * @return The created mock object
+     */
+    protected <T> T createMock(final Class<T> clazz)
     {
-        public MockControl newControl(Class mockClass);
+        final T mock = EasyMock.createMock(clazz);
+        _registeredMocks.add(mock);
+        return mock;
     }
 
-    /** @since 1.1 */
-    private static class InterfaceMockControlFactory implements MockControlFactory
+    /** Performs a EasyMock replay on all the registered mock objects
+     */
+    protected void replayAllRegisteredMocks()
     {
-        public MockControl newControl(Class mockClass)
-        {
-            return MockControl.createStrictControl(mockClass);
-        }
+        replay( _registeredMocks.toArray());
     }
 
-    /** @since 1.1 */
-    private static class ClassMockControlFactory implements MockControlFactory
+    /** Performs a verify & reset on all registered mock objects.
+     *
+     */
+    protected void verifyAllRegisteredMocks()
     {
-        public MockControl newControl(Class mockClass)
-        {
-            return MockClassControl.createStrictControl(mockClass);
-        }
+        verify( _registeredMocks.toArray());
+        reset( _registeredMocks.toArray());
     }
 
-    /** @since 1.1 */
-    public static class PlaceholderClassMockControlFactory implements MockControlFactory
+    /** Performs a resets on all the registered mock objects.
+     *
+     */
+    protected void resetAllRegisteredMocks()
     {
-        public MockControl newControl(Class mockClass)
-        {
-            throw new RuntimeException(
-                    "Unable to instantiate EasyMock control for "
-                            + mockClass
-                            + "; ensure that easymockclassextension-1.1.jar and cglib-full-2.0.1.jar are on the classpath.");
-        }
-    }
-
-    /** @since 1.1 */
-    private static final MockControlFactory _interfaceMockControlFactory = new InterfaceMockControlFactory();
-
-    /** @since 1.1 */
-    private static MockControlFactory _classMockControlFactory;
-
-    static
-    {
-        try
-        {
-            _classMockControlFactory = new ClassMockControlFactory();
-        }
-        catch (NoClassDefFoundError ex)
-        {
-            _classMockControlFactory = new PlaceholderClassMockControlFactory();
-        }
+        reset( _registeredMocks.toArray());
     }
 
     /**
@@ -171,6 +151,11 @@ public abstract class GaderianTestCase extends TestCase
     {
         super.tearDown();
 
+        if ( _registeredMocks != null && !_registeredMocks.isEmpty())
+        {
+            _registeredMocks.clear();
+        }
+
         if (_appender != null)
         {
             _appender = null;
@@ -216,7 +201,7 @@ public abstract class GaderianTestCase extends TestCase
                 + ") does not contain regular expression [" + pattern + "].");
     }
 
-    protected void assertRegexp(String pattern, String actual) throws Exception
+    protected void assertRegexp(String pattern, String actual) 
     {
 
         Pattern compiled = Pattern.compile(pattern);
@@ -319,206 +304,6 @@ public abstract class GaderianTestCase extends TestCase
         }
 
         throw new AssertionFailedError("Could not find logged message with pattern: " + pattern);
-    }
-
-    /**
-     * Creates a <em>managed</em> control via
-     * {@link MockControl#createStrictControl(Class)}. The created control is remembered,
-     * and will be invoked by {@link #replayControls()}, {@link #verifyControls()}, etc.
-     * <p>
-     * The class to mock may be either an interface or a class. The EasyMock class extension
-     * (easymockclassextension-1.1.jar) and CGLIB (cglib-full-2.01.jar) must be present in the
-     * latter case (new since 1.1).
-     * <p>
-     * This method is not deprecated, but is rarely used; typically {@link #newMock(Class)} is used
-     * to create the control and the mock, and {@link #setReturnValue(Object, Object)} and
-     * {@link #setThrowable(Object, Throwable)} are used to while training it.
-     * {@link #getControl(Object)} is used for the rare cases where the MockControl itself is
-     * needed.
-     */
-    protected MockControl newControl(Class mockClass)
-    {
-        MockControlFactory factory = mockClass.isInterface() ? _interfaceMockControlFactory
-                : _classMockControlFactory;
-
-        MockControl result = factory.newControl(mockClass);
-
-        addControl(result);
-
-        return result;
-    }
-
-    /**
-     * Accesses the control for a previously created mock object. Iterates over the list of managed
-     * controls until one is found whose mock object identity equals the mock object provided.
-     *
-     * @param mock
-     *            object whose control is needed
-     * @return the corresponding MockControl if found
-     * @throws IllegalArgumentException
-     *             if not found
-     * @since 1.1
-     */
-
-    protected MockControl getControl(Object mock)
-    {
-        Iterator i = _controls.iterator();
-        while (i.hasNext())
-        {
-            MockControl control = (MockControl) i.next();
-
-            if (control.getMock() == mock)
-                return control;
-        }
-
-        throw new IllegalArgumentException(mock
-                + " is not a mock object controlled by any registered MockControl instance.");
-    }
-
-    /**
-     * Invoked when training a mock object to set the Throwable for the most recently invoked
-     * method.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param t
-     *            the exception the object should throw when it replays
-     * @since 1.1
-     */
-    protected void setThrowable(Object mock, Throwable t)
-    {
-        getControl(mock).setThrowable(t);
-    }
-
-    /**
-     * Invoked when training a mock object to set the return value for the most recently invoked
-     * method. Overrides of this method exist to support a number of primitive types.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param returnValue
-     *            the value to return from the most recently invoked methods
-     * @since 1.1
-     */
-    protected void setReturnValue(Object mock, Object returnValue)
-    {
-        getControl(mock).setReturnValue(returnValue);
-    }
-
-    /**
-     * Invoked when training a mock object to set the return value for the most recently invoked
-     * method. Overrides of this method exist to support a number of primitive types.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param returnValue
-     *            the value to return from the most recently invoked methods
-     * @since 1.1
-     */
-    protected void setReturnValue(Object mock, long returnValue)
-    {
-        getControl(mock).setReturnValue(returnValue);
-    }
-
-    /**
-     * Invoked when training a mock object to set the return value for the most recently invoked
-     * method. Overrides of this method exist to support a number of primitive types.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param returnValue
-     *            the value to return from the most recently invoked methods
-     * @since 1.1
-     */
-    protected void setReturnValue(Object mock, float returnValue)
-    {
-        getControl(mock).setReturnValue(returnValue);
-    }
-
-    /**
-     * Invoked when training a mock object to set the return value for the most recently invoked
-     * method. Overrides of this method exist to support a number of primitive types.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param returnValue
-     *            the value to return from the most recently invoked methods
-     * @since 1.1
-     */
-    protected void setReturnValue(Object mock, double returnValue)
-    {
-        getControl(mock).setReturnValue(returnValue);
-    }
-
-    /**
-     * Invoked when training a mock object to set the return value for the most recently invoked
-     * method. Overrides of this method exist to support a number of primitive types.
-     *
-     * @param mock
-     *            the mock object being trained
-     * @param returnValue
-     *            the value to return from the most recently invoked methods
-     * @since 1.1
-     */
-    protected void setReturnValue(Object mock, boolean returnValue)
-    {
-        getControl(mock).setReturnValue(returnValue);
-    }
-
-    /**
-     * Adds the control to the list of managed controls used by {@link #replayControls()} and
-     * {@link #verifyControls()}.
-     */
-    protected void addControl(MockControl control)
-    {
-        _controls.add(control);
-    }
-
-    /**
-     * Convienience for invoking {@link #newControl(Class)} and then invoking
-     * {@link MockControl#getMock()} on the result.
-     */
-    protected Object newMock(Class mockClass)
-    {
-        return newControl(mockClass).getMock();
-    }
-
-    /**
-     * Invokes {@link MockControl#replay()} on all controls created by {@link #newControl(Class)}.
-     */
-    protected void replayControls()
-    {
-        Iterator i = _controls.iterator();
-        for ( MockControl mockControl : _controls )
-        {
-            mockControl.replay();
-        }
-    }
-
-    /**
-     * Invokes {@link org.easymock.MockControl#verify()} and {@link MockControl#reset()} on all
-     * controls created by {@link #newControl(Class)}.
-     */
-    protected void verifyControls()
-    {
-        Iterator i = _controls.iterator();
-        for ( MockControl mockControl : _controls )
-        {
-            mockControl.verify();
-            mockControl.reset();
-        }
-    }
-
-    /**
-     * Invokes {@link org.easymock.MockControl#reset()} on all controls.
-     */
-    protected void resetControls()
-    {
-        Iterator i = _controls.iterator();
-        for ( MockControl mockControl : _controls )
-        {
-            mockControl.reset();
-        }
     }
 
     protected boolean matches(String input, String pattern) throws Exception

@@ -15,12 +15,11 @@
 package gaderian.test.rules;
 
 import gaderian.test.FrameworkTestCase;
-
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.impl.ModuleImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.schema.rules.SetModuleRule;
-import org.easymock.MockControl;
 
 /**
  * Tests the {@link org.ops4j.gaderian.schema.rules.SetModuleRule} rule class.
@@ -47,19 +46,16 @@ public class TestSetModule extends FrameworkTestCase
 
     public void testSetModuleRule()
     {
-        MockControl control = newControl(SchemaProcessor.class);
-        SchemaProcessor p = (SchemaProcessor) control.getMock();
+        SchemaProcessor p = createMock(SchemaProcessor.class);
 
         Module m = new ModuleImpl();
         Target t = new Target();
 
-        p.peek();
-        control.setReturnValue(t);
+        expect(p.peek()).andReturn( t );
 
-        p.getContributingModule();
-        control.setReturnValue(m);
+        expect(p.getContributingModule()).andReturn( m );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         SetModuleRule rule = new SetModuleRule();
 
@@ -69,6 +65,6 @@ public class TestSetModule extends FrameworkTestCase
 
         assertSame(m, t.getModule());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

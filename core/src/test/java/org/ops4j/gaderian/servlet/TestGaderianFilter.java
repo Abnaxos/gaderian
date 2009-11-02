@@ -16,17 +16,11 @@ package org.ops4j.gaderian.servlet;
 
 import java.io.IOException;
 import java.net.URL;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Gaderian;
 import org.ops4j.gaderian.Registry;
@@ -34,15 +28,14 @@ import org.ops4j.gaderian.ShutdownCoordinator;
 import org.ops4j.gaderian.events.RegistryShutdownListener;
 import org.ops4j.gaderian.service.ThreadCleanupListener;
 import org.ops4j.gaderian.service.ThreadEventNotifier;
-import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
  * Tests for {@link GaderianFilter}.
  *
  * @author Howard Lewis Ship
  */
-public class TestGaderianFilter extends GaderianCoreTestCase
+public class TestGaderianFilter extends GaderianTestCase
 {
     private static class ThreadListenerFixture implements ThreadCleanupListener
     {
@@ -117,21 +110,17 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
     public void testLoadsFromWebInf() throws Exception
     {
-        MockControl contextc = newControl(ServletContext.class);
-        ServletContext context = (ServletContext) contextc.getMock();
+        ServletContext context = createMock(ServletContext.class);
 
-        MockControl configc = newControl(FilterConfig.class);
-        FilterConfig config = (FilterConfig) configc.getMock();
+        FilterConfig config = createMock(FilterConfig.class);
 
-        config.getServletContext();
-        configc.setReturnValue(context);
+        expect(config.getServletContext()).andReturn( context );
 
         URL url = getClass().getResource("webinf-hivemodule.xml");
 
-        context.getResource(GaderianFilter.HIVE_MODULE_XML);
-        contextc.setReturnValue(url, 2);
+        expect(context.getResource(GaderianFilter.HIVE_MODULE_XML)).andReturn( url ).times(2);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         RegistryExposingGaderianFilterFixture f = new RegistryExposingGaderianFilterFixture();
 
@@ -141,26 +130,26 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
         assertEquals("was here", r.expandSymbols("${kilroy}", null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testBasic() throws Exception
     {
         FilterConfig filterConfig = newFilterConfig();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         RegistryExposingGaderianFilterFixture f = new RegistryExposingGaderianFilterFixture();
 
         f.init(filterConfig);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         Registry r = f.getRegistry();
 
         assertNotNull(r);
 
-        ThreadEventNotifier t = (ThreadEventNotifier) r.getService(
+        ThreadEventNotifier t = r.getService(
                 Gaderian.THREAD_EVENT_NOTIFIER_SERVICE,
                 ThreadEventNotifier.class);
 
@@ -168,22 +157,19 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
         t.addThreadCleanupListener(l);
 
-        MockControl requestControl = newControl(HttpServletRequest.class);
-        HttpServletRequest request = (HttpServletRequest) requestControl.getMock();
-        HttpServletResponse response = (HttpServletResponse) newMock(HttpServletResponse.class);
-        FilterChain chain = (FilterChain) newMock(FilterChain.class);
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) createMock(HttpServletResponse.class);
+        FilterChain chain = (FilterChain) createMock(FilterChain.class);
 
         request.setAttribute(GaderianFilter.REQUEST_KEY, r);
 
         chain.doFilter(request, response);
 
-        request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY);
-        requestControl.setReturnValue(null);
+        expect(request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY)).andReturn( null );
 
-        request.getAttribute(GaderianFilter.REQUEST_KEY);
-        requestControl.setReturnValue(r);
+        expect(request.getAttribute(GaderianFilter.REQUEST_KEY)).andReturn( r );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         f.doFilter(request, response, chain);
 
@@ -203,30 +189,25 @@ public class TestGaderianFilter extends GaderianCoreTestCase
             assertExceptionSubstring(ex, "The Gaderian Registry has been shutdown.");
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testShutdown() throws Exception
     {
-        MockControl contextc = newControl(ServletContext.class);
-        ServletContext context = (ServletContext) contextc.getMock();
+        ServletContext context = createMock(ServletContext.class);
+        FilterConfig filterConfig = createMock(FilterConfig.class);
 
-        MockControl configc = newControl(FilterConfig.class);
-        FilterConfig filterConfig = (FilterConfig) configc.getMock();
+        expect(filterConfig.getServletContext()).andReturn( context );
 
-        filterConfig.getServletContext();
-        configc.setReturnValue(context);
+        expect(context.getResource(GaderianFilter.HIVE_MODULE_XML)).andReturn( null );
 
-        context.getResource(GaderianFilter.HIVE_MODULE_XML);
-        contextc.setReturnValue(null);
-
-        replayControls();
+        replayAllRegisteredMocks();
 
         RegistryExposingGaderianFilterFixture f = new RegistryExposingGaderianFilterFixture();
 
         f.init(filterConfig);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         Registry r = f.getRegistry();
 
@@ -239,52 +220,43 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
         coordinator.addRegistryShutdownListener(l);
 
-        MockControl requestControl = newControl(HttpServletRequest.class);
-        HttpServletRequest request = (HttpServletRequest) requestControl.getMock();
-        HttpServletResponse response = (HttpServletResponse) newMock(HttpServletResponse.class);
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) createMock(HttpServletResponse.class);
         FilterChain chain = new RebuildRegistryChainFixture();
 
         request.setAttribute(GaderianFilter.REQUEST_KEY, r);
 
         request.setAttribute(GaderianFilter.REBUILD_REQUEST_KEY, Boolean.TRUE);
 
-        request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY);
-        requestControl.setReturnValue(Boolean.TRUE);
+        expect(request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY)).andReturn( Boolean.TRUE );
 
-        filterConfig.getServletContext();
-        configc.setReturnValue(context);
+        expect(filterConfig.getServletContext()).andReturn( context );
 
-        context.getResource(GaderianFilter.HIVE_MODULE_XML);
-        contextc.setReturnValue(null);
+        expect(context.getResource(GaderianFilter.HIVE_MODULE_XML)).andReturn( null );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         f.doFilter(request, response, chain);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         assertEquals(true, l.getDidShutdown());
     }
 
     private FilterConfig newFilterConfig() throws Exception
     {
-        MockControl control = newControl(ServletContext.class);
+        ServletContext context = createMock(ServletContext.class);
 
-        ServletContext context = (ServletContext) control.getMock();
-
-        context.getResource(GaderianFilter.HIVE_MODULE_XML);
-        control.setReturnValue(null);
+        expect(context.getResource(GaderianFilter.HIVE_MODULE_XML)).andReturn( null );
 
         return newFilterConfig(context);
     }
 
     private FilterConfig newFilterConfig(ServletContext context)
     {
-        MockControl control = newControl(FilterConfig.class);
-        FilterConfig config = (FilterConfig) control.getMock();
+        FilterConfig config = createMock(FilterConfig.class);
 
-        config.getServletContext();
-        control.setReturnValue(context);
+        expect(config.getServletContext()).andReturn( context );
 
         return config;
     }
@@ -299,23 +271,21 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
         assertLoggedMessage("Forced failure");
 
-        MockControl requestControl = newControl(HttpServletRequest.class);
-        HttpServletRequest request = (HttpServletRequest) requestControl.getMock();
-        HttpServletResponse response = (HttpServletResponse) newMock(HttpServletResponse.class);
-        FilterChain chain = (FilterChain) newMock(FilterChain.class);
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) createMock(HttpServletResponse.class);
+        FilterChain chain = (FilterChain) createMock(FilterChain.class);
 
         request.setAttribute(GaderianFilter.REQUEST_KEY, null);
 
         chain.doFilter(request, response);
 
-        request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY);
-        requestControl.setReturnValue(null);
+        expect(request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY)).andReturn( null );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         f.doFilter(request, response, chain);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         f.destroy();
     }
@@ -333,25 +303,23 @@ public class TestGaderianFilter extends GaderianCoreTestCase
 
         interceptLogging(GaderianFilter.class.getName());
 
-        MockControl requestControl = newControl(HttpServletRequest.class);
-        HttpServletRequest request = (HttpServletRequest) requestControl.getMock();
-        HttpServletResponse response = (HttpServletResponse) newMock(HttpServletResponse.class);
-        FilterChain chain = (FilterChain) newMock(FilterChain.class);
+        HttpServletRequest request = createMock(HttpServletRequest.class);
+        HttpServletResponse response = (HttpServletResponse) createMock(HttpServletResponse.class);
+        FilterChain chain = (FilterChain) createMock(FilterChain.class);
 
         request.setAttribute(GaderianFilter.REQUEST_KEY, null);
 
         chain.doFilter(request, response);
 
-        request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY);
-        requestControl.setReturnValue(null);
+        expect(request.getAttribute(GaderianFilter.REBUILD_REQUEST_KEY)).andReturn( null );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         f.doFilter(request, response, chain);
 
         assertLoggedMessage("Unable to cleanup current thread");
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
 }

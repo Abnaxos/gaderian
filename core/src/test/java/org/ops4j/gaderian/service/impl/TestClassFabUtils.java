@@ -16,12 +16,12 @@ package org.ops4j.gaderian.service.impl;
 
 import java.lang.reflect.Modifier;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.service.ClassFab;
 import org.ops4j.gaderian.service.ClassFabUtils;
 import org.ops4j.gaderian.service.MethodFab;
 import org.ops4j.gaderian.service.MethodSignature;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.ClassFabUtils}
@@ -73,18 +73,16 @@ public class TestClassFabUtils extends GaderianCoreTestCase
 		MethodSignature sig = new MethodSignature(returnClass, "run", null,
 				null);
 
-		MockControl control = newControl(ClassFab.class);
-		ClassFab cf = (ClassFab) control.getMock();
-		MethodFab mf = (MethodFab) newMock(MethodFab.class);
+		ClassFab cf = createMock(ClassFab.class);
+		MethodFab mf = createMock(MethodFab.class);
 
-		cf.addMethod(Modifier.PUBLIC, sig, expectedBody);
-		control.setReturnValue(mf);
+		expect(cf.addMethod(Modifier.PUBLIC, sig, expectedBody)).andReturn(mf);
 
-		replayControls();
+		replayAllRegisteredMocks();
 
 		ClassFabUtils.addNoOpMethod(cf, sig);
 
-		verifyControls();
+		verifyAllRegisteredMocks();
 	}
 
 	/** @since 1.1 */

@@ -14,12 +14,11 @@
 
 package gaderian.test.rules;
 
-import gaderian.test.FrameworkTestCase;
-import gaderian.test.config.impl.Datum;
-
 import java.util.List;
 import java.util.Map;
 
+import gaderian.test.FrameworkTestCase;
+import gaderian.test.config.impl.Datum;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.rules.ConfigurationTranslator;
@@ -34,14 +33,14 @@ public class TestConfigurationTranslator extends FrameworkTestCase
 
     public void testNull()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = (Module) createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
         ConfigurationTranslator t = new ConfigurationTranslator();
 
         assertNull(t.translate(m, null, null, null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testConfigurationTranslator() throws Exception

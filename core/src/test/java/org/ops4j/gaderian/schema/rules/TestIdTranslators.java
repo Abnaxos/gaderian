@@ -14,10 +14,10 @@
 
 package org.ops4j.gaderian.schema.rules;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.schema.rules.QualifiedIdTranslator}
@@ -36,11 +36,9 @@ public class TestIdTranslators extends GaderianCoreTestCase
 
     private Module getModule()
     {
-        MockControl c = newControl(Module.class);
-        Module result = (Module) c.getMock();
+        Module result = createMock(Module.class);
 
-        result.getModuleId();
-        c.setReturnValue("foo.bar");
+        expect(result.getModuleId()).andReturn( "foo.bar" );
 
         return result;
     }
@@ -49,13 +47,13 @@ public class TestIdTranslators extends GaderianCoreTestCase
     {
         Module m = getModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Translator t = new QualifiedIdTranslator();
 
         assertEquals("foo.bar.Baz", t.translate(m, null, "Baz", null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNullList()
@@ -69,12 +67,12 @@ public class TestIdTranslators extends GaderianCoreTestCase
     {
         Module m = getModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Translator t = new IdListTranslator();
 
         assertEquals("foo.bar.Baz,zip.Zap", t.translate(m, null, "Baz,zip.Zap", null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

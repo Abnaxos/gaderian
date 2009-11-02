@@ -16,15 +16,14 @@ package org.ops4j.gaderian.impl;
 
 import gaderian.test.services.StringHolder;
 import gaderian.test.services.impl.StringHolderImpl;
-
+import org.easymock.classextension.EasyMock;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ClassResolver;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Locatable;
-import org.ops4j.gaderian.util.URLResource;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.util.URLResource;
 
 /**
  * Some additional tests for {@link org.ops4j.gaderian.impl.ModuleImpl}.
@@ -36,24 +35,22 @@ public class TestModule extends GaderianCoreTestCase
 
     public void testGetServiceByInterface()
     {
-        MockControl rc = newControl(RegistryInfrastructure.class);
-        RegistryInfrastructure r = (RegistryInfrastructure) rc.getMock();
+        RegistryInfrastructure r = createMock(RegistryInfrastructure.class);
 
         ModuleImpl m = new ModuleImpl();
         m.setRegistry(r);
 
         StringHolder h = new StringHolderImpl();
 
-        r.getService(StringHolder.class, m);
-        rc.setReturnValue(h);
+        EasyMock.expect(r.getService(StringHolder.class, m)).andReturn( h );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object result = m.getService(StringHolder.class);
 
         assertEquals(h, result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testResolveType()
@@ -78,7 +75,7 @@ public class TestModule extends GaderianCoreTestCase
 
         trainCheckForClass(resolver, "FooBar", expected);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleImpl module = new ModuleImpl();
         module.setPackageName("org.ops4j.gaderian");
@@ -90,18 +87,17 @@ public class TestModule extends GaderianCoreTestCase
 
         assertSame(expected, module.resolveType("FooBar"));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     private void trainCheckForClass(ClassResolver resolver, String type, Class returnClass)
     {
-        resolver.checkForClass(type);
-        setReturnValue(resolver, returnClass);
+        EasyMock.expect( resolver.checkForClass(type) ).andReturn( returnClass );
     }
 
     private ClassResolver newClassResolver()
     {
-        return (ClassResolver) newMock(ClassResolver.class);
+        return createMock(ClassResolver.class);
     }
 
     public void testResolveTypeFailure()

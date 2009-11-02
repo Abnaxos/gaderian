@@ -18,9 +18,9 @@ import java.io.Serializable;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorLog;
-import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
  * Tests the {@link org.ops4j.gaderian.utilities.pipeline.BridgeBuilder} class.
@@ -34,7 +34,7 @@ public class TestBridgeBuilder extends GaderianTestCase
 
     public void testStandard()
     {
-        replayControls();
+        replayAllRegisteredMocks();
 
         BridgeBuilder bb = new BridgeBuilder(null, "foo.bar", StandardService.class,
                 StandardFilter.class, _classFactory);
@@ -69,12 +69,12 @@ public class TestBridgeBuilder extends GaderianTestCase
                 "<PipelineBridge for service foo.bar(org.ops4j.gaderian.utilities.pipeline.StandardService)>",
                 bridge.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testToString()
     {
-        replayControls();
+        replayAllRegisteredMocks();
 
         BridgeBuilder bb = new BridgeBuilder(null, "foo.bar", ToStringService.class,
                 ToStringFilter.class, _classFactory);
@@ -99,12 +99,12 @@ public class TestBridgeBuilder extends GaderianTestCase
 
         assertEquals("SERVICE", bridge.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testExtraServiceMethod()
     {
-        ErrorLog log = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog log = (ErrorLog) createMock(ErrorLog.class);
 
         log
                 .error(
@@ -112,7 +112,7 @@ public class TestBridgeBuilder extends GaderianTestCase
                         null,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BridgeBuilder bb = new BridgeBuilder(log, "foo.bar", ExtraServiceMethod.class,
                 Serializable.class, _classFactory);
@@ -131,12 +131,12 @@ public class TestBridgeBuilder extends GaderianTestCase
                     ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testExtraFilterMethod()
     {
-        ErrorLog log = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog log = (ErrorLog) createMock(ErrorLog.class);
 
         log
                 .error(
@@ -146,7 +146,7 @@ public class TestBridgeBuilder extends GaderianTestCase
                         null,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BridgeBuilder bb = new BridgeBuilder(log, "foo.bar", Serializable.class,
                 ExtraFilterMethod.class, _classFactory);
@@ -155,12 +155,12 @@ public class TestBridgeBuilder extends GaderianTestCase
 
         assertEquals(true, bridge instanceof Serializable);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testServiceInTheMiddle()
     {
-        replayControls();
+        replayAllRegisteredMocks();
 
         BridgeBuilder bb = new BridgeBuilder(null, "foo.bar", MiddleService.class,
                 MiddleFilter.class, _classFactory);
@@ -197,6 +197,6 @@ public class TestBridgeBuilder extends GaderianTestCase
 
         assertEquals("CODE: aaa AAAA", buffer.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 /**
- * @author Howard M. Lewis Ship
- * @since 1.1
+ * An {@link org.ops4j.gaderian.testutils.ArgumentMatcher} that only compares the <em>types</em> of
+ * the two objects, not their actual values. This is useful for Throwable arguments, (since
+ * Throwables rarely implement a useful <code>equals</code>). This allows a check that the right
+ * type of exception was passed in (even if it doesn't check that the exception's message and other
+ * properties are correct).
+ * 
+ * @author Howard Lewis Ship
  */
-public class EqualsMatcher extends AbstractArgumentMatcher
+public class TypeMatcher extends AbstractArgumentMatcher
 {
-
-    /**
-     * Simple matcher based on <code>equals()</code>.
-     */
     public boolean compareArguments(Object expected, Object actual)
     {
-        return expected.equals(actual);
+        return expected.getClass().equals(actual.getClass());
     }
-
 }

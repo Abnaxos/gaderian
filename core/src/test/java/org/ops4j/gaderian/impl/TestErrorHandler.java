@@ -15,7 +15,6 @@
 package org.ops4j.gaderian.impl;
 
 import gaderian.test.FrameworkTestCase;
-
 import org.apache.commons.logging.Log;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
@@ -32,7 +31,7 @@ public class TestErrorHandler extends FrameworkTestCase
 {
     public void testDefaultErrorHandlerWithLocation()
     {
-        Log log = (Log) newMock(Log.class);
+        Log log = (Log) createMock(Log.class);
 
         Resource r = new ClasspathResource(getClassResolver(), "/foo/bar/Baz.module");
         Location l = new LocationImpl(r, 13);
@@ -41,30 +40,30 @@ public class TestErrorHandler extends FrameworkTestCase
 
         log.error("Error at classpath:/foo/bar/Baz.module, line 13: Bad frob value.", ex);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ErrorHandler eh = new DefaultErrorHandler();
 
         eh.error(log, "Bad frob value.", l, ex);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testDefaultErrorHandlerWithNoLocation()
     {
-        Log log = (Log) newMock(Log.class);
+        Log log = (Log) createMock(Log.class);
 
         Throwable ex = new IllegalArgumentException();
 
         log.error("Error: Bad frob value.", ex);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ErrorHandler eh = new DefaultErrorHandler();
 
         eh.error(log, "Bad frob value.", null, ex);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testStrictErrorHandler()

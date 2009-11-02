@@ -12,15 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
+
+import junit.framework.Assert;
 
 /**
- * Tests a few special cases involving {@link org.ops4j.gaderian.test.AggregateArgumentsMatcher}.
+ * Tests a few special cases involving {@link org.ops4j.gaderian.testutils.AggregateArgumentsMatcher}.
  *
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-public class TestAggregateArgumentsMatcher extends GaderianCoreTestCase
+public class TestAggregateArgumentsMatcher extends GaderianTestCase
 {
     /**
      * Test when an argument is outside the array of argument matches provided to the aggregate
@@ -30,11 +32,11 @@ public class TestAggregateArgumentsMatcher extends GaderianCoreTestCase
     {
         AggregateArgumentsMatcher matcher = new AggregateArgumentsMatcher(new ArgumentMatcher[] {});
 
-        assertEquals(true, matcher.matches(new String[]
+        Assert.assertEquals(true, matcher.matches(new String[]
         { "foo" }, new String[]
         { "foo" }));
 
-        assertEquals(false, matcher.matches(new String[]
+        Assert.assertEquals(false, matcher.matches(new String[]
         { "foo" }, new String[]
         { "bar" }));
     }
@@ -44,17 +46,17 @@ public class TestAggregateArgumentsMatcher extends GaderianCoreTestCase
      */
     public void testCompareNull()
     {
-        ArgumentMatcher am = (ArgumentMatcher) newMock(ArgumentMatcher.class);
+        ArgumentMatcher am = (ArgumentMatcher) createMock(ArgumentMatcher.class);
 
         AggregateArgumentsMatcher matcher = new AggregateArgumentsMatcher(new ArgumentMatcher[]
         { am });
 
-        replayControls();
+        replayAllRegisteredMocks();
 
-        assertEquals(false, matcher.matches(new String[]
+        Assert.assertEquals(false, matcher.matches(new String[]
         { "foo" }, new String[]
         { null }));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

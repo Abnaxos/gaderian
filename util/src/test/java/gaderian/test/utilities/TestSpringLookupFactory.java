@@ -16,6 +16,7 @@ package gaderian.test.utilities;
 
 import java.util.List;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
@@ -50,9 +51,9 @@ public class TestSpringLookupFactory extends GaderianCoreTestCase
     {
         SpringLookupFactory lf = new SpringLookupFactory();
 
-        BeanFactory beanFactory = (BeanFactory) newMock(BeanFactory.class);
+        BeanFactory beanFactory = createMock(BeanFactory.class);
 
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) newMock(ServiceImplementationFactoryParameters.class);
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         lf.setDefaultBeanFactory(beanFactory);
 
@@ -60,51 +61,45 @@ public class TestSpringLookupFactory extends GaderianCoreTestCase
 
         Object fred = new Object();
 
-        beanFactory.getBean("fred", List.class);
-        setReturnValue(beanFactory, fred);
+        expect(beanFactory.getBean("fred", List.class)).andReturn(fred);
 
-        fp.getFirstParameter();
-        setReturnValue(fp, param);
+        expect(fp.getFirstParameter()).andReturn(param);
 
-        fp.getServiceInterface();
-        setReturnValue(fp, List.class);
+        expect(fp.getServiceInterface()).andReturn(List.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object actual = lf.createCoreServiceImplementation(fp);
 
         assertSame(fred, actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testBeanSpecificFactory()
     {
         SpringLookupFactory lf = new SpringLookupFactory();
-        BeanFactory beanFactory = (BeanFactory) newMock(BeanFactory.class);
+        BeanFactory beanFactory = createMock(BeanFactory.class);
 
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) newMock(ServiceImplementationFactoryParameters.class);
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         SpringBeanParameter param = buildParameter("fred", beanFactory);
 
         Object fred = new Object();
 
-        beanFactory.getBean("fred", List.class);
-        setReturnValue(beanFactory, fred);
+        expect(beanFactory.getBean("fred", List.class)).andReturn(fred);
 
-        fp.getFirstParameter();
-        setReturnValue(fp, param);
+               expect(fp.getFirstParameter()).andReturn(param);
 
-        fp.getServiceInterface();
-        setReturnValue(fp, List.class);
+               expect(fp.getServiceInterface()).andReturn(List.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object actual = lf.createCoreServiceImplementation(fp);
 
         assertSame(fred, actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testSpringIntegration() throws Exception

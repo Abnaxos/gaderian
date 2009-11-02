@@ -18,7 +18,7 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.easymock.MockControl;
+import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.impl.RegistryBuilder;
 import org.ops4j.gaderian.service.BodyBuilder;
@@ -50,7 +50,7 @@ public class TestChainBuilder extends GaderianCoreTestCase
 
     private MethodFab newMethodFab()
     {
-        return (MethodFab) newMock(MethodFab.class);
+        return createMock(MethodFab.class);
     }
 
     /**
@@ -58,8 +58,7 @@ public class TestChainBuilder extends GaderianCoreTestCase
      */
     public void testAddVoidMethod()
     {
-        MockControl cfc = newControl(ClassFab.class);
-        ClassFab cf = (ClassFab) cfc.getMock();
+        ClassFab cf = createMock(ClassFab.class);
 
         MethodSignature sig = new MethodSignature(void.class, "run", null, null);
 
@@ -69,22 +68,20 @@ public class TestChainBuilder extends GaderianCoreTestCase
         builder.addln("_commands[i].run($$);");
         builder.end();
 
-        cf.addMethod(Modifier.PUBLIC, sig, builder.toString());
-        cfc.setReturnValue(newMethodFab());
+        expect(cf.addMethod(Modifier.PUBLIC, sig, builder.toString())).andReturn(newMethodFab());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ChainBuilderImpl cb = new ChainBuilderImpl();
 
         cb.addMethod(cf, Runnable.class, sig);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAddNonVoidMethod()
     {
-        MockControl cfc = newControl(ClassFab.class);
-        ClassFab cf = (ClassFab) cfc.getMock();
+        ClassFab cf = createMock(ClassFab.class);
 
         MethodSignature sig = new MethodSignature(boolean.class, "execute", new Class[]
         { String.class }, null);
@@ -100,16 +97,15 @@ public class TestChainBuilder extends GaderianCoreTestCase
         builder.addln("return result;");
         builder.end();
 
-        cf.addMethod(Modifier.PUBLIC, sig, builder.toString());
-        cfc.setReturnValue(newMethodFab());
+        expect(cf.addMethod(Modifier.PUBLIC, sig, builder.toString())).andReturn(newMethodFab());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ChainBuilderImpl cb = new ChainBuilderImpl();
 
         cb.addMethod(cf, ChainInterface.class, sig);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -118,11 +114,9 @@ public class TestChainBuilder extends GaderianCoreTestCase
 
     private ChainInterface newCommand(String parameter, boolean returnValue)
     {
-        MockControl control = newControl(ChainInterface.class);
-        ChainInterface chain = (ChainInterface) control.getMock();
+        ChainInterface chain = createMock(ChainInterface.class);
 
-        chain.execute(parameter);
-        control.setReturnValue(returnValue);
+        expect(chain.execute(parameter)).andReturn(returnValue);
 
         return chain;
     }
@@ -131,9 +125,9 @@ public class TestChainBuilder extends GaderianCoreTestCase
     {
         Registry r = RegistryBuilder.constructDefaultRegistry();
 
-        ChainBuilder cb = (ChainBuilder) r.getService(ChainBuilder.class);
+        ChainBuilder cb = r.getService(ChainBuilder.class);
 
-        List commands = new ArrayList();
+        List<ChainInterface> commands = new ArrayList<ChainInterface>();
 
         commands.add(newCommand("fred", false));
         commands.add(newCommand("fred", false));
@@ -148,7 +142,7 @@ public class TestChainBuilder extends GaderianCoreTestCase
                 commands,
                 "<Chain2>");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, chain.execute("fred"));
         assertEquals("<Chain>", chain.toString());
@@ -159,7 +153,7 @@ public class TestChainBuilder extends GaderianCoreTestCase
         assertEquals("<Chain2>", chain2.toString());
         assertSame(chain.getClass(), chain2.getClass());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -171,30 +165,30 @@ public class TestChainBuilder extends GaderianCoreTestCase
     {
         Registry r = RegistryBuilder.constructDefaultRegistry();
 
-        ChainBuilder cb = (ChainBuilder) r.getService(ChainBuilder.class);
+        ChainBuilder cb = r.getService(ChainBuilder.class);
 
-        List commands = new ArrayList();
+        List<ChainInterface> commands = new ArrayList<ChainInterface>();
 
         commands.add(newCommand("barney", true));
-        commands.add(newMock(ChainInterface.class));
+        commands.add(createMock(ChainInterface.class));
 
         ChainInterface chain = (ChainInterface) cb.buildImplementation(
                 ChainInterface.class,
                 commands,
                 "<Chain>");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(true, chain.execute("barney"));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testChainFactoryIntegration() throws Exception
     {
         Registry r = buildFrameworkRegistry("ChainFactoryIntegration.xml", false );
 
-        ChainInterface chain = (ChainInterface) r.getService(ChainInterface.class);
+        ChainInterface chain = r.getService(ChainInterface.class);
 
         assertEquals(true, chain.execute("whatever"));
     }

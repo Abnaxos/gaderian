@@ -14,7 +14,7 @@
 
 package gaderian.test.utilities;
 
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
@@ -47,7 +47,7 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
 
     private Object create(Class interfaceType)
     {
-        replayControls();
+        replayAllRegisteredMocks();
 
         return _builder.buildDefaultImplementation(interfaceType);
     }
@@ -60,7 +60,7 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
 
         assertEquals("<Default implementation of interface java.lang.Runnable>", r.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testComplex()
@@ -71,7 +71,7 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
         assertEquals(false, vh.getBooleanValue());
         assertEquals(0, vh.getIntValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testToStringInInterface()
@@ -80,7 +80,7 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
 
         assertNull(ts.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testCache()
@@ -90,7 +90,7 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
 
         assertSame(r1, r2);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNotInterface()
@@ -114,35 +114,32 @@ public class TestDefaultImplementationBuilder extends GaderianCoreTestCase
                 "gaderian.utilities.DefaultImplementationBuilder",
                 DefaultImplementationBuilder.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Runnable o = (Runnable) dib.buildDefaultImplementation(Runnable.class);
 
         o.run();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPlaceholderBuilderSimulated() throws Exception
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         PlaceholderFactory db = new PlaceholderFactory();
 
         db.setBuilder(_builder);
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Runnable.class);
+        expect(fp.getServiceInterface()).andReturn(Runnable.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Runnable r = (Runnable) db.createCoreServiceImplementation(fp);
 
         r.run();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPlaceholderFactory() throws Exception

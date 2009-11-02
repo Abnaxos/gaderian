@@ -14,15 +14,14 @@
 
 package org.ops4j.gaderian.internal.ser;
 
-import gaderian.test.FrameworkTestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
+import gaderian.test.FrameworkTestCase;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
 
@@ -36,7 +35,7 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
 {
     private ServiceSerializationSupport newSupport()
     {
-        return (ServiceSerializationSupport) newMock(ServiceSerializationSupport.class);
+        return (ServiceSerializationSupport) createMock(ServiceSerializationSupport.class);
     }
 
       public void testIntegrationWithGC() throws Exception
@@ -151,13 +150,13 @@ public class TestServiceSerializationHelper extends FrameworkTestCase
     {
         ServiceSerializationSupport s = newSupport();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServiceSerializationHelper.setServiceSerializationSupport(s);
 
         assertSame(s, ServiceSerializationHelper.getServiceSerializationSupport());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIntegration() throws Exception

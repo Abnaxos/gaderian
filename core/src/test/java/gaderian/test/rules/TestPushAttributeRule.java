@@ -14,6 +14,7 @@
 
 package gaderian.test.rules;
 
+import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.Attribute;
 import org.ops4j.gaderian.impl.AttributeImpl;
 import org.ops4j.gaderian.impl.ElementImpl;
@@ -22,13 +23,12 @@ import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.schema.rules.NullTranslator;
 import org.ops4j.gaderian.schema.rules.PushAttributeRule;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 public class TestPushAttributeRule extends GaderianCoreTestCase
 {
     public void testPushAttributeRule()
     {
-        MockControl control = newControl(SchemaProcessor.class);
+        SchemaProcessor mockSchemaProcessor = createMock(SchemaProcessor.class);
 
         ElementImpl element = new ElementImpl();
         element.setElementName("myelement");
@@ -41,34 +41,21 @@ public class TestPushAttributeRule extends GaderianCoreTestCase
 
         rule.setAttributeName("fred");
 
-        SchemaProcessor mockProcessor = (SchemaProcessor) control.getMock();
 
-        mockProcessor.getContributingModule();
+        Module mockModule = createMock(Module.class);
 
-        MockControl moduleControl = newControl(Module.class);
-        Module mockModule = (Module) moduleControl.getMock();
+        expect(mockSchemaProcessor.getContributingModule()).andReturn(mockModule).times(2);
+        expect(mockSchemaProcessor.getAttributeTranslator("fred")).andReturn(new NullTranslator());
+        expect(mockModule.expandSymbols("${flintstone}", element.getLocation())).andReturn("FLINTSTONE");
 
-        control.setReturnValue(mockModule);
+        mockSchemaProcessor.push("FLINTSTONE");
+        expect(mockSchemaProcessor.pop()).andReturn("FLINTSTONE");
 
-        mockProcessor.getAttributeTranslator("fred");
-        control.setReturnValue(new NullTranslator());
+        replayAllRegisteredMocks();
 
-        mockProcessor.getContributingModule();
-        control.setReturnValue(mockModule);
+        rule.begin(mockSchemaProcessor, element);
+        rule.end(mockSchemaProcessor, element);
 
-        mockModule.expandSymbols("${flintstone}", element.getLocation());
-        moduleControl.setReturnValue("FLINTSTONE");
-
-        mockProcessor.push("FLINTSTONE");
-        mockProcessor.pop();
-
-        control.setReturnValue("FLINTSTONE");
-
-        replayControls();
-
-        rule.begin(mockProcessor, element);
-        rule.end(mockProcessor, element);
-
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

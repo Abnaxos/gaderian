@@ -14,12 +14,11 @@
 
 package gaderian.test.services;
 
+import gaderian.test.FrameworkTestCase;
 import org.apache.commons.logging.Log;
 import org.ops4j.gaderian.service.ThreadCleanupListener;
 import org.ops4j.gaderian.service.ThreadEventNotifier;
 import org.ops4j.gaderian.service.impl.ThreadEventNotifierImpl;
-
-import gaderian.test.FrameworkTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.impl.ThreadEventNotifierImpl}.
@@ -90,13 +89,13 @@ public class TestThreadEventNotifier extends FrameworkTestCase
 
     public void testListenerThrowsException()
     {
-        Log log = (Log) newMock(Log.class);
+        Log log = (Log) createMock(Log.class);
 
         final RuntimeException re = new RuntimeException("Listener Failure");
 
         log.warn("Thread cleanup exception: Listener Failure", re);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ThreadCleanupListener l = new ThreadCleanupListener()
         {
@@ -112,6 +111,6 @@ public class TestThreadEventNotifier extends FrameworkTestCase
 
         n.fireThreadCleanup();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

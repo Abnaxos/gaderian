@@ -13,19 +13,19 @@
 // limitations under the License.
 package org.ops4j.gaderian.impl;
 
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.internal.ConfigurationPoint;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.internal.Visibility;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
-
-import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Additional tests for {@link RegistryInfrastructureImpl}. Much of the
@@ -212,25 +212,22 @@ public class TestRegistryInfrastructure extends GaderianCoreTestCase
      */
     public void testDoubleStartup()
     {
-        MockControl spc = newControl( ServicePoint.class );
-        ServicePoint sp = ( ServicePoint ) spc.getMock();
-        Runnable service = ( Runnable ) newMock( Runnable.class );
+        ServicePoint sp = createMock( ServicePoint.class );
+        Runnable service = createMock( Runnable.class );
 
         // Training
-        sp.getExtensionPointId();
-        spc.setReturnValue( "gaderian.Startup" );
-        sp.getServiceInterfaceClassName();
-        spc.setReturnValue( Runnable.class.getName() );
-        sp.visibleToModule( null );
-        spc.setReturnValue( true );
-        sp.getService( Runnable.class );
-        spc.setReturnValue( service );
+        expect(sp.getExtensionPointId()).andReturn("gaderian.Startup" );
+        expect(sp.getServiceInterfaceClassName()).andReturn( Runnable.class.getName() );
+        expect(sp.visibleToModule( null )).andReturn( true );
+        expect(sp.getService( Runnable.class )).andReturn( service );
+        
         service.run();
-        replayControls();
+        
+        replayAllRegisteredMocks();
         RegistryInfrastructureImpl r = new RegistryInfrastructureImpl( null, null );
         r.addServicePoint( sp );
         r.startup();
-        verifyControls();
+        verifyAllRegisteredMocks();
         try
         {
             r.startup();
@@ -244,17 +241,13 @@ public class TestRegistryInfrastructure extends GaderianCoreTestCase
 
     public void testUnknownServiceModelFactory()
     {
-        MockControl cpc = newControl( ConfigurationPoint.class );
-        ConfigurationPoint cp = ( ConfigurationPoint ) cpc.getMock();
+        final ConfigurationPoint cp = createMock( ConfigurationPoint.class );
 
         // Training
-        cp.getExtensionPointId();
-        cpc.setReturnValue( "gaderian.ServiceModels" );
-        cp.visibleToModule( null );
-        cpc.setReturnValue( true );
-        cp.getElements();
-        cpc.setReturnValue( Collections.EMPTY_LIST );
-        replayControls();
+        expect(cp.getExtensionPointId()).andReturn( "gaderian.ServiceModels" );
+        expect(cp.visibleToModule( null )).andReturn( true );
+        expect(cp.getElements()).andReturn( Collections.EMPTY_LIST );
+        replayAllRegisteredMocks();
         RegistryInfrastructureImpl r = new RegistryInfrastructureImpl( null, null );
         r.addConfigurationPoint( cp );
         try
@@ -266,7 +259,7 @@ public class TestRegistryInfrastructure extends GaderianCoreTestCase
         {
             assertEquals( ImplMessages.unknownServiceModel( "unknown" ), ex.getMessage() );
         }
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
 }

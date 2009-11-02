@@ -15,17 +15,10 @@
 package org.ops4j.gaderian.service.impl;
 
 import org.apache.commons.logging.Log;
-import org.ops4j.gaderian.ApplicationRuntimeException;
-import org.ops4j.gaderian.ErrorLog;
-import org.ops4j.gaderian.Location;
-import org.ops4j.gaderian.Registry;
-import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import static org.easymock.classextension.EasyMock.*;
+import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
-import org.ops4j.gaderian.test.ArgumentMatcher;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.ops4j.gaderian.test.TypeMatcher;
-import org.easymock.MockControl;
 
 /**
  * Additional tests for {@link org.ops4j.gaderian.service.impl.BuilderFactoryLogic}.
@@ -44,62 +37,44 @@ public class TestBuilderFactory extends GaderianCoreTestCase
     public void testErrorInInitializer() throws Exception
     {
         Location l = newLocation();
+        
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
+        
+        Log log = createMock(Log.class);
 
-        MockControl fpc = MockControl
-                .createNiceControl(ServiceImplementationFactoryParameters.class);
-        addControl(fpc);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        Module module = createMock(Module.class);
 
-        Log log = (Log) newMock(Log.class);
+        expect(module.getClassResolver()).andReturn(getClassResolver());
 
-        MockControl mc = newControl(Module.class);
-        Module module = (Module) mc.getMock();
+        ErrorLog errorLog = createMock(ErrorLog.class);
 
-        module.getClassResolver();
-        mc.setReturnValue( getClassResolver() );
+        expect(fp.getServiceId()).andReturn("foo.Bar").times(2);
+        expect(fp.getInvokingModule()).andReturn(module);
+        expect(module.resolveType("org.ops4j.gaderian.service.impl.InitializerErrorRunnable")).andReturn(InitializerErrorRunnable.class);
+        // expect(fp.getLog()).andReturn(log);
+        expect(fp.getErrorLog()).andReturn(errorLog);
 
-        MockControl errorLogc = newControl(ErrorLog.class);
-        ErrorLog errorLog = (ErrorLog) errorLogc.getMock();
+        final Throwable cause = new ApplicationRuntimeException("Failure in initializeService().");
 
-        fp.getServiceId();
-        fpc.setDefaultReturnValue("foo.Bar");
-
-        fp.getInvokingModule();
-        fpc.setDefaultReturnValue(module);
-
-        module.resolveType("org.ops4j.gaderian.service.impl.InitializerErrorRunnable");
-        mc.setReturnValue(InitializerErrorRunnable.class);
-
-        fp.getLog();
-        fpc.setDefaultReturnValue(log);
-
-        fp.getErrorLog();
-        fpc.setDefaultReturnValue(errorLog);
-
-        Throwable cause = new ApplicationRuntimeException("Failure in initializeService().");
-
-        String message = ServiceMessages.unableToInitializeService(
+        final String message = ServiceMessages.unableToInitializeService(
                 "foo.Bar",
                 "initializeService",
                 InitializerErrorRunnable.class,
                 cause);
 
-        errorLog.error(message, l, new ApplicationRuntimeException(""));
-        errorLogc.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-        { null, null, new TypeMatcher() }));
-
+        errorLog.error(eq(message), eq(l), isA(ApplicationRuntimeException.class));
+        
         BuilderParameter p = new BuilderParameter();
         p.setClassName(InitializerErrorRunnable.class.getName());
         p.setLocation(l);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BuilderFactoryLogic logic = new BuilderFactoryLogic(fp, p);
 
         assertNotNull(logic.createService());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testListPropertyAutowire() throws Exception

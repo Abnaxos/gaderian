@@ -15,7 +15,6 @@
 package gaderian.test.rules;
 
 import gaderian.test.FrameworkTestCase;
-
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.impl.ModuleImpl;
 import org.ops4j.gaderian.internal.Module;
@@ -39,7 +38,7 @@ public class TestEnumerationTranslator extends FrameworkTestCase
 
     public void testNull()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = (Module) createMock(Module.class);
 
         EnumerationTranslator t = new EnumerationTranslator(
                 "java.lang.Boolean,true=TRUE,false=FALSE");

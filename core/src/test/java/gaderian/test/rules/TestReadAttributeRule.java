@@ -15,60 +15,46 @@
 package gaderian.test.rules;
 
 import gaderian.test.services.impl.StringHolderImpl;
-
+import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.impl.ElementImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.schema.rules.NullTranslator;
 import org.ops4j.gaderian.schema.rules.ReadAttributeRule;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 public class TestReadAttributeRule extends GaderianCoreTestCase
 {
     public void testReadAttributeRule()
     {
-        ElementImpl element = new ElementImpl();
+        final ElementImpl element = new ElementImpl();
         element.setElementName("myelement");
 
-        ReadAttributeRule rule = new ReadAttributeRule();
+        final ReadAttributeRule rule = new ReadAttributeRule();
 
         rule.setAttributeName("fred");
         rule.setPropertyName("value");
 
-        MockControl control = newControl(SchemaProcessor.class);
-        SchemaProcessor mockProcessor = (SchemaProcessor) control.getMock();
+        final SchemaProcessor mockSchemaProcessor = createMock(SchemaProcessor.class);
 
-        mockProcessor.getAttributeDefault("fred");
-        control.setReturnValue("${flintstone}");
+        expect(mockSchemaProcessor.getAttributeDefault("fred")).andReturn("${flintstone}");
 
-        mockProcessor.getContributingModule();
+        final Module mockModule = createMock(Module.class);
+        expect(mockSchemaProcessor.getContributingModule()).andReturn(mockModule).times(2);
 
-        MockControl moduleControl = newControl(Module.class);
-        Module mockModule = (Module) moduleControl.getMock();
+        final StringHolderImpl target = new StringHolderImpl();
+        expect(mockSchemaProcessor.peek()).andReturn(target);
 
-        control.setReturnValue(mockModule);
+        expect(mockSchemaProcessor.getAttributeTranslator("fred")).andReturn(new NullTranslator());
 
-        mockProcessor.peek();
+        expect(mockModule.expandSymbols("${flintstone}", element.getLocation())).andReturn("FLINTSTONE");
 
-        StringHolderImpl target = new StringHolderImpl();
-        control.setReturnValue(target);
+        replayAllRegisteredMocks();
 
-        mockProcessor.getAttributeTranslator("fred");
-        control.setReturnValue(new NullTranslator());
+        rule.begin(mockSchemaProcessor, element);
+        rule.end(mockSchemaProcessor, element);
 
-        mockProcessor.getContributingModule();
-        control.setReturnValue(mockModule);
-
-        mockModule.expandSymbols("${flintstone}", element.getLocation());
-        moduleControl.setReturnValue("FLINTSTONE");
-
-        replayControls();
-
-        rule.begin(mockProcessor, element);
-        rule.end(mockProcessor, element);
-
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         assertEquals("FLINTSTONE", target.getValue());
     }

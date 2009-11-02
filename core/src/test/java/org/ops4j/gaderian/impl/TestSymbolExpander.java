@@ -15,11 +15,11 @@
 package org.ops4j.gaderian.impl;
 
 import org.apache.commons.logging.LogFactory;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.SymbolSource;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.impl.SymbolExpander}.
@@ -83,16 +83,14 @@ public class TestSymbolExpander extends GaderianCoreTestCase
 
     public void testMissingSymbol()
     {
-        ErrorHandler eh = (ErrorHandler) newMock(ErrorHandler.class);
+        ErrorHandler eh = createMock(ErrorHandler.class);
         Location l = newLocation();
 
-        MockControl control = newControl(SymbolSource.class);
-        SymbolSource source = (SymbolSource) control.getMock();
+        SymbolSource source = createMock(SymbolSource.class);
 
         // Training
 
-        source.valueForSymbol("symbol");
-        control.setReturnValue(null);
+        expect(source.valueForSymbol("symbol")).andReturn(null);
 
         eh.error(
             LogFactory.getLog(SymbolExpander.class),
@@ -100,7 +98,7 @@ public class TestSymbolExpander extends GaderianCoreTestCase
             l,
             null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         SymbolExpander e = new SymbolExpander(eh, source);
 
@@ -108,7 +106,7 @@ public class TestSymbolExpander extends GaderianCoreTestCase
 
         assertEquals("Unknown ${symbol}", actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testEscaped()

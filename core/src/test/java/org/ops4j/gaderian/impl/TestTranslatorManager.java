@@ -17,11 +17,11 @@ package org.ops4j.gaderian.impl;
 import java.util.Collections;
 import java.util.List;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.impl.TranslatorManager}.
@@ -34,11 +34,9 @@ public class TestTranslatorManager extends GaderianCoreTestCase
     {
         List l = Collections.singletonList(tc);
 
-        MockControl c = newControl(RegistryInfrastructure.class);
-        RegistryInfrastructure result = (RegistryInfrastructure) c.getMock();
+        RegistryInfrastructure result = createMock(RegistryInfrastructure.class);
 
-        result.getConfiguration(TranslatorManager.TRANSLATORS_CONFIGURATION_ID, null);
-        c.setReturnValue(l);
+        expect(result.getConfiguration(TranslatorManager.TRANSLATORS_CONFIGURATION_ID, null)).andReturn( l );
 
         return result;
     }
@@ -50,7 +48,7 @@ public class TestTranslatorManager extends GaderianCoreTestCase
 
         RegistryInfrastructure r = createRegistryForContribution(tc);
 
-        ErrorHandler eh = (ErrorHandler) newMock(ErrorHandler.class);
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         eh
                 .error(
@@ -59,7 +57,7 @@ public class TestTranslatorManager extends GaderianCoreTestCase
                         null,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         TranslatorManager tm = new TranslatorManager(r, eh);
 
@@ -75,6 +73,6 @@ public class TestTranslatorManager extends GaderianCoreTestCase
                     "No translator named 'invalid' has been registered in configuration point gaderian.Translators.");
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

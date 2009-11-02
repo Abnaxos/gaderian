@@ -78,7 +78,7 @@ public class TestEventLinker extends GaderianCoreTestCase
         EventProducer p = new EventProducer();
         Object c = "NeverwinterNights";
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el
                 .error(
@@ -86,7 +86,7 @@ public class TestEventLinker extends GaderianCoreTestCase
                         location,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         EventLinker l = new EventLinkerImpl(el);
 
@@ -94,7 +94,7 @@ public class TestEventLinker extends GaderianCoreTestCase
 
         assertEquals(0, p.getListenerCount());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNoMatchingName() throws Exception
@@ -103,11 +103,11 @@ public class TestEventLinker extends GaderianCoreTestCase
         EventProducer p = new EventProducer();
         Object c = "SoulCailiburII";
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el.error("EventProducer does not implement an event set named 'fred'.", location, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         EventLinker l = new EventLinkerImpl(el);
 
@@ -115,7 +115,7 @@ public class TestEventLinker extends GaderianCoreTestCase
 
         assertEquals(0, p.getListenerCount());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIncompatible() throws Exception
@@ -124,7 +124,7 @@ public class TestEventLinker extends GaderianCoreTestCase
         EventProducer p = new EventProducer();
         Object c = "SplinterCell";
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el
                 .error(
@@ -132,7 +132,7 @@ public class TestEventLinker extends GaderianCoreTestCase
                         location,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         EventLinker l = new EventLinkerImpl(el);
 
@@ -140,7 +140,7 @@ public class TestEventLinker extends GaderianCoreTestCase
 
         assertEquals(0, p.getListenerCount());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNoProducer() throws Exception
@@ -149,7 +149,7 @@ public class TestEventLinker extends GaderianCoreTestCase
         Object p = "DanceDanceRevolution";
         Object c = "SplinterCell";
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = (ErrorLog) createMock(ErrorLog.class);
 
         el
                 .error(
@@ -157,13 +157,13 @@ public class TestEventLinker extends GaderianCoreTestCase
                         location,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         EventLinker l = new EventLinkerImpl(el);
 
         l.addEventListener(p, null, c, location);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testInsideBuilderFactory() throws Exception

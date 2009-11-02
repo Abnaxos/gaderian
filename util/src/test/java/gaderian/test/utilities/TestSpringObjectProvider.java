@@ -14,7 +14,7 @@
 
 package gaderian.test.utilities;
 
-import org.easymock.MockControl;
+import org.easymock.EasyMock;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
 import org.ops4j.gaderian.utilities.SpringBeanFactoryHolder;
@@ -32,13 +32,11 @@ public class TestSpringObjectProvider extends GaderianCoreTestCase
     public void testBasic()
     {
         Object bean = new Object();
-        MockControl control = newControl(BeanFactory.class);
-        BeanFactory bf = (BeanFactory) control.getMock();
+        BeanFactory bf = createMock(BeanFactory.class);
 
-        bf.getBean("fred");
-        control.setReturnValue(bean);
+        EasyMock.expect(bf.getBean("fred")).andReturn(bean);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         SpringObjectProvider p = new SpringObjectProvider();
         p.setBeanFactory(bf);
@@ -47,7 +45,7 @@ public class TestSpringObjectProvider extends GaderianCoreTestCase
 
         assertSame(bean, result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testSpringIntegration() throws Exception

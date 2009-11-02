@@ -18,7 +18,9 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.reportMatcher;
+import org.easymock.IArgumentMatcher;
 import org.easymock.internal.EqualsMatcher;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
@@ -34,10 +36,10 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
 {
     public void testBasicScript() throws Exception
     {
-        MockControl control = newControl(ContentHandler.class);
-        control.setDefaultMatcher(new SAXEqualsMatcher());
+        ContentHandler mock = createMock(ContentHandler.class);
+        // control.setDefaultMatcher(new SAXEqualsMatcher());
 
-        ContentHandler mock = (ContentHandler) control.getMock();
+        //ContentHandler mock = (ContentHandler) control.getMock();
 
         mock.setDocumentLocator(GaderianBuilder.GROOVY_LOCATOR);
 
@@ -46,20 +48,20 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
         attrs.addAttribute("", "id", "id", "", "basic");
         attrs.addAttribute("", "version", "version", "", "1.0.0");
 
-        mock.startElement("", "module", "module", attrs);
+        mock.startElement( eq(""), eq("module"), eq("module"), attributesMatches(attrs));
         mock.endElement("", "module", "module");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Script script = new GroovyShell().parse("processor.module(id:'basic', version:'1.0.0')");
 
         runScript(script, mock);
+
+        verifyAllRegisteredMocks();
+
     }
 
-    /*
-     * FIXME Test disabled until GROOVY-726 is resolved.
-     */
-    public void _testLinePreciseErrorReporting() throws Exception
+    public void testLinePreciseErrorReporting() throws Exception
     {
         Resource resource = getResource("missingModuleId.groovy");
 
@@ -80,9 +82,7 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
         }
         catch (ApplicationRuntimeException e)
         {
-            assertExceptionRegexp(
-                    e,
-                    "Missing required attribute .+missingModuleId\\.groovy, line 15\\)\\.");
+            assertExceptionRegexp(e,"Missing required attribute .+missingModuleId\\.groovy, line 15\\)\\.");
         }
     }
 
@@ -96,6 +96,35 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
         script.setBinding(processorBinding);
 
         script.run();
+    }
+
+    private Attributes attributesMatches(final Attributes expectedAttributes)
+    {
+        reportMatcher( new IArgumentMatcher()
+        {
+            public boolean matches( final Object argument )
+            {
+                Attributes actualAttributes = (Attributes) argument;
+
+                if (expectedAttributes.getLength() != actualAttributes.getLength())
+                    return false;
+
+                for (int i = 0; i < expectedAttributes.getLength(); i++)
+                {
+                    if (!expectedAttributes.getLocalName(i)
+                            .equals(actualAttributes.getLocalName(i))
+                            || !expectedAttributes.getValue(i).equals(actualAttributes.getValue(i)))
+                        return false;
+                }
+                return true;
+            }
+
+            public void appendTo( final StringBuffer buffer )
+            {
+                buffer.append("attributesMatches(" + expectedAttributes + ")");
+            }
+        } );
+        return null;
     }
 
     private static class SAXEqualsMatcher extends EqualsMatcher

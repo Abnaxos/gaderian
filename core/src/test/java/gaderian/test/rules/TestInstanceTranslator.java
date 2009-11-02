@@ -14,10 +14,10 @@
 
 package gaderian.test.rules;
 
-import gaderian.test.FrameworkTestCase;
-
 import java.util.List;
 
+import gaderian.test.FrameworkTestCase;
+import org.easymock.EasyMock;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
@@ -46,7 +46,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
 
     protected Module newModule()
     {
-        return (Module) newMock(Module.class);
+        return createMock(Module.class);
     }
 
     public void testBadClass() throws Exception
@@ -58,11 +58,10 @@ public class TestInstanceTranslator extends FrameworkTestCase
 
         Module m = newModule();
 
-        m.resolveType("bad.class.Name");
         ApplicationRuntimeException cause = new ApplicationRuntimeException("failure");
-        setThrowable(m, cause);
+        EasyMock.expect(m.resolveType("bad.class.Name")).andThrow(cause);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -73,7 +72,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
             assertSame(cause, ex);
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testInitializer() throws Exception
@@ -82,16 +81,15 @@ public class TestInstanceTranslator extends FrameworkTestCase
 
         Module m = newModule();
 
-        m.resolveType("Bean");
-        setReturnValue(m, IntHolder.class);
+        EasyMock.expect(m.resolveType("Bean")).andReturn(IntHolder.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         IntHolder ih = (IntHolder) t.translate(m, Object.class, "Bean,value=37", null);
 
         assertEquals(37, ih.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPrivateObject() throws Exception
@@ -104,7 +102,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
         ModuleImpl m = new ModuleImpl();
         m.setClassResolver(getClassResolver());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -118,7 +116,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
                     "Unable to instantiate instance of class gaderian.test.rules.PrivateObject");
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testWrongType() throws Exception
@@ -142,7 +140,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
         ModuleImpl m = new ModuleImpl();
         m.setClassResolver(getClassResolver());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ClassTranslator t = new ClassTranslator();
 
@@ -150,6 +148,6 @@ public class TestInstanceTranslator extends FrameworkTestCase
 
         assertEquals(getClass(), c);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

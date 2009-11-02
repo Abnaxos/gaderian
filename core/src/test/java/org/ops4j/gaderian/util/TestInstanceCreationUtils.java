@@ -14,12 +14,12 @@
 
 package org.ops4j.gaderian.util;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.impl.BaseLocatable;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.util.InstanceCreationUtils}.
@@ -46,11 +46,9 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
 
     private Module newModule(String name, Class returnValue)
     {
-        MockControl control = newControl(Module.class);
-        Module module = (Module) control.getMock();
+        Module module = createMock(Module.class);
 
-        module.resolveType(name);
-        control.setReturnValue(returnValue);
+        expect(module.resolveType(name)).andReturn(returnValue);
 
         return module;
     }
@@ -59,26 +57,26 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
     {
         Module module = newModule("Bean", Bean.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Bean bean = (Bean) InstanceCreationUtils.createInstance(module, "Bean", null);
 
         assertNotNull(bean);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testComplex()
     {
         Module module = newModule("Bean", Bean.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Bean bean = (Bean) InstanceCreationUtils.createInstance(module, "Bean,value=42", null);
 
         assertEquals(42, bean.getValue());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testSetLocation()
@@ -86,7 +84,7 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule("Holder", BaseLocatable.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BaseLocatable holder = (BaseLocatable) InstanceCreationUtils.createInstance(
                 module,
@@ -95,7 +93,7 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
 
         assertSame(l, holder.getLocation());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testFailure()
@@ -103,7 +101,7 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule("Bean", Bean.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -118,6 +116,6 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
             assertSame(l, ex.getLocation());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

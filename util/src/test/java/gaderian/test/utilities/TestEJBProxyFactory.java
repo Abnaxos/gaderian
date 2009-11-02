@@ -15,15 +15,27 @@
 package gaderian.test.utilities;
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 import java.util.Map;
 import javax.naming.Context;
 
 import gaderian.test.utilities.impl.FakeContext;
 import gaderian.test.utilities.impl.NameLookupHack;
 import gaderian.test.utilities.impl.SimpleHomeImpl;
+import static org.easymock.classextension.EasyMock.anyObject;
+import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
+import org.ops4j.gaderian.impl.ServiceImplementationFactoryParametersImpl;
+import org.ops4j.gaderian.internal.Module;
+import org.ops4j.gaderian.internal.ServicePoint;
+import org.ops4j.gaderian.service.ClassFactory;
+import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.utilities.NameLookup;
+import org.ops4j.gaderian.utilities.RemoteExceptionCoordinator;
+import org.ops4j.gaderian.utilities.impl.EJBProxyFactory;
+import org.ops4j.gaderian.utilities.impl.EJBProxyParameters;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.impl.EJBProxyFactory}.
@@ -126,6 +138,89 @@ public class TestEJBProxyFactory extends GaderianCoreTestCase
         {
             assertExceptionSubstring(ex, "Forced error.");
         }
+    }
+
+    public void testEJBProxyRemoteFailureWithMocks() throws Exception
+    {
+        final EJBProxyFactory ejbProxyFactory = new EJBProxyFactory();
+
+        final NameLookup nameLookup = createMock(NameLookup.class);
+        final ClassFactory classFactory = new ClassFactoryImpl();
+        final RemoteExceptionCoordinator remoteExceptionCoordinator = createMock(RemoteExceptionCoordinator.class);
+        
+        ejbProxyFactory.setClassFactory(classFactory);
+        ejbProxyFactory.setNameLookup(nameLookup);
+        ejbProxyFactory.setCoordinator(remoteExceptionCoordinator);
+        
+        final EJBProxyParameters ejbProxyParameters = new EJBProxyParameters();
+        ejbProxyParameters.setHomeInterfaceClassName("gaderian.test.utilities.SimpleHome");
+        ejbProxyParameters.setJndiName("jndi");
+
+        final ServicePoint servicePoint = createMock(ServicePoint.class);
+        final Module module = createMock(Module.class);
+
+        expect(servicePoint.getServiceInterface()).andReturn(SimpleRemote.class);
+        expect(module.resolveType("gaderian.test.utilities.SimpleHome")).andReturn(SimpleHome.class);
+        expect(servicePoint.getExtensionPointId()).andReturn("fred");
+        final SimpleHomeImpl value = new SimpleHomeImpl();
+        value.setForceError(true);
+        expect(nameLookup.lookup("jndi", Object.class)).andReturn(value).times(2);
+
+        remoteExceptionCoordinator.fireRemoteExceptionDidOccur(anyObject(), (Throwable)anyObject());
+        
+        replayAllRegisteredMocks();
+
+        try
+        {
+            final SimpleRemote object = (SimpleRemote) ejbProxyFactory.createCoreServiceImplementation(new ServiceImplementationFactoryParametersImpl(servicePoint, module, Arrays.asList(ejbProxyParameters)));
+            object.add(1, 1);
+        }
+        catch (RemoteException ex)
+        {
+            assertExceptionSubstring(ex, "Forced error.");
+        }
+
+
+        verifyAllRegisteredMocks();
+    }
+
+    public void testEJBProxyNameFailureWithMocks()
+    {
+        
+        final EJBProxyFactory ejbProxyFactory = new EJBProxyFactory();
+        final NameLookup nameLookup = createMock(NameLookup.class);
+        final ClassFactory classFactory = new ClassFactoryImpl();
+        
+        ejbProxyFactory.setClassFactory(classFactory);
+        ejbProxyFactory.setNameLookup(nameLookup);
+
+        final EJBProxyParameters ejbProxyParameters = new EJBProxyParameters();
+        ejbProxyParameters.setHomeInterfaceClassName("gaderian.test.utilities.SimpleHome");
+        ejbProxyParameters.setJndiName("jndi");
+
+        final ServicePoint servicePoint = createMock(ServicePoint.class);
+        final Module module = createMock(Module.class);
+        
+        expect(servicePoint.getServiceInterface()).andReturn(SimpleRemote.class);
+        expect(module.resolveType("gaderian.test.utilities.SimpleHome")).andReturn(SimpleHome.class);
+        expect(servicePoint.getExtensionPointId()).andReturn("fred");
+        expect(nameLookup.lookup("jndi",Object.class)).andThrow(new ApplicationRuntimeException("Forced error: jndi"));
+        
+        replayAllRegisteredMocks();
+
+        try
+        {
+            final SimpleRemote object = (SimpleRemote) ejbProxyFactory.createCoreServiceImplementation(new ServiceImplementationFactoryParametersImpl(servicePoint, module, Arrays.asList(ejbProxyParameters)));
+            object.add(1,1);
+        }
+        catch (Exception ex)
+        {
+            assertExceptionSubstring(ex,"Forced error: jndi");
+        }
+
+
+        verifyAllRegisteredMocks();
+        
     }
 
 }

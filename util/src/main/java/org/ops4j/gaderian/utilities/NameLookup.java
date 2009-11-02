@@ -30,7 +30,7 @@ public interface NameLookup
      * @param name the name to lookup
      * @param expected the expected class of the object; the object found must be assignable
      * to this class (which may be a class or interface)
-     * @throws org.apache.tapestry.ApplicationRuntimeException if an error occurs during
+     * @throws org.ops4j.gaderian.ApplicationRuntimeException if an error occurs during
      * the lookup, or if the found object can not be assigned to the expected class.
      */
     public Object lookup(String name, Class expected);

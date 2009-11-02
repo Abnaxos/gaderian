@@ -14,77 +14,63 @@
 
 package org.ops4j.gaderian.service.impl;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 public class TestBuilderPropertyFacet extends GaderianCoreTestCase
 {
     public void testCachingOfTranslatedValues() throws Exception
     {
-        MockControl moduleControl = newControl(Module.class);
-        Module module = (Module) moduleControl.getMock();
+        Module module = createMock(Module.class);
 
-        MockControl translatorControl = newControl(Translator.class);
-        Translator translator = (Translator) translatorControl.getMock();
+        Translator translator = createMock(Translator.class);
 
-        MockControl paramsControl = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters params = (ServiceImplementationFactoryParameters) paramsControl
-                .getMock();
+        ServiceImplementationFactoryParameters params = createMock(ServiceImplementationFactoryParameters.class);
 
         BuilderPropertyFacet facet = new BuilderPropertyFacet();
 
         facet.setTranslator("foo");
         facet.setValue("bar");
 
-        params.getInvokingModule();
-        paramsControl.setDefaultReturnValue(module);
+        expect(params.getInvokingModule()).andReturn(module).times( 2 );
 
-        module.getTranslator("foo");
-        moduleControl.setDefaultReturnValue(translator);
+        expect(module.getTranslator("foo")).andReturn(translator);
 
-        translator.translate(module, Object.class, "bar", null);
-        translatorControl.setReturnValue("BAR");
+        expect(translator.translate(module, Object.class, "bar", null)).andReturn("BAR");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         facet.isAssignableToType(params, Object.class);
         facet.getFacetValue(params, Object.class);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAssignableFromBadValue()
     {
-        MockControl moduleControl = newControl(Module.class);
-        Module module = (Module) moduleControl.getMock();
+        Module module = createMock(Module.class);
 
-        MockControl translatorControl = newControl(Translator.class);
-        Translator translator = (Translator) translatorControl.getMock();
+        Translator translator = createMock(Translator.class);
 
-        MockControl paramsControl = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters params = (ServiceImplementationFactoryParameters) paramsControl
-                .getMock();
+        ServiceImplementationFactoryParameters params = createMock(ServiceImplementationFactoryParameters.class);
 
         BuilderPropertyFacet facet = new BuilderPropertyFacet();
 
         facet.setTranslator("foo");
         facet.setValue("bar");
 
-        params.getInvokingModule();
-        paramsControl.setDefaultReturnValue(module);
+        expect(params.getInvokingModule()).andReturn(module).times( 2 );
 
-        module.getTranslator("foo");
-        moduleControl.setDefaultReturnValue(translator);
+        expect(module.getTranslator("foo")).andReturn(translator);
 
-        translator.translate(module, Object.class, "bar", null);
         ApplicationRuntimeException exception = new ApplicationRuntimeException("");
-        translatorControl.setThrowable(exception);
+        expect(translator.translate(module, Object.class, "bar", null)).andThrow( exception );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -96,6 +82,6 @@ public class TestBuilderPropertyFacet extends GaderianCoreTestCase
             assertSame(exception, e);
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

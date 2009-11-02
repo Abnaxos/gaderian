@@ -18,20 +18,16 @@ import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.internal.ConfigurationPoint;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.internal.Visibility;
-import org.ops4j.gaderian.parse.ContributionDescriptor;
-import org.ops4j.gaderian.parse.ImplementationDescriptor;
-import org.ops4j.gaderian.parse.InterceptorDescriptor;
-import org.ops4j.gaderian.parse.ModuleDescriptor;
-import org.ops4j.gaderian.parse.XmlResourceProcessor;
+import org.ops4j.gaderian.parse.*;
 import org.ops4j.gaderian.service.ObjectProvider;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests the logic related to service point and configuration point visibility.
@@ -44,11 +40,11 @@ public class TestVisibility extends GaderianCoreTestCase
 
     public void testPublicConfigurationVisibleToOtherModule()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = createMock(Module.class);
 
-        Module om = (Module) newMock(Module.class);
+        Module om = createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ConfigurationPointImpl cp = new ConfigurationPointImpl();
         cp.setModule(m);
@@ -56,14 +52,14 @@ public class TestVisibility extends GaderianCoreTestCase
 
         assertEquals(true, cp.visibleToModule(om));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPublicConfigurationVisibleToApplication()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ConfigurationPointImpl cp = new ConfigurationPointImpl();
         cp.setModule(m);
@@ -71,15 +67,15 @@ public class TestVisibility extends GaderianCoreTestCase
 
         assertEquals(true, cp.visibleToModule(null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPrivateConfigurationInvisibleToOtherModule()
     {
-        Module m = (Module) newMock(Module.class);
-        Module om = (Module) newMock(Module.class);
+        Module m = createMock(Module.class);
+        Module om = createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ConfigurationPointImpl cp = new ConfigurationPointImpl();
         cp.setModule(m);
@@ -87,14 +83,14 @@ public class TestVisibility extends GaderianCoreTestCase
 
         assertEquals(false, cp.visibleToModule(om));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPrivateConfigurationInvisibleToApplication()
     {
-        Module m = (Module) newMock(Module.class);
+        Module m = createMock(Module.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ConfigurationPointImpl cp = new ConfigurationPointImpl();
         cp.setModule(m);
@@ -102,28 +98,24 @@ public class TestVisibility extends GaderianCoreTestCase
 
         assertEquals(false, cp.visibleToModule(null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetServiceNotVisibleToApplication()
     {
         RegistryInfrastructureImpl rf = new RegistryInfrastructureImpl(null, null);
 
-        MockControl spc = newControl(ServicePoint.class);
-        ServicePoint sp = (ServicePoint) spc.getMock();
+        ServicePoint sp = createMock(ServicePoint.class);
 
         // Training
 
-        sp.getExtensionPointId();
-        spc.setReturnValue("foo.bar.Baz");
+        expect(sp.getExtensionPointId()).andReturn("foo.bar.Baz");
 
-        sp.getServiceInterfaceClassName();
-        spc.setReturnValue(Runnable.class.getName());
+        expect(sp.getServiceInterfaceClassName()).andReturn( Runnable.class.getName());
 
-        sp.visibleToModule(null);
-        spc.setReturnValue(false);
+        expect(sp.visibleToModule(null)).andReturn(false);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         rf.addServicePoint(sp);
 
@@ -138,31 +130,27 @@ public class TestVisibility extends GaderianCoreTestCase
             assertEquals(ImplMessages.serviceNotVisible("foo.bar.Baz", null), ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetServiceNotVisibleToModule()
     {
         RegistryInfrastructureImpl rf = new RegistryInfrastructureImpl(null, null);
 
-        MockControl spc = newControl(ServicePoint.class);
-        ServicePoint sp = (ServicePoint) spc.getMock();
+        ServicePoint sp = createMock(ServicePoint.class);
 
         ModuleImpl m = new ModuleImpl();
         m.setModuleId("zip.zap.Zoom");
 
         // Training
 
-        sp.getExtensionPointId();
-        spc.setReturnValue("foo.bar.Baz");
+        expect(sp.getExtensionPointId()).andReturn( "foo.bar.Baz");
 
-        sp.getServiceInterfaceClassName();
-        spc.setReturnValue(Runnable.class.getName());
+        expect(sp.getServiceInterfaceClassName()).andReturn( Runnable.class.getName());
 
-        sp.visibleToModule(m);
-        spc.setReturnValue(false);
+        expect(sp.visibleToModule(m)).andReturn( false);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         rf.addServicePoint(sp);
 
@@ -177,28 +165,25 @@ public class TestVisibility extends GaderianCoreTestCase
             assertEquals(ImplMessages.serviceNotVisible("foo.bar.Baz", m), ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetConfigurationNotVisibleToModule()
     {
         RegistryInfrastructureImpl rf = new RegistryInfrastructureImpl(null, null);
 
-        MockControl control = newControl(ConfigurationPoint.class);
-        ConfigurationPoint point = (ConfigurationPoint) control.getMock();
+        ConfigurationPoint point = createMock(ConfigurationPoint.class);
 
         ModuleImpl m = new ModuleImpl();
         m.setModuleId("zip.zap.Zoom");
 
         // Training
 
-        point.getExtensionPointId();
-        control.setReturnValue("foo.bar.Baz");
+        expect(point.getExtensionPointId()).andReturn( "foo.bar.Baz");
 
-        point.visibleToModule(m);
-        control.setReturnValue(false);
+        expect(point.visibleToModule(m)).andReturn( false);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         rf.addConfigurationPoint(point);
 
@@ -213,7 +198,7 @@ public class TestVisibility extends GaderianCoreTestCase
             assertEquals(ImplMessages.configurationNotVisible("foo.bar.Baz", m), ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -224,38 +209,29 @@ public class TestVisibility extends GaderianCoreTestCase
      */
     public void testGetServiceMatchesPublicOnly()
     {
-        MockControl spc1 = newControl(ServicePoint.class);
-        ServicePoint sp1 = (ServicePoint) spc1.getMock();
+        ServicePoint sp1 = createMock(ServicePoint.class);
 
-        MockControl spc2 = newControl(ServicePoint.class);
-        ServicePoint sp2 = (ServicePoint) spc2.getMock();
+        ServicePoint sp2 = createMock(ServicePoint.class);
 
-        ObjectProvider service = (ObjectProvider) newMock(ObjectProvider.class);
+        ObjectProvider service = (ObjectProvider) createMock(ObjectProvider.class);
 
         // Training
 
-        sp1.getExtensionPointId();
-        spc1.setReturnValue("foo.Private");
+        expect(sp1.getExtensionPointId()).andReturn("foo.Private");
 
-        sp1.getServiceInterfaceClassName();
-        spc1.setReturnValue(ObjectProvider.class.getName());
+        expect(sp1.getServiceInterfaceClassName()).andReturn(ObjectProvider.class.getName());
 
-        sp2.getExtensionPointId();
-        spc2.setReturnValue("foo.Public");
+        expect(sp2.getExtensionPointId()).andReturn("foo.Public");
 
-        sp2.getServiceInterfaceClassName();
-        spc2.setReturnValue(ObjectProvider.class.getName());
+        expect(sp2.getServiceInterfaceClassName()).andReturn(ObjectProvider.class.getName());
 
-        sp1.visibleToModule(null);
-        spc1.setReturnValue(false);
+        expect(sp1.visibleToModule(null)).andReturn(false);
 
-        sp2.visibleToModule(null);
-        spc2.setReturnValue(true);
+        expect(sp2.visibleToModule(null)).andReturn(true);
 
-        sp2.getService(ObjectProvider.class);
-        spc2.setReturnValue(service);
+        expect(sp2.getService(ObjectProvider.class)).andReturn(service);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         RegistryInfrastructureImpl r = new RegistryInfrastructureImpl(null, null);
 
@@ -266,7 +242,7 @@ public class TestVisibility extends GaderianCoreTestCase
 
         assertSame(service, actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -278,8 +254,7 @@ public class TestVisibility extends GaderianCoreTestCase
 
     public void testContributionToNonVisibleConfigurationPoint() throws Exception
     {
-        MockControl ehc = newControl(ErrorHandler.class);
-        ErrorHandler errorHandler = (ErrorHandler) ehc.getMock();
+        ErrorHandler errorHandler = createMock(ErrorHandler.class);
 
         RegistryAssemblyImpl assembly = new RegistryAssemblyImpl();
 
@@ -334,10 +309,10 @@ public class TestVisibility extends GaderianCoreTestCase
                         null,
                         null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         cons.constructRegistryInfrastructure(Locale.getDefault());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

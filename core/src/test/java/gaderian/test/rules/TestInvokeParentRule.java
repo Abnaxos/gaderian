@@ -14,15 +14,14 @@
 
 package gaderian.test.rules;
 
-import gaderian.test.FrameworkTestCase;
-
 import java.util.List;
 
+import gaderian.test.FrameworkTestCase;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.schema.SchemaProcessor;
 import org.ops4j.gaderian.schema.rules.InvokeParentRule;
-import org.easymock.MockControl;
 
 public class TestInvokeParentRule extends FrameworkTestCase
 {
@@ -55,38 +54,29 @@ public class TestInvokeParentRule extends FrameworkTestCase
     {
         InvokeParentRule rule = new InvokeParentRule("add");
 
-        MockControl procControl = newControl(SchemaProcessor.class);
-        SchemaProcessor proc = (SchemaProcessor) procControl.getMock();
+        SchemaProcessor proc = createMock(SchemaProcessor.class);
 
-        proc.peek();
-        procControl.setReturnValue(null);
+        expect(proc.peek()).andReturn(null);
 
-        MockControl listControl = newControl(List.class);
-        List list = (List) listControl.getMock();
+        List list  = createMock(List.class);
 
-        proc.peek(1);
-        procControl.setReturnValue(list);
+        expect(proc.peek(1)).andReturn(list);
 
-        list.add(null);
-        listControl.setReturnValue(true);
+        expect(list.add(null)).andReturn(true);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         rule.begin(proc, null);
 
-        verifyControls();
-
-        resetControls();
+        verifyAllRegisteredMocks();
 
         rule = new InvokeParentRule("get");
 
-        proc.peek();
-        procControl.setReturnValue(null);
+        expect(proc.peek()).andReturn( null );
 
-        proc.peek(1);
-        procControl.setReturnValue(list);
+        expect(proc.peek(1)).andReturn(list);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -99,7 +89,7 @@ public class TestInvokeParentRule extends FrameworkTestCase
             assertEquals(NoSuchMethodException.class, e.getCause().getClass());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testGetMethod()

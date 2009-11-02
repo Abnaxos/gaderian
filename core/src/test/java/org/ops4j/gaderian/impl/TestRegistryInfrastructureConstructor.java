@@ -19,6 +19,8 @@ import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.isA;
 import org.ops4j.gaderian.Element;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Location;
@@ -29,11 +31,7 @@ import org.ops4j.gaderian.parse.ConfigurationPointDescriptor;
 import org.ops4j.gaderian.parse.ContributionDescriptor;
 import org.ops4j.gaderian.parse.ModuleDescriptor;
 import org.ops4j.gaderian.schema.impl.SchemaImpl;
-import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
-import org.ops4j.gaderian.test.ArgumentMatcher;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.ops4j.gaderian.test.TypeMatcher;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link RegistryInfrastructureConstructor}.
@@ -78,8 +76,7 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
     public void testNotVisible()
     {
-        MockControl ehControl = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) ehControl.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         Log log = LogFactory.getLog(TestRegistryInfrastructureConstructor.class);
 
@@ -91,7 +88,7 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         eh.error(log, ImplMessages.schemaNotVisible("foo.bar.Baz", "zip.zoop"), l, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleDescriptor fooBar = new ModuleDescriptor(null, eh);
         fooBar.setModuleId("foo.bar");
@@ -115,13 +112,12 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         ric.constructRegistryInfrastructure(Locale.getDefault());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNotFound()
     {
-        MockControl ehControl = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) ehControl.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         Log log = LogFactory.getLog(TestRegistryInfrastructureConstructor.class);
 
@@ -129,7 +125,7 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         eh.error(log, ImplMessages.unableToResolveSchema("foo.bar.Baz"), l, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleDescriptor zipZoop = new ModuleDescriptor(null, eh);
         zipZoop.setModuleId("zip.zoop");
@@ -147,7 +143,7 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         ric.constructRegistryInfrastructure(Locale.getDefault());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     private Element newElement(String name)
@@ -161,12 +157,11 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
     public void testConditionalExpressionTrue()
     {
-        MockControl ehControl = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) ehControl.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         Log log = LogFactory.getLog(TestRegistryInfrastructureConstructor.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleDescriptor md = new ModuleDescriptor(getClassResolver(), eh);
         md.setModuleId("zip.zoop");
@@ -197,17 +192,16 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         assertEquals("foo", e.getElementName());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testConditionalExpressionFalse()
     {
-        MockControl ehControl = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) ehControl.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         Log log = LogFactory.getLog(TestRegistryInfrastructureConstructor.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleDescriptor md = new ModuleDescriptor(getClassResolver(), eh);
         md.setModuleId("zip.zoop");
@@ -236,27 +230,23 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         assertTrue(l.isEmpty());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testConditionalExpressionError()
     {
-        MockControl ehControl = newControl(ErrorHandler.class);
-        ErrorHandler eh = (ErrorHandler) ehControl.getMock();
+        ErrorHandler eh = createMock(ErrorHandler.class);
 
         Log log = LogFactory.getLog(TestRegistryInfrastructureConstructor.class);
 
         Location location = newLocation();
 
-        eh.error(
-                log,
-                "Unexpected token <AND> in expression 'and class foo'.",
-                location,
-                new RuntimeException());
-        ehControl.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher[]
-        { null, null, null, new TypeMatcher() }));
+        eh.error( eq(log),
+                eq("Unexpected token <AND> in expression 'and class foo'."),
+                eq(location),
+                isA(RuntimeException.class));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ModuleDescriptor md = new ModuleDescriptor(getClassResolver(), eh);
         md.setModuleId("zip.zoop");
@@ -286,6 +276,6 @@ public class TestRegistryInfrastructureConstructor extends GaderianCoreTestCase
 
         assertTrue(l.isEmpty());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

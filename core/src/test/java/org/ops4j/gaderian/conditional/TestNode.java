@@ -14,12 +14,8 @@
 
 package org.ops4j.gaderian.conditional;
 
-import org.ops4j.gaderian.conditional.EvaluationContext;
-import org.ops4j.gaderian.conditional.Evaluator;
-import org.ops4j.gaderian.conditional.Node;
-import org.ops4j.gaderian.conditional.NodeImpl;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for the {@link org.ops4j.gaderian.conditional.NodeImpl} class.
@@ -31,39 +27,36 @@ public class TestNode extends GaderianCoreTestCase
 {
     public void testConstructorAndGetters()
     {
-        Node left = (Node) newMock(Node.class);
-        Node right = (Node) newMock(Node.class);
-        Evaluator evaluator = (Evaluator) newMock(Evaluator.class);
+        Node left = (Node) createMock(Node.class);
+        Node right = (Node) createMock(Node.class);
+        Evaluator evaluator = (Evaluator) createMock(Evaluator.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Node n = new NodeImpl(left, right, evaluator);
 
         assertSame(left, n.getLeft());
         assertSame(right, n.getRight());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testEvaluate()
     {
-        MockControl control = newControl(Evaluator.class);
-        Evaluator evaluator = (Evaluator) control.getMock();
-        EvaluationContext context = (EvaluationContext) newMock(EvaluationContext.class);
+        Evaluator evaluator = createMock(Evaluator.class);
+        EvaluationContext context = createMock(EvaluationContext.class);
 
         Node n = new NodeImpl(evaluator);
 
-        evaluator.evaluate(context, n);
-        control.setReturnValue(false);
+        expect(evaluator.evaluate(context, n)).andReturn( false);
 
-        evaluator.evaluate(context, n);
-        control.setReturnValue(true);
+        expect(evaluator.evaluate(context, n)).andReturn( true);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, n.evaluate(context));
         assertEquals(true, n.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

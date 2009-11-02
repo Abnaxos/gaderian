@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package org.ops4j.gaderian.test;
+package org.ops4j.gaderian.testutils;
 
 import java.util.regex.Pattern;
 
-import org.ops4j.gaderian.ApplicationRuntimeException;
-
 /**
- * A {@link org.ops4j.gaderian.test.ArgumentMatcher} implementation that treats the expected
+ * A {@link org.ops4j.gaderian.testutils.ArgumentMatcher} implementation that treats the expected
  * value (provided while training the mock object) as a Perl5 Regular expression, which is matched
  * against the actual value.
  * 
@@ -44,7 +42,7 @@ public class RegexpMatcher extends AbstractArgumentMatcher
         }
         catch (Exception ex)
         {
-            throw new ApplicationRuntimeException(ex);
+            throw new RuntimeException(ex);
         }
     }
 }

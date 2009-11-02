@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServiceModel;
 import org.ops4j.gaderian.internal.ServiceModelFactory;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Test for {@link org.ops4j.gaderian.impl.ServicePointImpl}. Much of the testing is done using
@@ -52,7 +52,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServicePointImpl sp = new ServicePointImpl();
         sp.setModule(module);
@@ -72,7 +72,7 @@ public class TestServicePoint extends GaderianCoreTestCase
             assertSame(l, ex.getLocation());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testDefaultInterceptorOrdering()
@@ -80,7 +80,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServicePointImpl sp = new ServicePointImpl();
         sp.setModule(module);
@@ -99,7 +99,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         assertEquals(2, ordered.size());
         assertEquals(interceptor1, ordered.get(0));
         assertEquals(interceptor2, ordered.get(1));
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testCustomInterceptorOrdering()
@@ -107,7 +107,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServicePointImpl sp = new ServicePointImpl();
         sp.setModule(module);
@@ -127,7 +127,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         assertEquals(2, ordered.size());
         assertEquals(interceptor2, ordered.get(0));
         assertEquals(interceptor1, ordered.get(1));
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testInterceptorOrderingByName()
@@ -135,7 +135,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         Location l = newLocation();
         Module module = newModule();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ServicePointImpl sp = new ServicePointImpl();
         sp.setModule(module);
@@ -156,7 +156,7 @@ public class TestServicePoint extends GaderianCoreTestCase
         assertEquals(2, ordered.size());
         assertEquals(interceptor2, ordered.get(0));
         assertEquals(interceptor1, ordered.get(1));
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testResultNotAssignableToServiceInterface()
@@ -164,30 +164,23 @@ public class TestServicePoint extends GaderianCoreTestCase
         Location l = newLocation();
         ServicePointImpl sp = new ServicePointImpl();
 
-        MockControl modulec = newControl(Module.class);
-        Module module = (Module) modulec.getMock();
+        Module module = createMock(Module.class);
 
         Object service = new ArrayList();
 
-        MockControl factoryc = newControl(ServiceModelFactory.class);
-        ServiceModelFactory factory = (ServiceModelFactory) factoryc.getMock();
+        ServiceModelFactory factory = createMock(ServiceModelFactory.class);
 
-        MockControl modelc = newControl(ServiceModel.class);
-        ServiceModel model = (ServiceModel) modelc.getMock();
+        ServiceModel model = createMock(ServiceModel.class);
 
-        module.getServiceModelFactory("fred");
-        modulec.setReturnValue(factory);
+        expect(module.getServiceModelFactory("fred")).andReturn(factory);
 
-        factory.createServiceModelForService(sp);
-        factoryc.setReturnValue(model);
+        expect(factory.createServiceModelForService(sp)).andReturn(model);
 
-        model.getService();
-        modelc.setReturnValue(service);
+        expect(model.getService()).andReturn(service);
 
-        module.resolveType("java.util.List");
-        modulec.setReturnValue(List.class);
+        expect(module.resolveType("java.util.List")).andReturn(List.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         sp.setExtensionPointId("foo.bar");
         sp.setServiceInterfaceName("java.util.List");
@@ -207,5 +200,6 @@ public class TestServicePoint extends GaderianCoreTestCase
                     ex.getMessage());
             assertSame(l, ex.getLocation());
         }
+        verifyAllRegisteredMocks();
     }
 }

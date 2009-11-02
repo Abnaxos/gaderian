@@ -15,31 +15,20 @@
 package org.ops4j.gaderian.management;
 
 import java.util.List;
-
-import javax.management.MBeanRegistrationException;
-import javax.management.MBeanServer;
-import javax.management.NotCompliantMBeanException;
-import javax.management.ObjectInstance;
-import javax.management.ObjectName;
-import javax.management.StandardMBean;
+import javax.management.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import static org.easymock.EasyMock.*;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.events.RegistryShutdownListener;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.internal.ServicePoint;
-import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.ArgumentsMatcher;
-import org.easymock.MockControl;
-import org.easymock.internal.AlwaysMatcher;
-import org.easymock.internal.EqualsMatcher;
-import org.ops4j.gaderian.management.MBeanRegistry;
-import org.ops4j.gaderian.management.ObjectNameBuilder;
 import org.ops4j.gaderian.management.impl.MBeanRegistrationContribution;
 import org.ops4j.gaderian.management.impl.MBeanRegistryImpl;
 import org.ops4j.gaderian.management.impl.ObjectNameBuilderImpl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Test of {@link org.ops4j.gaderian.management.impl.MBeanRegistryImpl}.
@@ -53,8 +42,6 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
 
     private Log log;
 
-    private MockControl serverControl;
-
     private MBeanServer server;
 
     private ObjectNameBuilder objectNameBuilder;
@@ -63,8 +50,7 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
     {
         errorHandler = new DefaultErrorHandler();
         log = LogFactory.getLog(MBeanRegistry.class);
-        serverControl = newControl(MBeanServer.class);
-        server = (MBeanServer) serverControl.getMock();
+        server = createMock(MBeanServer.class);
         objectNameBuilder = new ObjectNameBuilderImpl();
     }
 
@@ -80,31 +66,29 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         ServicePoint sp1 = ((MBeanRegistrationContribution) mBeanList.get(0)).getServicePoint();
         Object mBean1 = registry.getService("test.management.MBean1", Runnable.class);
         ObjectName on1 = objectNameBuilder.createServiceObjectName(sp1);
-        server.registerMBean(mBean1, on1);
+
         ObjectInstance oin1 = new ObjectInstance(on1, mBean1.getClass().getName());
-        serverControl.setReturnValue(oin1);
+
+        expect(server.registerMBean(mBean1, on1)).andReturn(oin1);
 
         Object mBean2 = registry.getService("test.management.MBean2", Runnable.class);
         ObjectName on2 = new ObjectName("gaderian:name=bean2");
-        server.registerMBean(mBean2, on2);
-        serverControl.setReturnValue(new ObjectInstance(on2, mBean2.getClass().getName()));
+        expect(server.registerMBean(mBean2, on2)).andReturn(new ObjectInstance(on2, mBean2.getClass().getName()));
 
         // This is a special case. A class without interface
         Object mBean3 = registry.getService("test.management.MBean3", MBeanNonInterfaceTestService.class);
         ObjectName on3 = new ObjectName("gaderian:name=bean3");
-        server.registerMBean(mBean3, on3);
-        serverControl.setReturnValue(new ObjectInstance(on3, mBean3.getClass().getName()));
+        expect(server.registerMBean(mBean3, on3)).andReturn(new ObjectInstance(on3, mBean3.getClass().getName()));
 
         // Call from unregisterBean
-        server.getObjectInstance(on1);
-        serverControl.setReturnValue(oin1);
+        expect(server.getObjectInstance(on1)).andReturn(oin1);
 
         server.unregisterMBean(on1);
         // The automatically unregistered beans get unregistered in reverse order
         server.unregisterMBean(on3);
         server.unregisterMBean(on2);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         MBeanRegistry mbeanRegistry = new MBeanRegistryImpl(errorHandler, log, server,
                 objectNameBuilder, mBeanList);
@@ -113,7 +97,7 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         mbeanRegistry.unregisterMBean(on1);
         ((RegistryShutdownListener) mbeanRegistry).registryDidShutdown();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
         assertTrue("start method has not been called", ((MBeanTestService) mBean1).isStartCalled());
 
@@ -129,9 +113,8 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         ObjectName objectName = new ObjectName("gaderian:module=test");
 
         // Training
-        server.registerMBean(calculatorMBean, objectName);
-        serverControl.setThrowable(new NotCompliantMBeanException("Not compliant"));
-        replayControls();
+        expect(server.registerMBean(calculatorMBean, objectName)).andThrow(new NotCompliantMBeanException("Not compliant"));
+        replayAllRegisteredMocks();
 
         // Registration must fail since the bean is not mbean compliant and a management
         // interface is not provided
@@ -146,7 +129,7 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         {
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -161,24 +144,19 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         ObjectName on1 = objectNameBuilder.createServiceObjectName(sp1);
 
         // Training
-        server.registerMBean(null, null);
-        serverControl.setThrowable(new MBeanRegistrationException(new Exception(
-                "Registration failed")));
-        serverControl.setDefaultMatcher(new AlwaysMatcher());
-        server.registerMBean(null, null);
-        serverControl.setThrowable(new MBeanRegistrationException(new Exception(
-                "Registration failed")));
-        server.registerMBean(null, null);
-        serverControl.setThrowable(new MBeanRegistrationException(new Exception(
-        		"Registration failed")));
+        expect(server.registerMBean( isA( MBeanTestService.class ), eq(on1))).andThrow(new MBeanRegistrationException(new Exception("Registration failed")));
+        expect(server.registerMBean( isA( MBeanTestService.class ), isA( ObjectName.class ))).andThrow(new MBeanRegistrationException(new Exception("Registration failed")));
+        expect(server.registerMBean( isA( MBeanNonInterfaceTestService.class ), isA( ObjectName.class ))).andThrow(new MBeanRegistrationException(new Exception("Registration failed")));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         interceptLogging(MBeanRegistry.class.getName());
 
         new MBeanRegistryImpl(errorHandler, log, server, objectNameBuilder, mBeanList);
 
         assertLoggedMessage("Registering MBean " + on1.toString() + " failed");
+
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -191,36 +169,11 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         ObjectName objectName = new ObjectName("gaderian:module=test");
 
         // Training
-        server.registerMBean(calculatorMBean, objectName);
-        serverControl.setThrowable(new NotCompliantMBeanException("Not compliant"));
+        expect(server.registerMBean(calculatorMBean, objectName)).andThrow(new NotCompliantMBeanException("Not compliant"));
 
-        server.registerMBean(null, objectName);
-        // Matcher must match both method calls, it's not possible to
-        // define multiple matchers
-        serverControl.setMatcher(new ArgumentsMatcher()
-        {
-            boolean firstCall = true;
-
-            public boolean matches(Object[] arg0, Object[] arg1)
-            {
-                if (firstCall)
-                {
-                    firstCall = false;
-                    EqualsMatcher matcher = new EqualsMatcher();
-                    return matcher.matches(arg0, arg1);
-                }
-
-                return arg1[0].getClass().equals(StandardMBean.class);
-            }
-
-            public String toString(Object[] arg0)
-            {
-                return "";
-            }
-        });
-        serverControl.setReturnValue(new ObjectInstance(objectName, StandardMBean.class.getName()));
-
-        replayControls();
+        expect(server.registerMBean( isA(StandardMBean.class), eq(objectName))).andReturn( new ObjectInstance(objectName, StandardMBean.class.getName()) );
+        
+        replayAllRegisteredMocks();
 
         MBeanRegistry mbeanRegistry = new MBeanRegistryImpl(errorHandler, log, server,
                 objectNameBuilder, null);
@@ -228,7 +181,7 @@ public class TestMBeanRegistry extends GaderianCoreTestCase
         // Management interface is specified
         mbeanRegistry.registerMBean(calculatorMBean, Calculator.class, objectName);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
 }

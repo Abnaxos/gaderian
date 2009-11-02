@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
 import org.ops4j.gaderian.ClassResolver;
 import org.ops4j.gaderian.impl.DefaultClassResolver;
 
@@ -31,6 +32,8 @@ public class ConstructorAutowireTarget
     private StringHolder _stringHolder;
 
     private ClassResolver _classResolver;
+
+    private Log _log;
 
     public ConstructorAutowireTarget(StringHolder holder)
     {

@@ -14,14 +14,14 @@
 
 package org.ops4j.gaderian.schema.rules;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.Element;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.SchemaProcessor;
-import org.ops4j.gaderian.test.AggregateArgumentsMatcher;
-import org.ops4j.gaderian.test.ArgumentMatcher;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.schema.rules.CreateObjectRule}.
@@ -33,22 +33,18 @@ public class TestCreateObjectRule extends GaderianCoreTestCase
 {
     private Module newModule(String className, Class result)
     {
-        MockControl control = newControl(Module.class);
-        Module module = (Module) control.getMock();
+        Module module = createMock(Module.class);
 
-        module.resolveType(className);
-        control.setReturnValue(result);
+        expect(module.resolveType(className)).andReturn( result);
 
         return module;
     }
 
     private Element newElement(Location location)
     {
-        MockControl control = newControl(Element.class);
-        Element element = (Element) control.getMock();
+        Element element  = createMock(Element.class);
 
-        element.getLocation();
-        control.setReturnValue(location);
+        expect(element.getLocation()).andReturn( location );
 
         return element;
     }
@@ -59,41 +55,33 @@ public class TestCreateObjectRule extends GaderianCoreTestCase
         Module module = newModule("Bean", Bean.class);
         Element element = newElement(l);
 
-        MockControl control = newControl(SchemaProcessor.class);
-        SchemaProcessor processor = (SchemaProcessor) control.getMock();
+        SchemaProcessor processor = createMock(SchemaProcessor.class);
 
-        processor.getDefiningModule();
-        control.setReturnValue(module);
+        expect(processor.getDefiningModule()).andReturn( module );
 
-        processor.push(new Bean());
-        control.setMatcher(new AggregateArgumentsMatcher(new ArgumentMatcher()
-        {
-            public boolean compareArguments(Object expected, Object actual)
-            {
-                Bean b = (Bean) actual;
-
-                assertEquals("Gaderian", b.getValue());
-                assertSame(l, b.getLocation());
-
-                return true;
-            }
-        }));
-
-        replayControls();
+        final Capture<Bean> capture = new Capture<Bean>();
+        processor.push(EasyMock.capture( capture ));
+        replayAllRegisteredMocks();
 
         CreateObjectRule rule = new CreateObjectRule("Bean,value=Gaderian");
 
         rule.begin(processor, element);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
-        processor.pop();
-        control.setReturnValue(null);
+        Bean b = capture.getValue();
 
-        replayControls();
+        assertEquals("Gaderian", b.getValue());
+        assertSame(l, b.getLocation());
+                
+        capture.getValue();
+
+        expect(processor.pop()).andReturn( null );
+
+        replayAllRegisteredMocks();
 
         rule.end(processor, element);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

@@ -16,12 +16,12 @@ package org.ops4j.gaderian.service.impl;
 
 import java.util.Collections;
 
+import org.easymock.EasyMock;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.rules.SmartTranslator;
 import org.ops4j.gaderian.service.ObjectProvider;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.service.impl.ObjectTranslator}.
@@ -35,66 +35,65 @@ public class TestObjectTranslator extends GaderianCoreTestCase
     {
         ObjectTranslator ot = new ObjectTranslator();
 
-        Module module = (Module) newMock(Module.class);
+        Module module = createMock(Module.class);
 
         ot.setContributions(Collections.EMPTY_MAP);
 
-        module.getTranslator("smart");
-        getControl(module).setReturnValue(new SmartTranslator());
+        EasyMock.expect(module.getTranslator("smart")).andReturn(new SmartTranslator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object result = ot.translate(module, Object.class, "99", null);
 
         assertEquals("99", result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testUnknownPrefix()
     {
         ObjectTranslator ot = new ObjectTranslator();
 
-        Module module = (Module) newMock(Module.class);
+        Module module = createMock(Module.class);
 
-        ErrorLog el = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog el = createMock(ErrorLog.class);
 
         ot.setErrorLog(el);
         ot.setContributions(Collections.EMPTY_MAP);
 
         el.error("No object provider exists for prefix 'zap'.", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Object result = ot.translate(module, Object.class, "zap:foo", null);
 
         assertNull(result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testSuccess()
     {
-        MockControl c = newControl(ObjectProvider.class);
-        ObjectProvider p = (ObjectProvider) c.getMock();
+        ObjectProvider p = createMock(ObjectProvider.class);
 
         ObjectTranslator ot = new ObjectTranslator();
         ot.setContributions(Collections.singletonMap("fetch", p));
 
-        Module module = (Module) newMock(Module.class);
+        Module module = createMock(Module.class);
 
-        p.provideObject(module, Integer.class, "zap", null);
         Object value = new Integer(13);
 
-        c.setReturnValue(value);
+        EasyMock.expect(p.provideObject(module, Integer.class, "zap", null)).andReturn( value );
 
-        replayControls();
+
+
+        replayAllRegisteredMocks();
 
         Object result = ot.translate(module, Integer.class, "fetch:zap", null);
 
         assertSame(value, result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNullInput()

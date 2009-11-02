@@ -15,25 +15,13 @@
 package gaderian.test.services;
 
 import gaderian.test.services.impl.StringHolderImpl;
-
 import org.apache.commons.logging.Log;
-import org.ops4j.gaderian.AssemblyParameters;
-import org.ops4j.gaderian.ClassResolver;
-import org.ops4j.gaderian.ErrorHandler;
-import org.ops4j.gaderian.ErrorLog;
-import org.ops4j.gaderian.Messages;
-import org.ops4j.gaderian.Registry;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.service.impl.AssemblyInstructionImpl;
-import org.ops4j.gaderian.service.impl.BuilderClassResolverFacet;
-import org.ops4j.gaderian.service.impl.BuilderErrorHandlerFacet;
-import org.ops4j.gaderian.service.impl.BuilderErrorLogFacet;
-import org.ops4j.gaderian.service.impl.BuilderFacet;
-import org.ops4j.gaderian.service.impl.BuilderLogFacet;
-import org.ops4j.gaderian.service.impl.BuilderMessagesFacet;
-import org.ops4j.gaderian.service.impl.BuilderServiceIdFacet;
+import org.ops4j.gaderian.service.impl.*;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for the dependency injection logic of {@link AssemblyInstructionImpl} and various
@@ -82,7 +70,7 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         trainGetInvokingModule(p, m);
         trainGetErrorHandler(m, eh);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BuilderFacet f = new BuilderErrorHandlerFacet();
 
@@ -90,7 +78,7 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
 
         assertSame(eh, actual);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testBuilderClassResolverFacet()
@@ -102,7 +90,7 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         trainGetInvokingModule(p, m);
         trainGetClassResolver(m, cr);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         BuilderClassResolverFacet fc = new BuilderClassResolverFacet();
 
@@ -110,41 +98,38 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
 
         assertSame(cr, result);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     protected AssemblyParameters newParameters()
     {
-        final MockControl control = MockControl.createNiceControl(AssemblyParameters.class);
-        addControl(control);
-        return (AssemblyParameters) control.getMock();
+        return createMock(AssemblyParameters.class);
     }
 
     protected Module newModule()
     {
-        final MockControl control = MockControl.createNiceControl(Module.class);
-        addControl(control);
-        return (Module) control.getMock();
+        return createMock(Module.class);
+
     }
 
     protected ErrorHandler newErrorHandler()
     {
-        return (ErrorHandler) newMock(ErrorHandler.class);
+        return createMock(ErrorHandler.class);
     }
 
     protected Log newLog()
     {
-        return (Log) newMock(Log.class);
+        return createMock(Log.class);
     }
 
     protected Messages newMessages()
     {
-        return (Messages) newMock(Messages.class);
+        return createMock(Messages.class);
     }
 
     protected ErrorLog newErrorLog()
     {
-        return (ErrorLog) newMock(ErrorLog.class);
+        return createMock(ErrorLog.class);
     }
 
     public void testAutowire()
@@ -156,11 +141,11 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         Messages messages = newMessages();
         ErrorLog errorLog = newErrorLog();
 
-        AutowireTarget t = (AutowireTarget) newMock(AutowireTarget.class);
+        AutowireTarget t = createMock(AutowireTarget.class);
 
         trainGetInvokingModule(fp, module);
 
-        trainGetLog(fp, log);
+        trainGetLog(fp, log, 1 );
         t.setLog(log);
         trainDebug(fp, log, "Autowired property log to " + log);
 
@@ -184,7 +169,7 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         t.setErrorLog(errorLog);
         trainDebug(fp, log, "Autowired property errorLog to " + errorLog);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         AssemblyInstructionImpl p = new AssemblyInstructionImpl();
 
@@ -197,64 +182,54 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
 
         p.assemble(t, fp);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     private void trainGetErrorLog(AssemblyParameters fp, ErrorLog errorLog)
     {
-        fp.getErrorLog();
-        setReturnValue(fp, errorLog);
+        expect(fp.getErrorLog()).andReturn(errorLog);
     }
 
     private void trainGetServiceId(AssemblyParameters fp)
     {
-        fp.getServiceId();
-        setReturnValue(fp, "foo.bar.Baz");
+        expect(fp.getServiceId()).andReturn("foo.bar.Baz");
     }
 
     private void trainGetErrorHandler(Module module, ErrorHandler eh)
     {
-        module.getErrorHandler();
-        setReturnValue(module, eh);
+        expect(module.getErrorHandler()).andReturn(eh);
     }
 
     private void trainGetMessages(Module module, Messages messages)
     {
-        module.getMessages();
-        setReturnValue(module, messages);
+        expect(module.getMessages()).andReturn(messages);
     }
 
     private void trainGetClassResolver(Module module, ClassResolver resolver)
     {
-        module.getClassResolver();
-        setReturnValue(module, resolver);
+        expect(module.getClassResolver()).andReturn(resolver);
     }
 
     private void trainGetInvokingModule(AssemblyParameters fp, Module module)
     {
-        fp.getInvokingModule();
-        getControl(fp).setDefaultReturnValue(module);
+        expect(fp.getInvokingModule()).andReturn(module).atLeastOnce();
     }
 
     protected void trainGetServiceId(AssemblyParameters fp, String serviceId)
     {
-        fp.getServiceId();
-        getControl(fp).setDefaultReturnValue(serviceId);
+        expect(fp.getServiceId()).andReturn( serviceId );
     }
 
-    protected void trainGetLog(AssemblyParameters fp, Log log)
+    protected void trainGetLog( AssemblyParameters fp, Log log, final int times )
     {
-        fp.getLog();
-        getControl(fp).setDefaultReturnValue(log);
+        expect(fp.getLog()).andReturn( log ).times( times );
     }
 
     private void trainDebug(AssemblyParameters fp, Log log, String string)
     {
-        fp.getLog();
-        setReturnValue(fp, log);
+        expect(fp.getLog()).andReturn( log );
 
-        log.isDebugEnabled();
-        setReturnValue(log, true);
+        expect(log.isDebugEnabled()).andReturn( true);
 
         log.debug(string);
     }
@@ -267,19 +242,19 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         AssemblyParameters fp = newParameters();
         Module module = newModule();
 
-        InitializeFixture f = (InitializeFixture) newMock(InitializeFixture.class);
+        InitializeFixture f = createMock(InitializeFixture.class);
 
-        trainGetInvokingModule(fp, module);
+        //trainGetInvokingModule(fp, module);
 
         f.initializeService();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         AssemblyInstructionImpl p = new AssemblyInstructionImpl();
 
         p.assemble(f, fp);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -290,20 +265,20 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         AssemblyParameters fp = newParameters();
         Module module = newModule();
 
-        InitializeFixture f = (InitializeFixture) newMock(InitializeFixture.class);
+        InitializeFixture f = createMock(InitializeFixture.class);
 
-        trainGetInvokingModule(fp, module);
+        // trainGetInvokingModule(fp, module);
 
         f.initializeCustom();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         AssemblyInstructionImpl p = new AssemblyInstructionImpl();
         p.setInitializeMethod("initializeCustom");
 
         p.assemble(f, fp);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAutowireServices()
@@ -312,45 +287,43 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         Module module = newModule();
         Log log = newLog();
 
-        ServiceAutowireTarget f = (ServiceAutowireTarget) newMock(ServiceAutowireTarget.class);
+        ServiceAutowireTarget f = createMock(ServiceAutowireTarget.class);
 
         trainGetInvokingModule(fp, module);
-        trainGetLog(fp, log);
+        trainGetLog(fp, log, 3 );
 
         StringHolder h = new StringHolderImpl();
 
         trainContainsService(module, String.class, false);
         trainContainsService(module, StringHolder.class, true);
+        trainContainsService(module, isA( Class.class ), false);
         trainGetService(module, StringHolder.class, h);
         f.setStringHolder(h);
         trainIsDebugEnabled(log);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         AssemblyInstructionImpl p = new AssemblyInstructionImpl();
         p.setAutowireServices(true);
 
         p.assemble(f, fp);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     private void trainIsDebugEnabled(Log log)
     {
-        log.isDebugEnabled();
-        setReturnValue(log, false);
+        expect(log.isDebugEnabled()).andReturn(false);
     }
 
     private void trainGetService(Module module, Class serviceInterface, Object service)
     {
-        module.getService(serviceInterface);
-        setReturnValue(module, service);
+        expect(module.getService(serviceInterface)).andReturn(service);
     }
 
     private void trainContainsService(Module module, Class serviceInterface, boolean containsService)
     {
-        module.containsService(serviceInterface);
-        setReturnValue(module, containsService);
+        expect(module.containsService(serviceInterface)).andReturn(containsService);
     }
 
     public void testAutowireServicesFailure()
@@ -359,21 +332,22 @@ public class TestAssemblyInstruction extends GaderianCoreTestCase
         Module module = newModule();
         Log log = newLog();
 
-        ServiceAutowireTarget f = (ServiceAutowireTarget) newMock(ServiceAutowireTarget.class);
+        ServiceAutowireTarget f = createMock(ServiceAutowireTarget.class);
 
         trainGetInvokingModule(fp, module);
-        trainGetLog(fp, log);
+        trainGetLog(fp, log, 3 );
 
         trainContainsService(module, String.class, false);
         trainContainsService(module, StringHolder.class, false);
+        trainContainsService(module, isA( Class.class ), false);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         AssemblyInstructionImpl p = new AssemblyInstructionImpl();
         p.setAutowireServices(true);
 
         p.assemble(f, fp);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

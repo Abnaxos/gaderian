@@ -14,16 +14,8 @@
 
 package org.ops4j.gaderian.conditional;
 
-import org.ops4j.gaderian.conditional.AndEvaluator;
-import org.ops4j.gaderian.conditional.ClassNameEvaluator;
-import org.ops4j.gaderian.conditional.EvaluationContext;
-import org.ops4j.gaderian.conditional.Node;
-import org.ops4j.gaderian.conditional.NodeImpl;
-import org.ops4j.gaderian.conditional.NotEvaluator;
-import org.ops4j.gaderian.conditional.OrEvaluator;
-import org.ops4j.gaderian.conditional.PropertyEvaluator;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests for {@link org.ops4j.gaderian.conditional.PropertyEvaluator}.
@@ -35,58 +27,51 @@ public class TestEvaluators extends GaderianCoreTestCase
 {
     private EvaluationContext newContext()
     {
-        return (EvaluationContext) newMock(EvaluationContext.class);
+        return createMock(EvaluationContext.class);
     }
 
     private Node newNode(EvaluationContext context, boolean value)
     {
-        MockControl control = newControl(Node.class);
-        Node node = (Node) control.getMock();
+        Node node = newNode( );
 
-        node.evaluate(context);
-
-        control.setReturnValue(value);
+        expect(node.evaluate(context)).andReturn( value );
 
         return node;
     }
 
     private Node newNode()
     {
-        return (Node) newMock(Node.class);
+        return createMock(Node.class);
     }
 
     public void testPropertyEvaluator()
     {
-        MockControl control = newControl(EvaluationContext.class);
-        EvaluationContext context = (EvaluationContext) control.getMock();
+        EvaluationContext context = createMock(EvaluationContext.class);
 
-        context.isPropertySet("foo.bar");
-        control.setReturnValue(true);
+        expect(context.isPropertySet("foo.bar")).andReturn( true );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         PropertyEvaluator pe = new PropertyEvaluator("foo.bar");
 
         assertEquals(true, pe.evaluate(context, null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testClassNameEvaluator()
     {
-        MockControl control = newControl(EvaluationContext.class);
-        EvaluationContext context = (EvaluationContext) control.getMock();
+        EvaluationContext context = createMock(EvaluationContext.class);
 
-        context.doesClassExist("foo.bar.Baz");
-        control.setReturnValue(true);
+        expect(context.doesClassExist("foo.bar.Baz")).andReturn( true );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         ClassNameEvaluator e = new ClassNameEvaluator("foo.bar.Baz");
 
         assertEquals(true, e.evaluate(context, null));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNotEvaluator()
@@ -96,11 +81,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, null, new NotEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAndEvaluatorTrue()
@@ -111,11 +96,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new AndEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(true, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAndEvaluatorShortcicuit()
@@ -126,11 +111,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new AndEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testAndEvaluatorFalse()
@@ -141,11 +126,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new AndEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testOrEvaluatorTrue()
@@ -156,11 +141,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new OrEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(true, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testOrEvaluatorShortcicuit()
@@ -171,11 +156,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new OrEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(true, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testOrEvaluatorFalse()
@@ -186,11 +171,11 @@ public class TestEvaluators extends GaderianCoreTestCase
 
         Node node = new NodeImpl(left, right, new OrEvaluator());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         assertEquals(false, node.evaluate(context));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
 }

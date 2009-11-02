@@ -16,13 +16,13 @@ package org.ops4j.gaderian.impl;
 
 import java.util.Collections;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Occurances;
 import org.ops4j.gaderian.ServiceImplementationFactory;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Tests some error conditions related to invoking a service factory.
@@ -33,58 +33,46 @@ public class TestInvokeFactoryServiceConstructor extends GaderianCoreTestCase
 {
     public void testWrongNumberOfParameters()
     {
-        MockControl moduleControl = newControl(Module.class);
-        Module module = (Module) moduleControl.getMock();
+        Module module = createMock( Module.class );
 
-        MockControl factoryPointControl = newControl(ServicePoint.class);
-        ServicePoint factoryPoint = (ServicePoint) factoryPointControl.getMock();
+        ServicePoint factoryPoint = createMock( ServicePoint.class );
 
-        MockControl factoryControl = newControl(ServiceImplementationFactory.class);
-        ServiceImplementationFactory factory = (ServiceImplementationFactory) factoryControl
-                .getMock();
-
-        MockControl pointControl = newControl(ServicePoint.class);
-        ServicePoint point = (ServicePoint) pointControl.getMock();
+        ServiceImplementationFactory factory = createMock( ServiceImplementationFactory.class );
+        ServicePoint point = createMock( ServicePoint.class );
 
         InvokeFactoryServiceConstructor c = new InvokeFactoryServiceConstructor();
 
-        ErrorLog log = (ErrorLog) newMock(ErrorLog.class);
+        ErrorLog log = createMock( ErrorLog.class );
 
         // Training !
 
-        point.getErrorLog();
-        pointControl.setReturnValue(log);
+        expect(point.getErrorLog()).andReturn( log );
 
-        module.getServicePoint("foo.bar.Baz");
-        moduleControl.setReturnValue(factoryPoint);
+        expect(module.getServicePoint( "foo.bar.Baz" )).andReturn( factoryPoint );
 
-        factoryPoint.getParametersCount();
-        factoryPointControl.setReturnValue(Occurances.REQUIRED);
+        expect(factoryPoint.getParametersCount()).andReturn( Occurances.REQUIRED );
 
-        factoryPoint.getService(ServiceImplementationFactory.class);
-        factoryPointControl.setReturnValue(factory);
+        expect(factoryPoint.getService( ServiceImplementationFactory.class )).andReturn( factory );
 
-        factoryPoint.getParametersSchema();
-        factoryPointControl.setReturnValue(null);
+        expect(factoryPoint.getParametersSchema()).andReturn( null );
 
         String message = ImplMessages
-                .wrongNumberOfParameters("foo.bar.Baz", 0, Occurances.REQUIRED);
+                .wrongNumberOfParameters( "foo.bar.Baz", 0, Occurances.REQUIRED );
 
-        log.error(message, null, null);
+        log.error( message, null, null );
 
-        factory.createCoreServiceImplementation(new ServiceImplementationFactoryParametersImpl(
-                point, module, Collections.EMPTY_LIST));
-        factoryControl.setReturnValue("THE SERVICE");
+        expect(factory.createCoreServiceImplementation( new ServiceImplementationFactoryParametersImpl(
+                point, module, Collections.EMPTY_LIST ) )).andReturn( "THE SERVICE" );
 
-        replayControls();
+        replayAllRegisteredMocks();
 
-        c.setContributingModule(module);
-        c.setFactoryServiceId("foo.bar.Baz");
-        c.setParameters(Collections.EMPTY_LIST);
-        c.setServiceExtensionPoint(point);
+        c.setContributingModule( module );
+        c.setFactoryServiceId( "foo.bar.Baz" );
+        c.setParameters( Collections.EMPTY_LIST );
+        c.setServiceExtensionPoint( point );
 
-        assertEquals("THE SERVICE", c.constructCoreServiceImplementation());
+        assertEquals( "THE SERVICE", c.constructCoreServiceImplementation() );
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

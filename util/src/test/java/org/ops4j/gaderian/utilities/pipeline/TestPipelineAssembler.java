@@ -18,10 +18,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.easymock.MockControl;
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ErrorLog;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
+import org.ops4j.gaderian.impl.BaseLocatable;
 import org.ops4j.gaderian.service.ClassFactory;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
@@ -65,7 +66,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
                 null,
                 null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         PipelineAssembler pa = new PipelineAssembler(log, "foo.bar", StandardService.class,
                 StandardFilter.class, null, null);
@@ -78,7 +79,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         assertSame(ss1, pa.getTerminator());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIncorrectTerminatorType()
@@ -89,7 +90,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
                 + "org.ops4j.gaderian.utilities.pipeline.StandardService suitable for "
                 + "use as part of the pipeline for service foo.bar.", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         PipelineAssembler pa = new PipelineAssembler(log, "foo.bar", StandardService.class,
                 StandardFilter.class, null, null);
@@ -98,7 +99,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         assertNull(pa.getTerminator());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIncorrectFilterType()
@@ -109,14 +110,14 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
                 + "org.ops4j.gaderian.utilities.pipeline.StandardFilter suitable for "
                 + "use as part of the pipeline for service foo.bar.", null, null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         PipelineAssembler pa = new PipelineAssembler(log, "foo.bar", StandardService.class,
                 StandardFilter.class, null, null);
 
         pa.addFilter("filter-name", null, null, "-String-", null);
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPassThruToPlaceholder()
@@ -128,7 +129,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         ErrorLog log = newErrorLog();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         PipelineAssembler pa = new PipelineAssembler(log, "foo.bar", StandardService.class,
                 StandardFilter.class, new ClassFactoryImpl(), dib);
@@ -137,7 +138,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         assertEquals(0, pipeline.run(99));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testFilterChain()
@@ -152,7 +153,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
         PipelineAssembler pa = new PipelineAssembler(log, "foo.bar", StandardService.class,
                 StandardFilter.class, new ClassFactoryImpl(), dib);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         pa.setTerminator(new StandardInner("ss"), null);
 
@@ -190,14 +191,12 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
         assertEquals(14, pipeline.run(5));
         assertEquals(24, pipeline.run(10));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPipelineFactoryWithTerminator()
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         ClassFactory cf = new ClassFactoryImpl();
         DefaultImplementationBuilderImpl dib = new DefaultImplementationBuilderImpl();
@@ -213,7 +212,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
         pp.setFilterInterface(StandardFilter.class);
         pp.setTerminator(new StandardInner("terminator"));
 
-        List l = new ArrayList();
+        List<FilterContribution> l = new ArrayList<FilterContribution>();
 
         FilterContribution fc = new FilterContribution();
         fc.setFilter(new StandardFilterImpl());
@@ -223,30 +222,25 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         pp.setPipelineConfiguration(l);
 
-        fp.getParameters();
-        fpc.setReturnValue(Collections.singletonList(pp));
+        expect(fp.getParameters()).andReturn(Collections.singletonList(pp));
 
-        fp.getServiceId();
-        fpc.setReturnValue("example");
+        expect(fp.getServiceId()).andReturn("example");
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(StandardService.class);
+        expect(fp.getServiceInterface()).andReturn(StandardService.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         StandardService s = (StandardService) factory.createCoreServiceImplementation(fp);
 
         assertEquals(24, s.run(12));
         assertEquals(18, s.run(9));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPipelineFactoryNoTerminator()
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         ClassFactory cf = new ClassFactoryImpl();
         DefaultImplementationBuilderImpl dib = new DefaultImplementationBuilderImpl();
@@ -261,7 +255,7 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
         PipelineParameters pp = new PipelineParameters();
         pp.setFilterInterface(StandardFilter.class);
 
-        List l = new ArrayList();
+        List<BaseLocatable> l = new ArrayList<BaseLocatable>();
 
         FilterContribution fc = new FilterContribution();
         fc.setFilter(new StandardFilterImpl());
@@ -276,28 +270,25 @@ public class TestPipelineAssembler extends GaderianCoreTestCase
 
         pp.setPipelineConfiguration(l);
 
-        fp.getParameters();
-        fpc.setReturnValue(Collections.singletonList(pp));
+        expect(fp.getParameters()).andReturn(Collections.singletonList(pp));
 
-        fp.getServiceId();
-        fpc.setReturnValue("example");
+        expect(fp.getServiceId()).andReturn("example");
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(StandardService.class);
+        expect(fp.getServiceInterface()).andReturn(StandardService.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         StandardService s = (StandardService) factory.createCoreServiceImplementation(fp);
 
         assertEquals(24, s.run(12));
         assertEquals(18, s.run(9));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     private ErrorLog newErrorLog()
     {
-        return (ErrorLog) newMock(ErrorLog.class);
+        return createMock(ErrorLog.class);
     }
 
     /**

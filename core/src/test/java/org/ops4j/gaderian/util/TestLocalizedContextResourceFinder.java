@@ -17,11 +17,10 @@ package org.ops4j.gaderian.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
-
 import javax.servlet.ServletContext;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.easymock.MockControl;
 
 /**
  * Test for {@link org.ops4j.gaderian.util.LocalizedResourceFinder}.
@@ -33,16 +32,13 @@ public class TestLocalizedContextResourceFinder extends GaderianCoreTestCase
 {
     public void testFound() throws Exception
     {
-        MockControl control = newControl(ServletContext.class);
-        ServletContext sc = (ServletContext) control.getMock();
+        ServletContext sc = createMock(ServletContext.class);
 
-        sc.getResource("/foo/bar/baz_en_US.html");
-        control.setReturnValue(null);
+        expect(sc.getResource("/foo/bar/baz_en_US.html")).andReturn( null );
 
-        sc.getResource("/foo/bar/baz_en.html");
-        control.setReturnValue(new URL("http://foo.com"));
+        expect(sc.getResource("/foo/bar/baz_en.html")).andReturn( new URL("http://foo.com"));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         LocalizedContextResourceFinder f = new LocalizedContextResourceFinder(sc);
 
@@ -51,59 +47,51 @@ public class TestLocalizedContextResourceFinder extends GaderianCoreTestCase
         assertEquals("/foo/bar/baz_en.html", lr.getResourcePath());
         assertEquals(Locale.ENGLISH, lr.getResourceLocale());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
 
     }
 
     public void testNotFound() throws Exception
     {
-        MockControl control = newControl(ServletContext.class);
-        ServletContext sc = (ServletContext) control.getMock();
+        ServletContext sc = createMock(ServletContext.class);
 
-        sc.getResource("/foo/bar/baz_en.html");
-        control.setReturnValue(null);
+        expect(sc.getResource("/foo/bar/baz_en.html")).andReturn(null);
 
-        sc.getResource("/foo/bar/baz.html");
-        control.setReturnValue(null);
+        expect(sc.getResource("/foo/bar/baz.html")).andReturn(null);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         LocalizedContextResourceFinder f = new LocalizedContextResourceFinder(sc);
 
         assertNull(f.resolve("/foo/bar/baz.html", Locale.ENGLISH));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testNotFoundException() throws Exception
     {
-        MockControl control = newControl(ServletContext.class);
-        ServletContext sc = (ServletContext) control.getMock();
+        ServletContext sc = createMock(ServletContext.class);
 
-        sc.getResource("/foo/bar/baz_en.html");
-        control.setThrowable(new MalformedURLException());
+        expect(sc.getResource("/foo/bar/baz_en.html")).andThrow(new MalformedURLException());
 
-        sc.getResource("/foo/bar/baz.html");
-        control.setThrowable(new MalformedURLException());
+        expect(sc.getResource("/foo/bar/baz.html")).andThrow(new MalformedURLException());
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         LocalizedContextResourceFinder f = new LocalizedContextResourceFinder(sc);
 
         assertNull(f.resolve("/foo/bar/baz.html", Locale.ENGLISH));
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testExtensionlessResource() throws Exception
     {
-        MockControl control = newControl(ServletContext.class);
-        ServletContext sc = (ServletContext) control.getMock();
+        ServletContext sc = createMock(ServletContext.class);
 
-        sc.getResource("/foo/bar/baz");
-        control.setReturnValue(new URL("http://foo.com"));
+        expect(sc.getResource("/foo/bar/baz")).andReturn(new URL("http://foo.com"));
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         LocalizedContextResourceFinder f = new LocalizedContextResourceFinder(sc);
 
@@ -112,6 +100,6 @@ public class TestLocalizedContextResourceFinder extends GaderianCoreTestCase
         assertEquals("/foo/bar/baz", lr.getResourcePath());
         assertNull(lr.getResourceLocale());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }

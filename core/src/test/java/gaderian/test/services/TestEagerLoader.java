@@ -14,11 +14,10 @@
 
 package gaderian.test.services;
 
-import gaderian.test.FrameworkTestCase;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import gaderian.test.FrameworkTestCase;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.service.impl.EagerLoader;
 
@@ -34,11 +33,11 @@ public class TestEagerLoader extends FrameworkTestCase
         EagerLoader el = new EagerLoader();
         List l = new ArrayList();
 
-        ServicePoint sp = (ServicePoint) newMock(ServicePoint.class);
+        ServicePoint sp = (ServicePoint) createMock(ServicePoint.class);
 
         sp.forceServiceInstantiation();
    
-		replayControls();
+		replayAllRegisteredMocks();
 
         l.add(sp);
 
@@ -46,7 +45,7 @@ public class TestEagerLoader extends FrameworkTestCase
 
         el.run();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testEagerLoadSingleton() throws Exception

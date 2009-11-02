@@ -20,15 +20,14 @@ import java.lang.reflect.Proxy;
 import java.util.Collections;
 import java.util.List;
 
+import static org.easymock.EasyMock.expect;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Gaderian;
 import org.ops4j.gaderian.Registry;
 import org.ops4j.gaderian.ServiceImplementationFactoryParameters;
-import org.ops4j.gaderian.test.GaderianCoreTestCase;
-import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.internal.ServicePoint;
 import org.ops4j.gaderian.service.impl.ClassFactoryImpl;
-import org.easymock.MockControl;
+import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
  * Tests for {@link org.ops4j.gaderian.utilities.impl.ServicePropertyFactory}.
@@ -50,13 +49,10 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
     {
         ServicePropertyFactoryParameter p = new ServicePropertyFactoryParameter();
 
-        final MockControl spControl = newControl( ServicePoint.class );
-        final ServicePoint sp = ( ServicePoint )spControl.getMock();
+        final ServicePoint sp= createMock( ServicePoint.class );
 
-        sp.getServiceInterface();
-        spControl.setReturnValue( WonkSource.class );
-        sp.getService( WonkSource.class );
-        spControl.setReturnValue( service );
+        expect(sp.getServiceInterface()).andReturn( WonkSource.class );
+        expect(sp.getService( WonkSource.class )).andReturn( service );
         p.setServicePoint(sp);
         p.setPropertyName(propertyName);
         p.setLocation(newLocation());
@@ -68,29 +64,22 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
     {
         ServicePropertyFactory f = newFactory();
 
-        MockControl wonkControl = newControl(Wonk.class);
-        Wonk wonk = (Wonk) wonkControl.getMock();
+        Wonk wonk = createMock(Wonk.class);
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         List parameters = newParameters(new WonkHolder(wonk), "wonk");
 
         wonk.wonkVoid();
-        wonk.wonkString("zebra");
-        wonkControl.setReturnValue("stripes");
+        expect(wonk.wonkString("zebra")).andReturn("stripes");
 
-        fp.getParameters();
-        fpc.setReturnValue(parameters);
+        expect(fp.getParameters()).andReturn(parameters);
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Wonk.class);
+        expect(fp.getServiceInterface()).andReturn(Wonk.class);
 
-        fp.getServiceId();
-        fpc.setReturnValue("foo.bar");
+        expect(fp.getServiceId()).andReturn("foo.bar");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Wonk proxy = (Wonk) f.createCoreServiceImplementation(fp);
 
@@ -101,19 +90,17 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
                 "<ServicePropertyProxy foo.bar(org.ops4j.gaderian.utilities.impl.Wonk) for property 'wonk' of <WonkHolder>>",
                 proxy.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testWithJdkProxies()
     {
     	ServicePropertyFactory f = newFactory();
 
-        MockControl wonkControl = newControl(Wonk.class);
-        final Wonk wonk = (Wonk) wonkControl.getMock();
+        Wonk wonk = createMock(Wonk.class);
 
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
+
         final WonkHolder delegate = new WonkHolder( wonk );
         final WonkSource jdkProxy = ( WonkSource )Proxy.newProxyInstance( WonkSource.class.getClassLoader(), new Class[] { WonkSource.class }, new InvocationHandler()
         		{
@@ -125,19 +112,15 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
         List parameters = newParameters(jdkProxy, "wonk");
 
         wonk.wonkVoid();
-        wonk.wonkString("zebra");
-        wonkControl.setReturnValue("stripes");
+        expect(wonk.wonkString("zebra")).andReturn("stripes");
 
-        fp.getParameters();
-        fpc.setReturnValue(parameters);
+        expect(fp.getParameters()).andReturn(parameters);
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Wonk.class);
+        expect(fp.getServiceInterface()).andReturn(Wonk.class);
 
-        fp.getServiceId();
-        fpc.setReturnValue("foo.bar");
+        expect(fp.getServiceId()).andReturn("foo.bar");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Wonk proxy = (Wonk) f.createCoreServiceImplementation(fp);
 
@@ -148,28 +131,23 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
                 "<ServicePropertyProxy foo.bar(org.ops4j.gaderian.utilities.impl.Wonk) for property 'wonk' of <WonkHolder>>",
                 proxy.toString());
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
     public void testPropertyNull()
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         ServicePropertyFactory f = newFactory();
 
         List parameters = newParameters(new WonkHolder(null), "wonk");
 
-        fp.getParameters();
-        fpc.setReturnValue(parameters);
+       expect(fp.getParameters()).andReturn(parameters);
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Wonk.class);
+        expect(fp.getServiceInterface()).andReturn(Wonk.class);
 
-        fp.getServiceId();
-        fpc.setReturnValue("foo.bar");
+        expect(fp.getServiceId()).andReturn("foo.bar");
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         Wonk proxy = (Wonk) f.createCoreServiceImplementation(fp);
 
@@ -183,23 +161,20 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
             assertEquals("Property 'wonk' of <WonkHolder> is null.", ex.getMessage());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testWriteOnlyProperty()
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         ServicePropertyFactory f = newFactory();
 
         List parameters = newParameters(new WonkHolder(null), "writeOnly");
 
-        fp.getParameters();
-        fpc.setReturnValue(parameters);
+        expect(fp.getParameters()).andReturn(parameters);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -212,26 +187,22 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
             assertEquals(Gaderian.getLocation(parameters.get(0)), ex.getLocation());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testPropertyTypeMismatch()
     {
-        MockControl fpc = newControl(ServiceImplementationFactoryParameters.class);
-        ServiceImplementationFactoryParameters fp = (ServiceImplementationFactoryParameters) fpc
-                .getMock();
+        ServiceImplementationFactoryParameters fp = createMock(ServiceImplementationFactoryParameters.class);
 
         ServicePropertyFactory f = newFactory();
 
         List parameters = newParameters(new WonkHolder(null), "class");
 
-        fp.getParameters();
-        fpc.setReturnValue(parameters);
+       expect(fp.getParameters()).andReturn(parameters);
 
-        fp.getServiceInterface();
-        fpc.setReturnValue(Wonk.class);
+       expect(fp.getServiceInterface()).andReturn(Wonk.class);
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         try
         {
@@ -246,7 +217,7 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
             assertEquals(Gaderian.getLocation(parameters.get(0)), ex.getLocation());
         }
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     public void testIntegrated() throws Exception
@@ -256,20 +227,20 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
         WonkSource source = r.getService(WonkSource.class);
         Wonk wonkService = r.getService(Wonk.class);
 
-        Wonk wonk = (Wonk) newMock(Wonk.class);
+        Wonk wonk = createMock(Wonk.class);
 
         source.setWonk(wonk);
 
         wonk.wonkVoid();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         // Invoking this (on the proxy) will cause the corresponding
         // method (on the mock) to be invoked.
 
         wonkService.wonkVoid();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 
     /**
@@ -283,19 +254,19 @@ public class TestServicePropertyFactory extends GaderianCoreTestCase
         WonkSource source = r.getService(WonkSource.class);
         Wonk wonkService = r.getService(Wonk.class);
 
-        Wonk wonk = (Wonk) newMock(Wonk.class);
+        Wonk wonk = createMock(Wonk.class);
 
         source.setWonk(wonk);
 
         wonk.wonkVoid();
 
-        replayControls();
+        replayAllRegisteredMocks();
 
         // Invoking this (on the proxy) will cause the corresponding
         // method (on the mock) to be invoked.
 
         wonkService.wonkVoid();
 
-        verifyControls();
+        verifyAllRegisteredMocks();
     }
 }
