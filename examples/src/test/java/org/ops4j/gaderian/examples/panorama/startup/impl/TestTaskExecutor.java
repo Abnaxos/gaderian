@@ -29,7 +29,7 @@ import org.ops4j.gaderian.impl.ModuleMessages;
 import org.ops4j.gaderian.internal.MessageFinder;
 import org.ops4j.gaderian.service.ThreadLocale;
 import org.ops4j.gaderian.service.impl.ThreadLocaleImpl;
-import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 import org.ops4j.gaderian.util.ClasspathResource;
 
 
@@ -38,7 +38,7 @@ import org.ops4j.gaderian.util.ClasspathResource;
  *
  * @author Howard Lewis Ship
  */
-public class TestTaskExecutor extends GaderianCoreTestCase
+public class TestTaskExecutor extends GaderianTestCase
 {
     private static List _tokens = new ArrayList();
 

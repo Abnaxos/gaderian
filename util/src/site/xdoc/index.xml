@@ -20,10 +20,10 @@
       <title>Gaderian Util</title>
    </properties>
    <body>
-       <section name="Gaderian Util">
+       <section name="Gaderian Utililities">
            <p>
-               The Gaderian standard util (module
-               <a href="module-report/module/gaderian.utilities.html">gaderian.util</a>), provides common
+               The Gaderian standard utililities (module
+               <a href="module-report/module/gaderian.utilities.html">gaderian.utililities</a>), provides common
                functionality used in most Gaderian applications.
            </p>
 

@@ -17,7 +17,6 @@ package org.ops4j.gaderian.utilities.impl;
 import javax.naming.Context;
 
 import org.ops4j.gaderian.impl.MessageFormatter;
-import org.ops4j.gaderian.service.ClassFabUtils;
 
 /**
  * Messages for the lib.impl package.
@@ -27,24 +26,6 @@ import org.ops4j.gaderian.service.ClassFabUtils;
 final class ImplMessages
 {
     private static final MessageFormatter FORMATTER = new MessageFormatter(ImplMessages.class);
-
-    static String unableToCreateDefaultImplementation(Class interfaceType, Throwable cause)
-    {
-        return FORMATTER.format(
-                "unable-to-create-default-implementation",
-                interfaceType.getName(),
-                cause.getMessage());
-    }
-
-    static String notAnInterface(Class interfaceType)
-    {
-        return FORMATTER.format("not-an-interface", interfaceType.getName());
-    }
-
-    static String defaultImplementationDescription(Class interfaceType)
-    {
-        return FORMATTER.format("default-implementation-description", interfaceType.getName());
-    }
 
     static String ejbProxyDescription(String serviceId, Class serviceInterface, String jndiName)
     {
@@ -75,30 +56,4 @@ final class ImplMessages
         return FORMATTER.format("coordinator-locked", methodName);
     }
 
-    static String servicePropertyNotReadable(String propertyName, Object service)
-    {
-        return FORMATTER.format("service-property-not-readable", propertyName, service);
-    }
-
-    static String servicePropertyWrongType(String propertyName, Object service, Class actualType,
-            Class expectedType)
-    {
-        return FORMATTER.format(
-                "service-property-wrong-type",
-                new Object[]
-                { propertyName, service, ClassFabUtils.getJavaClassName(actualType),
-                        expectedType.getName() });
-    }
-
-    static String servicePropertyWasNull(String propertyName, Object service)
-    {
-        return FORMATTER.format("service-property-was-null", propertyName, service);
-    }
-
-    static String servicePropertyToString(String serviceId, Class serviceInterface,
-            String propertyName, Object service)
-    {
-        return FORMATTER.format("service-property-to-string", new Object[]
-        { serviceId, serviceInterface.getName(), propertyName, service });
-    }
 }

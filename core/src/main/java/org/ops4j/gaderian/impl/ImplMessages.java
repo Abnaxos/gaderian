@@ -18,17 +18,13 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.ops4j.gaderian.Gaderian;
 import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.events.RegistryShutdownListener;
-import org.ops4j.gaderian.internal.ConfigurationPoint;
-import org.ops4j.gaderian.internal.ExtensionPoint;
-import org.ops4j.gaderian.internal.Module;
-import org.ops4j.gaderian.internal.ServiceInterceptorContribution;
-import org.ops4j.gaderian.internal.ServicePoint;
+import org.ops4j.gaderian.internal.*;
 import org.ops4j.gaderian.parse.ContributionDescriptor;
 import org.ops4j.gaderian.parse.DependencyDescriptor;
 import org.ops4j.gaderian.schema.SchemaProcessor;
+import org.ops4j.gaderian.service.ClassFabUtils;
 
 /**
  * Used to format messages used in errors and log output for classes within the impl package.
@@ -39,6 +35,51 @@ class ImplMessages
 {
     private static final MessageFormatter _formatter = new MessageFormatter(ImplMessages.class,
             "ImplStrings");
+
+     static String servicePropertyWrongType(String propertyName, Object service, Class actualType,
+            Class expectedType)
+    {
+        return _formatter.format(
+                "service-property-wrong-type",
+                new Object[]
+                { propertyName, service, ClassFabUtils.getJavaClassName(actualType),
+                        expectedType.getName() });
+    }
+
+    static String servicePropertyWasNull(String propertyName, Object service)
+    {
+        return _formatter.format("service-property-was-null", propertyName, service);
+    }
+
+    static String servicePropertyToString(String serviceId, Class serviceInterface,
+            String propertyName, Object service)
+    {
+        return _formatter.format("service-property-to-string", new Object[]
+        { serviceId, serviceInterface.getName(), propertyName, service });
+    }
+
+    static String servicePropertyNotReadable(String propertyName, Object service)
+    {
+        return _formatter.format("service-property-not-readable", propertyName, service);
+    }
+
+    static String unableToCreateDefaultImplementation(Class interfaceType, Throwable cause)
+    {
+        return _formatter.format(
+                "unable-to-create-default-implementation",
+                interfaceType.getName(),
+                cause.getMessage());
+    }
+
+    static String notAnInterface(Class interfaceType)
+    {
+        return _formatter.format("not-an-interface", interfaceType.getName());
+    }
+
+    static String defaultImplementationDescription(Class interfaceType)
+    {
+        return _formatter.format("default-implementation-description", interfaceType.getName());
+    }
 
     static String recursiveServiceBuild(ServicePoint point)
     {

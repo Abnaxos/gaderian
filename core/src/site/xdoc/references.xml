@@ -19,45 +19,89 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-    <title>References</title>
-  </properties>
-  <body>
-      <section name="References">
-          <p>Below is a list of reference information available for the various parts of Gaderian Framework</p>
-          <ul>
+        <title>References</title>
+    </properties>
+    <body>
+        <section name="References">
+            <p>Below is a list of reference information available for the various parts of Gaderian Core</p>
 
-              <li>
-                  <a href="SymbolSources.html">Symbol Sources</a>
-              </li>
-              <li>
-                  <a href="FactoryDefaults.html">Factory Defaults</a>
-              </li>
-              <li>
-                  <a href="ApplicationDefaults.html">Application Defaults</a>
-              </li>
-              <li>
-                  <a href="BuilderFactory.html">Builder Factory</a>
-              </li>
-              <li>
-                  <a href="LoggingInterceptor.html">Logging Interceptor</a>
-              </li>
-              <li>
-                  <a href="ObjectProviders.html">Object Providers</a>
-              </li>
-              <li>
-                  <a href="Translators.html">Translators</a>
-              </li>
-              <li>
-                  <a href="ServiceModels.html">Service Models</a>
-              </li>
-              <li>
-                  <a href="ThreadLocale.html">Thread Locale</a>
-              </li>
-              <li>
-                  <a href="ThreadLocalStorage.html">Thread Local Storage</a>
-              </li>
+            <subsection name="Service Instantiation">
+                <ul>
+                    <li>
+                        <a href="BuilderFactory.html">Builder Factory</a>
+                    </li>
+                    <li>
+                        <a href="JavaProxyFactory.html">Java Proxy Factory</a>
+                    </li>
+                    <li>
+                        <a href="PipelineFactory.html">Pipeline Factory</a>
+                    </li>
+                    <li>
+                        <a href="ServicePropertyFactory.html">Service Property Factory</a>
+                    </li>
+                    <li>
+                        <a href="StrategyFactory.html">Strategy Factory</a>
+                    </li>
+                    <li>
+                        <a href="ChainFactory.html">Chain Factory</a>
+                    </li>
+                    <li>
+                        <a href="DefaultImplementationFactory.html">Default Implementation Factory</a>
+                    </li>
+                </ul>
+            </subsection>
 
-          </ul>
-      </section>
-  </body>
+            <subsection name="Configuration">
+                <ul>
+                    <li>
+                        <a href="ObjectProviders.html">Object Providers</a>
+                    </li>
+                    <li>
+                        <a href="Translators.html">Translators</a>
+                    </li>
+
+
+                    <li>
+                        <a href="SymbolSources.html">Symbol Sources</a>
+                    </li>
+                    <li>
+                        <a href="FactoryDefaults.html">Factory Defaults</a>
+                    </li>
+                    <li>
+                        <a href="ApplicationDefaults.html">Application Defaults</a>
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Lifecycle Definitions">
+                <ul>
+                    <li>
+                        <a href="ServiceModels.html">Service Models</a>
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Miscellaneous">
+                <ul>
+                    <li>
+                        <a href="LoggingInterceptor.html">Logging Interceptor</a>
+                    </li>
+                    <li>
+                        <a href="ThreadLocale.html">Thread Locale</a>
+                    </li>
+                    <li>
+                        <a href="ThreadLocalStorage.html">Thread Local Storage</a>
+                    </li>
+
+                    <li>
+                        <a href="BeanFactoryBuilder.html">Bean Factory Builder</a>
+                    </li>
+                    <li>
+                        <a href="ChainBuilder.html">Chain Builder</a>
+                    </li>
+                </ul>
+            </subsection>
+
+        </section>
+    </body>
 </document>

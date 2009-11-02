@@ -30,7 +30,17 @@
                 <item name="ThreadLocale" href="ThreadLocale.html"/>
                 <item name="ThreadLocalStorage" href="ThreadLocalStorage.html"/>
                 <item name="LoggingInterceptor" href="LoggingInterceptor.html"/>
+
+                <item name="Bean Factory Builder" href="BeanFactoryBuilder.html"/>
+                <item name="Chain Builder" href="ChainBuilder.html"/>
+                <item name="Chain Factory" href="ChainFactory.html"/>
+                <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
+                <item name="Java Proxy Factory" href="JDKProxyFactory.html"/>
+                <item name="Pipeline Factory" href="PipelineFactory.html"/>
+                <item name="Service Property Factory" href="ServicePropertyFactory.html"/>
+                <item name="Strategy Factory" href="StrategyFactory.html"/>
                 
+
             </item>
         </menu>
 

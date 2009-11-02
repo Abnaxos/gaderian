@@ -14,18 +14,11 @@
         
         <menu name="Util">
             <item name="Introduction" href="index.html"/>
-            <item name="Bean Factory Builder" href="BeanFactoryBuilder.html"/>
-            <item name="Chain Builder" href="ChainBuilder.html"/>
-            <item name="Chain Factory" href="ChainFactory.html"/>
-            <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
             <item name="EJB Proxy Factory" href="EJBProxyFactory.html"/>
-            <item name="Java Proxy Factory" href="JDKProxyFactory.html"/>
             <item name="Method Interceptor Factory" href="MethodInterceptorFactory.html"/>
             <item name="Name Lookup" href="NameLookup.html"/>
-            <item name="Pipeline Factory" href="PipelineFactory.html"/>
             <item name="Remote Exception Coordinator" href="RemoteExceptionCoordinator.html"/>
-            <item name="Service Property Factory" href="ServicePropertyFactory.html"/>
-            <item name="Strategy Factory" href="StrategyFactory.html"/>
+            <item name="Spring Lookup Factory" href="SpringLookupFactory.xml"/>
         </menu>
 
         <menu ref="parent"/>

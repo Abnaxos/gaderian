@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Copyright 2004, 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document xmlns="http://maven.apache.org/XDOC/2.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>gaderian.BeanFactoryBuilder Service</title>
+    </properties>
+    <body>
+
+        <section name="Bean Factory Builder Service">
+
+
+      <p>The <a href="module-report/service/gaderian.BeanFactoryBuilder.html">
+      BeanFactoryBuilder</a> services is used to construct a
+      <a href="apidocs/org/ops4j/gaderian/BeanFactory.html">BeanFactory</a> instance. An BeanFactory will <em>vend out</em>
+      instances of classes. A logical name is mapped to a particular Java class
+      to be instantiated. </p>
+
+          <p> Client code can retrieve beans via the factory's <code>get()</code>
+      method. Beans are retrieved using a <em>locator</em>, which consists of a
+      name and an optional initializer seperated by a comma. The initializer is
+      provided to the bean via an alternate constructor that takes a single
+      string parameter (the default case).  In the case where the bean does <em>not</em> a constructor
+      which accepts a single string parameter, BeanFactory will attempt to use the default (empty) constructor and
+      populate the bean using a Java bean property.  The initializer in this case is used to determine the property and
+      value to use.  Initializers are used, typically, to initialize properties of the bean, but the actual
+      implementation is internal to the bean class. </p>
+
+       <p>The general format of the initializer string (when used as a constructor parameter) is
+           <code><em>name</em>[,<em>initializer</em>]</code>.  The initializer in this case is passed <em>as is</em> to
+           the constructor of the bean.
+           The initializer, if used in property based bean initialization, takes the following format
+           <code> <em>name</em>[,<em>propertyName=value</em>]</code>.  This instructs BeanFactory to create
+           an instance of the given class and then initialize the property named propertyName with the specified value.
+       </p>
+
+            <subsection name="Usage">
+
+
+                <p>The service takes a single parameter element:</p>
+
+                <source>
+                    &lt;factory vend-class="..." configuration-id="..." default-cacheable="..."/&gt;
+                </source>
+                <p>The
+                    <code>vend-class</code>
+                    attribute is the name of a class all
+                    vended objects must be assignable to (as a class or interface). This is
+                    used to validate contributed bean definitions. By default it is
+                    <code>java.lang.Object</code>.
+                </p>
+                <p>The
+                    <code>configuration-id</code>
+                    is the id of the companion
+                    configuration (used to define object classes).
+                </p>
+                <p>The optional
+                    <code>default-cacheable</code>
+                    attribute sets the default
+                    for whether instantiated beans should be cached for reuse. By default
+                    this is true, which is appropriate for most use cases where the vended
+                    objects are immutable.
+                </p>
+            </subsection>
+
+            <subsection name="Configuration">
+
+
+                <p>Each BeanFactory service must have a configuration, into which beans
+                    are contributed:
+                </p>
+
+                <source>
+                    &lt;configuration-point id="..." schema-id="gaderian.BeanFactoryContribution"/&gt;
+                </source>
+                <p>Contributions into the configuration are used to specify the bean
+                    classes to instantiate, as:
+                </p>
+                <source>
+                    &lt;bean name="..." class="..." cacheable="..."/&gt;  </source>
+                <p>
+                    <code>name</code>
+                    is a unique name used to reference an instance of
+                    the class.
+                </p>
+                <p>
+                    <code>class</code>
+                    is the Java class to instantiate.
+                </p>
+                <p>
+                    <code>cacheable</code>
+                    determines whether instances of the class are
+                    cacheable (that is, have immutable internal state and should be
+                    reused), or non-cacheable (presumably, because of mutable internal
+                    state).
+                </p>
+            </subsection>
+
+        </section>
+    </body>
+</document>

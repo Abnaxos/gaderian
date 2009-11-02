@@ -17,784 +17,1184 @@
 
 <module id="gaderian" version="1.1.0" package="org.ops4j.gaderian">
 
-  The master module for Gaderian, defining core, universal functionality.
+    The master module for Gaderian, defining core, universal functionality.
 
-  <configuration-point id="SymbolSources">
-    Provides a list of sources for values of Testsubstitution symbols.
+    <configuration-point id="SymbolSources">
+        Provides a list of sources for values of Testsubstitution symbols.
 
-    <schema>
-      <element name="source">
+        <schema>
+            <element name="source">
 
-        Describes a single source of symbol values.
+                Describes a single source of symbol values.
 
-        <attribute name="name" required="true">
-          A unique name used
-          to identify the source, used when ordering the sources.
-        </attribute>
+                <attribute name="name" required="true">
+                    A unique name used
+                    to identify the source, used when ordering the sources.
+                </attribute>
 
-        <attribute name="class" translator="instance">
-          Name of a class implementing the SymbolSource interface.
-        </attribute>
+                <attribute name="class" translator="instance">
+                    Name of a class implementing the SymbolSource interface.
+                </attribute>
 
-        <attribute name="service-id" translator="service">
-          Service configuration id for a service which implements the SymbolSource
-          interface.
-        </attribute>
+                <attribute name="service-id" translator="service">
+                    Service configuration id for a service which implements the SymbolSource
+                    interface.
+                </attribute>
 
-        <attribute name="before">
-          A list of the names of other sources this source should
-          precede.
-        </attribute>
+                <attribute name="before">
+                    A list of the names of other sources this source should
+                    precede.
+                </attribute>
 
-        <attribute name="after">
-          A list of the names of other sources this source should
-          follow.
-        </attribute>
+                <attribute name="after">
+                    A list of the names of other sources this source should
+                    follow.
+                </attribute>
 
-        <conversion class="SymbolSourceContribution">
-          <map attribute="class" property="source"/>
-          <map attribute="service-id" property="source"/>
-          <map attribute="before" property="followingNames"/>
-          <map attribute="after" property="precedingNames"/>
-        </conversion>
-      </element>
+                <conversion class="SymbolSourceContribution">
+                    <map attribute="class" property="source"/>
+                    <map attribute="service-id" property="source"/>
+                    <map attribute="before" property="followingNames"/>
+                    <map attribute="after" property="precedingNames"/>
+                </conversion>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <contribution configuration-id="SymbolSources">
+        <source before="gaderian.FactoryDefaults"
+                name="gaderian.ApplicationDefaults" service-id="ApplicationDefaultsSymbolSource"/>
+        <source name="gaderian.FactoryDefaults" service-id="FactoryDefaultsSymbolSource"/>
+    </contribution>
+
+    <schema id="Defaults">
+        <element name="default">
+
+            Provides a default symbol value.
+
+            <attribute name="symbol" required="true" unique="true">
+                The id of the symbol to define a default value for.
+            </attribute>
+            <attribute name="value" required="true">
+                The value for the symbol.
+            </attribute>
+            <conversion class="service.impl.FactoryDefault"/>
+        </element>
     </schema>
-  </configuration-point>
 
-  <contribution configuration-id="SymbolSources">
-    <source before="gaderian.FactoryDefaults"
-      name="gaderian.ApplicationDefaults" service-id="ApplicationDefaultsSymbolSource"/>
-    <source name="gaderian.FactoryDefaults" service-id="FactoryDefaultsSymbolSource"/>
-  </contribution>
+    <configuration-point id="FactoryDefaults" schema-id="Defaults">
+        Extension point for setting "factory defaults" for symbol values.
+    </configuration-point>
 
-  <schema id="Defaults">
-    <element name="default">
+    <service-point id="FactoryDefaultsSymbolSource" interface="SymbolSource" visibility="private">
 
-      Provides a default symbol value.
+        SymbolSource implementation driven by the FactoryDefaults configuration point.
 
-      <attribute name="symbol" required="true" unique="true">
-        The id of the symbol to define a default value for.
-      </attribute>
-      <attribute name="value" required="true">
-        The value for the symbol.
-      </attribute>
-      <conversion class="service.impl.FactoryDefault"/>
-    </element>
-  </schema>
+        <invoke-factory>
+            <construct class="service.impl.DefaultsSymbolSource">
+                <set-configuration configuration-id="FactoryDefaults" property="defaults"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-  <configuration-point id="FactoryDefaults" schema-id="Defaults">
-    Extension point for setting "factory defaults" for symbol values.
-  </configuration-point>
+    <configuration-point id="ApplicationDefaults" schema-id="Defaults">
+        Extension point for setting application defaults; these defaults will override factory defaults specified in the
+        FactoryDefaults configuration point.
+    </configuration-point>
 
-  <service-point id="FactoryDefaultsSymbolSource" interface="SymbolSource" visibility="private">
+    <service-point id="ApplicationDefaultsSymbolSource" interface="SymbolSource" visibility="private">
 
-    SymbolSource implementation driven by the FactoryDefaults configuration point.
+        SymbolSource implementation driven by the ApplicationDefaults configuration point.
 
-    <invoke-factory>
-      <construct class="service.impl.DefaultsSymbolSource">
-        <set-configuration configuration-id="FactoryDefaults" property="defaults"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+        <invoke-factory>
+            <construct class="service.impl.DefaultsSymbolSource">
+                <set-configuration
+                        configuration-id="ApplicationDefaults" property="defaults"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-  <configuration-point id="ApplicationDefaults" schema-id="Defaults">
-    Extension point for setting application defaults; these defaults will override factory defaults specified in the FactoryDefaults configuration point.
-  </configuration-point>
+    <service-point id="ClassFactory" interface="org.ops4j.gaderian.service.ClassFactory">
 
-  <service-point id="ApplicationDefaultsSymbolSource" interface="SymbolSource" visibility="private">
+        Wrapper around Javassist used to dynamically create classes such as service interceptors.
 
-    SymbolSource implementation driven by the ApplicationDefaults configuration point.
+        <create-instance class="service.impl.ClassFactoryImpl" model="primitive"/>
+    </service-point>
 
-    <invoke-factory>
-      <construct class="service.impl.DefaultsSymbolSource">
-        <set-configuration
-          configuration-id="ApplicationDefaults" property="defaults"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+    <schema id="MethodFilter">
+        Used primarily as parameters to interceptor factories (such as LoggingInterceptor) to define which methods of
+        service interface are to be included and which excluded.
 
-  <service-point id="ClassFactory" interface="org.ops4j.gaderian.service.ClassFactory">
+        <element name="include">
+            Identifies a method, or set of methods, to be included.
 
-    Wrapper around Javassist used to dynamically create classes such as service interceptors.
+            <attribute name="method" required="true">
+                A method pattern used to identify the affected methods.
+            </attribute>
 
-    <create-instance class="service.impl.ClassFactoryImpl" model="primitive"/>
-  </service-point>
-
-  <schema id="MethodFilter">
-    Used primarily as parameters to interceptor factories (such as LoggingInterceptor) to define which methods of service interface are to be included and which excluded.
-
-    <element name="include">
-      Identifies a method, or set of methods, to be included.
-
-      <attribute name="method" required="true">
-        A method pattern used to identify the affected methods.
-      </attribute>
-
-      <rules>
-        <create-object class="service.MethodContribution,include"/>
-        <read-attribute attribute="method" property="methodPattern"/>
-        <invoke-parent method="addElement"/>
-      </rules>
-    </element>
-    <element name="exclude">
-      Identifies a method, or set of methods, to be excluded.
-
-      <attribute name="method" required="true">
-        A method pattern used to identify the affected methods.
-      </attribute>
-
-      <rules>
-        <create-object class="service.MethodContribution"/>
-        <read-attribute attribute="method" property="methodPattern"/>
-        <invoke-parent method="addElement"/>
-      </rules>
-    </element>
-  </schema>
-
-  <service-point id="LoggingInterceptor" interface="ServiceInterceptorFactory" parameters-schema-id="MethodFilter">
-
-    An interceptor factory for adding method-level logging to a service.
-    Logging occurs at level DEBUG and uses the service id as the logger.
-    Method entry (with parameters) and method exit (with return value) are logged, as are any exceptions.
-
-    <invoke-factory model="primitive">
-      <construct class="service.impl.LoggingInterceptorFactory">
-        <set-service property="factory" service-id="ClassFactory"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
-
-  <schema id="Assembly">
-    <element name="assembly">
-      <attribute name="autowire-services" translator="boolean" default="true">If true unclaimed properties will be attempted to connect to services.</attribute>
-      <attribute name="initialize-method">The name of a public instance method (taking no parameters) to be invoked after the service has been assembled.</attribute>
-
-      <rules>
-        <create-object class="service.impl.AssemblyInstructionImpl"/>
-        <read-attribute attribute="autowire-services" property="autowireServices"/>
-        <read-attribute attribute="initialize-method" property="initializeMethod"/>
-        <invoke-parent method="addElement"/>
-
-        <create-object class="service.impl.BuilderMessagesFacet"/>
-        <invoke-parent depth="1" method="addProperty"/>
-
-        <create-object class="service.impl.BuilderLogFacet"/>
-        <invoke-parent depth="2" method="addProperty"/>
-
-        <create-object class="service.impl.BuilderServiceIdFacet"/>
-        <invoke-parent depth="3" method="addProperty"/>
-
-        <create-object class="service.impl.BuilderErrorHandlerFacet"/>
-        <invoke-parent depth="4" method="addProperty"/>
-
-        <create-object class="service.impl.BuilderClassResolverFacet"/>
-        <invoke-parent depth="5" method="addProperty"/>
-
-        <create-object class="service.impl.BuilderErrorLogFacet"/>
-        <invoke-parent depth="6" method="addProperty"/>
-      </rules>
-
-      <element name="set">
-
-        Configures a property of the service instance using an object.
-
-        <attribute name="property" required="true">The name of a property of the service instance to configure.</attribute>
-        <attribute name="value" required="true">The value to set the property to, in the form of a prefix and a locator for that prefix. Prefixes are defined by the ObjectProviders configuration point. Each prefix provides a different interpretation for the locator, such as a service id or class name.</attribute>
-        <rules>
-          <create-object class="service.impl.BuilderPropertyFacet"/>
-          <set-property property="translator" value="object"/>
-          <read-attribute attribute="property" property="propertyName"/>
-          <read-attribute attribute="value" property="value"/>
-          <invoke-parent depth="7" method="addProperty"/>
-        </rules>
-      </element>
-
-      <element name="listener">
-
-        Registers the new services as an event listener for events produced by the specified service.
-
-        <attribute name="service-id" required="true" translator="service">The service which will produce events.</attribute>
-        <attribute name="event-set">If given, the name of an event set for which the service will be registered. If omitted, the service will be registered for all events sets for which it implements the necessary listener interfaces.</attribute>
-        <rules>
-          <create-object class="service.impl.EventRegistration"/>
-          <read-attribute attribute="service-id" property="producer"/>
-          <read-attribute attribute="event-set" property="eventSetName"/>
-          <invoke-parent depth="7" method="addEventRegistration"/>
-        </rules>
-      </element>
-    </element>
-  </schema>
-
-  <service-point id="BuilderFactory" interface="ServiceImplementationFactory">
-
-    Used to construct a service from a class name and optional constructor parameters and properties.
-
-    <parameters-schema>
-      <element name="construct">
-        A single construct element identifies the class to instantiate.
-
-        <attribute name="class" required="true">The name of the class to instantiate.</attribute>
-        <attribute name="messages-property">The name of a property to assign invoking module's messages to.</attribute>
-        <attribute name="log-property">The name of a property to assign the Log instance for the service to. The Log instance is built from the service configuration point id.</attribute>
-        <attribute name="service-id-property">The name of a property to assign the configuration point id of the service to.</attribute>
-        <attribute name="initialize-method">The name of a public instance method (taking no parameters) to be invoked after the service is constructed.</attribute>
-        <attribute name="error-handler-property">The name of a property to assign the module's ErrorHandler to.</attribute>
-        <attribute name="class-resolver-property">The name of a property to assign the module's ClassResolver to.</attribute>
-        <attribute name="autowire-services" translator="boolean" default="true">If true, the BuilderFactory will attempt to connect unclaimed properties to services.</attribute>
-        <attribute name="error-log-property">The name of a property to assign the service's ErrorLog to.</attribute>
-
-        <rules>
-          <create-object class="service.impl.BuilderParameter"/>
-          <read-attribute attribute="class" property="className"/>
-          <read-attribute attribute="initialize-method" property="initializeMethod"/>
-          <read-attribute attribute="autowire-services" property="autowireServices"/>
-          <invoke-parent method="addElement"/>
-
-          <create-object class="service.impl.BuilderMessagesFacet"/>
-          <read-attribute attribute="messages-property" property="propertyName"/>
-          <invoke-parent depth="1" method="addProperty"/>
-
-          <create-object class="service.impl.BuilderLogFacet"/>
-          <read-attribute attribute="log-property" property="propertyName"/>
-          <invoke-parent depth="2" method="addProperty"/>
-
-          <create-object class="service.impl.BuilderServiceIdFacet"/>
-          <read-attribute attribute="service-id-property" property="propertyName"/>
-          <invoke-parent depth="3" method="addProperty"/>
-
-          <create-object class="service.impl.BuilderErrorHandlerFacet"/>
-          <read-attribute attribute="error-handler-property" property="propertyName"/>
-          <invoke-parent depth="4" method="addProperty"/>
-
-          <create-object class="service.impl.BuilderClassResolverFacet"/>
-          <read-attribute attribute="class-resolver-property" property="propertyName"/>
-          <invoke-parent depth="5" method="addProperty"/>
-
-          <create-object class="service.impl.BuilderErrorLogFacet"/>
-          <read-attribute attribute="error-log-property" property="propertyName"/>
-          <invoke-parent depth="6" method="addProperty"/>
-        </rules>
-        <element name="string">
-
-          A string value constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="null"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
+            <rules>
+                <create-object class="service.MethodContribution,include"/>
+                <read-attribute attribute="method" property="methodPattern"/>
+                <invoke-parent method="addElement"/>
+            </rules>
         </element>
+        <element name="exclude">
+            Identifies a method, or set of methods, to be excluded.
 
-        <element name="int">
+            <attribute name="method" required="true">
+                A method pattern used to identify the affected methods.
+            </attribute>
 
-          An integer value constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="int"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
+            <rules>
+                <create-object class="service.MethodContribution"/>
+                <read-attribute attribute="method" property="methodPattern"/>
+                <invoke-parent method="addElement"/>
+            </rules>
         </element>
-
-        <element name="long">
-
-          A long (64-bit) integer value constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="long"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="boolean">
-
-          A boolean value constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="enumeration,java.lang.Boolean,true=TRUE,false=FALSE"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="service">
-
-          A constructor parameter providing the identified Gaderian service.
-
-         <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="service"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="configuration">
-
-          A constructor parameter providing a Gaderian configuration point (as a List).
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="configuration"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="resource">
-
-          A Resource constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="resource"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="log">
-
-          Placeholder for a Log instance for the constructed service as constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderLogFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="error-handler">
-
-          Placeholder for the module's ErrorHandler instance passed in as a constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderErrorHandlerFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="error-log">
-
-          Placeholder for the service's ErrorLog instance passed in as a constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderErrorLogFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="class-resolver">
-
-          Placeholder for the module's ClassResolver instance passed in as a constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderClassResolverFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="messages">
-
-          Placeholder for a Messages object (from the invoking module) as constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderMessagesFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="service-id">
-
-          Placeholder for the service id (of the constructed service) as constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderServiceIdFacet"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="object">
-
-          Placeholder for an object provided by the object translator as a constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="object"/>
-            <read-content property="value"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="null">
-
-          Placeholder for a null object provided by the object translator as a constructor parameter.
-
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="object"/>
-            <invoke-parent depth="7" method="addParameter"/>
-          </rules>
-        </element>
-
-        <element name="set">
-
-          Configures a property of the service instance.
-
-          <attribute name="property" required="true">The name of a property of the service instance to configure.</attribute>
-          <attribute name="value" required="true">The value to set the property to. The value will be converted to the type of the property.</attribute>
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="smart"/>
-            <read-attribute attribute="property" property="propertyName"/>
-            <read-attribute attribute="value" property="value"/>
-            <invoke-parent depth="7" method="addProperty"/>
-          </rules>
-        </element>
-
-        <element name="set-object">
-
-          Configures a property of the service instance using an object.
-
-          <attribute name="property" required="true">The name of a property of the service instance to configure.</attribute>
-          <attribute name="value" required="true">The value to set the property to, in the form of a prefix and a locator for that prefix. Prefixes are defined by the ObjectProviders configuration point. Each prefix provides a different interpretation for the locator, such as a service id or class name.</attribute>
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="object"/>
-            <read-attribute attribute="property" property="propertyName"/>
-            <read-attribute attribute="value" property="value"/>
-            <invoke-parent depth="7" method="addProperty"/>
-          </rules>
-        </element>
-
-        <element name="set-service">
-
-          Configures a property of the service instance to another service.
-
-          <attribute name="property" required="true">The name of the property of the service instance to configure.</attribute>
-          <attribute name="service-id" required="true">The id of the service.</attribute>
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="service"/>
-            <read-attribute attribute="property" property="propertyName"/>
-            <read-attribute attribute="service-id" property="value"/>
-            <invoke-parent depth="7" method="addProperty"/>
-          </rules>
-        </element>
-
-        <element name="set-configuration">
-
-          Configures a property of the service instance to the elements contributed to an configuration point.
-
-          <attribute name="property" required="true">The name of the property of the service instance to configure.</attribute>
-          <attribute name="configuration-id" required="true">The id of the configuration point to access.</attribute>
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="configuration"/>
-            <read-attribute attribute="property" property="propertyName"/>
-            <read-attribute attribute="configuration-id" property="value"/>
-            <invoke-parent depth="7" method="addProperty"/>
-          </rules>
-        </element>
-
-        <element name="set-resource">
-
-          Configures a property of the service instance to a resource.
-
-          <attribute name="property" required="true">The name of the property of the service instance to configure.</attribute>
-          <attribute name="path" required="true">The path, relative to the module's deployment descriptor, of the resource.</attribute>
-          <rules>
-            <create-object class="service.impl.BuilderPropertyFacet"/>
-            <set-property property="translator" value="resource"/>
-            <read-attribute attribute="property" property="propertyName"/>
-            <read-attribute attribute="path" property="value"/>
-            <invoke-parent depth="7" method="addProperty"/>
-          </rules>
-        </element>
-
-        <element name="event-listener">
-
-          Registers the new services as an event listener for events produced by the specified service.
-
-          <attribute name="service-id" required="true" translator="service">The service which will produce events.</attribute>
-          <attribute name="event-set">If given, the name of an event set for which the service will be registered. If omitted, the service will be registered for all events sets for which it implements the necessary listener interfaces.</attribute>
-          <rules>
-            <create-object class="service.impl.EventRegistration"/>
-            <read-attribute attribute="service-id" property="producer"/>
-            <read-attribute attribute="event-set" property="eventSetName"/>
-            <invoke-parent depth="7" method="addEventRegistration"/>
-          </rules>
-        </element>
-      </element>
-    </parameters-schema>
-
-    <create-instance class="service.impl.BuilderFactory" model="primitive"/>
-  </service-point>
-
-  <service-point id="ThreadEventNotifier" interface="org.ops4j.gaderian.service.ThreadEventNotifier">
-
-    Service used by other services to be alerted when a thread is cleaned up (typically, at the end of a request or transaction).
-
-    <create-instance class="service.impl.ThreadEventNotifierImpl"/>
-  </service-point>
-
-  <service-point id="ThreadLocalStorage" interface="org.ops4j.gaderian.service.ThreadLocalStorage">
-
-    Service which manages a thread-local map of data items.
-    This can be used for temporary storage of information when local variables can't be used.
-    All stored items are released when the thread is cleaned up.
-    Note: this service should be considered deprecated; use the threaded service model
-    instead.
-
-    <create-instance model="threaded" class="service.impl.ThreadLocalStorageImpl"/>
-  </service-point>
-
-  <configuration-point id="ServiceModels">
-
-    Defines service models, providing a name and a class for each.
-
-    <schema>
-
-      Describes contributions that define new types of service models by providing service model factories.
-
-      <element name="service-model">
-        <attribute name="name" required="true" unique="true">The name of the service model, which must be unique.</attribute>
-        <attribute name="class" required="false" translator="instance">The name of the service model factory class to instantiate.</attribute>
-        <conversion class="impl.ServiceModelContribution">
-          <map attribute="class" property="factory"/>
-        </conversion>
-      </element>
     </schema>
-  </configuration-point>
 
-  <contribution configuration-id="ServiceModels">
-    <service-model class="impl.servicemodel.PrimitiveServiceModelFactory" name="primitive"/>
-    <service-model class="impl.servicemodel.SingletonServiceModelFactory" name="singleton"/>
-    <service-model class="impl.servicemodel.ThreadedServiceModelFactory" name="threaded"/>
-    <service-model class="impl.servicemodel.PooledServiceModelFactory" name="pooled"/>
-  </contribution>
+    <service-point id="LoggingInterceptor" interface="ServiceInterceptorFactory" parameters-schema-id="MethodFilter">
 
-  <configuration-point id="Translators">
+        An interceptor factory for adding method-level logging to a service.
+        Logging occurs at level DEBUG and uses the service id as the logger.
+        Method entry (with parameters) and method exit (with return value) are logged, as are any exceptions.
 
-    Used to define new translators that can be used in contribution conversion rules.
-    Translators must have unique names.
+        <invoke-factory model="primitive">
+            <construct class="service.impl.LoggingInterceptorFactory">
+                <set-service property="factory" service-id="ClassFactory"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-    <schema>
+    <schema id="Assembly">
+        <element name="assembly">
+            <attribute name="autowire-services" translator="boolean" default="true">If true unclaimed properties will be
+                attempted to connect to services.
+            </attribute>
+            <attribute name="initialize-method">The name of a public instance method (taking no parameters) to be
+                invoked after the service has been assembled.
+            </attribute>
 
-      Maps translator names to translator classes.
+            <rules>
+                <create-object class="service.impl.AssemblyInstructionImpl"/>
+                <read-attribute attribute="autowire-services" property="autowireServices"/>
+                <read-attribute attribute="initialize-method" property="initializeMethod"/>
+                <invoke-parent method="addElement"/>
 
-      <element name="translator">Maps a translator name to a translator class.
+                <create-object class="service.impl.BuilderMessagesFacet"/>
+                <invoke-parent depth="1" method="addProperty"/>
 
-        <attribute name="name" required="true">A unique name for a translator.</attribute>
-        <attribute name="class" required="false" translator="class">The class to instantiate, which must implement the Translator interface.</attribute>
-        <attribute name="service-id" required="false" translator="service">A service which implements the Translator interface.</attribute>
-        <conversion class="impl.TranslatorContribution">
-          <map attribute="class" property="translatorClass"/>
-          <map attribute="service-id" property="translator"/>
-        </conversion>
-      </element>
+                <create-object class="service.impl.BuilderLogFacet"/>
+                <invoke-parent depth="2" method="addProperty"/>
+
+                <create-object class="service.impl.BuilderServiceIdFacet"/>
+                <invoke-parent depth="3" method="addProperty"/>
+
+                <create-object class="service.impl.BuilderErrorHandlerFacet"/>
+                <invoke-parent depth="4" method="addProperty"/>
+
+                <create-object class="service.impl.BuilderClassResolverFacet"/>
+                <invoke-parent depth="5" method="addProperty"/>
+
+                <create-object class="service.impl.BuilderErrorLogFacet"/>
+                <invoke-parent depth="6" method="addProperty"/>
+            </rules>
+
+            <element name="set">
+
+                Configures a property of the service instance using an object.
+
+                <attribute name="property" required="true">The name of a property of the service instance to configure.
+                </attribute>
+                <attribute name="value" required="true">The value to set the property to, in the form of a prefix and a
+                    locator for that prefix. Prefixes are defined by the ObjectProviders configuration point. Each
+                    prefix provides a different interpretation for the locator, such as a service id or class name.
+                </attribute>
+                <rules>
+                    <create-object class="service.impl.BuilderPropertyFacet"/>
+                    <set-property property="translator" value="object"/>
+                    <read-attribute attribute="property" property="propertyName"/>
+                    <read-attribute attribute="value" property="value"/>
+                    <invoke-parent depth="7" method="addProperty"/>
+                </rules>
+            </element>
+
+            <element name="listener">
+
+                Registers the new services as an event listener for events produced by the specified service.
+
+                <attribute name="service-id" required="true" translator="service">The service which will produce events.
+                </attribute>
+                <attribute name="event-set">If given, the name of an event set for which the service will be registered.
+                    If omitted, the service will be registered for all events sets for which it implements the necessary
+                    listener interfaces.
+                </attribute>
+                <rules>
+                    <create-object class="service.impl.EventRegistration"/>
+                    <read-attribute attribute="service-id" property="producer"/>
+                    <read-attribute attribute="event-set" property="eventSetName"/>
+                    <invoke-parent depth="7" method="addEventRegistration"/>
+                </rules>
+            </element>
+        </element>
     </schema>
-  </configuration-point>
 
-  <contribution configuration-id="Translators">
-    <translator class="schema.rules.BooleanTranslator" name="boolean"/>
-    <translator class="schema.rules.IntTranslator" name="int"/>
-    <translator class="schema.rules.EnumerationTranslator" name="enumeration"/>
-    <translator class="schema.rules.ConfigurationTranslator" name="configuration"/>
-    <translator class="schema.rules.ResourceTranslator" name="resource"/>
-    <translator class="schema.rules.LongTranslator" name="long"/>
-    <translator class="schema.rules.DoubleTranslator" name="double"/>
-    <translator class="schema.rules.ServicePointTranslator" name="service-point"/>
-    <translator class="schema.rules.QualifiedIdTranslator" name="qualified-id"/>
-    <translator class="schema.rules.IdListTranslator" name="id-list"/>
-    <translator name="object" service-id="ObjectTranslator"/>
-    <translator class="schema.rules.NullTranslator" name="null"/>
-  </contribution>
+    <service-point id="BuilderFactory" interface="ServiceImplementationFactory">
 
-  <service-point id="ShutdownCoordinator">
+        Used to construct a service from a class name and optional constructor parameters and properties.
 
-    A source of event notifications for when the Registry is shutdown.
+        <parameters-schema>
+            <element name="construct">
+                A single construct element identifies the class to instantiate.
 
-    <invoke-factory>
-      <construct class="impl.ShutdownCoordinatorImpl">
-        <log/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+                <attribute name="class" required="true">The name of the class to instantiate.</attribute>
+                <attribute name="messages-property">The name of a property to assign invoking module's messages to.
+                </attribute>
+                <attribute name="log-property">The name of a property to assign the Log instance for the service to. The
+                    Log instance is built from the service configuration point id.
+                </attribute>
+                <attribute name="service-id-property">The name of a property to assign the configuration point id of the
+                    service to.
+                </attribute>
+                <attribute name="initialize-method">The name of a public instance method (taking no parameters) to be
+                    invoked after the service is constructed.
+                </attribute>
+                <attribute name="error-handler-property">The name of a property to assign the module's ErrorHandler to.
+                </attribute>
+                <attribute name="class-resolver-property">The name of a property to assign the module's ClassResolver
+                    to.
+                </attribute>
+                <attribute name="autowire-services" translator="boolean" default="true">If true, the BuilderFactory will
+                    attempt to connect unclaimed properties to services.
+                </attribute>
+                <attribute name="error-log-property">The name of a property to assign the service's ErrorLog to.
+                </attribute>
 
-  <configuration-point id="Startup">
+                <rules>
+                    <create-object class="service.impl.BuilderParameter"/>
+                    <read-attribute attribute="class" property="className"/>
+                    <read-attribute attribute="initialize-method" property="initializeMethod"/>
+                    <read-attribute attribute="autowire-services" property="autowireServices"/>
+                    <invoke-parent method="addElement"/>
 
-    A configuration to which startup objects may be contributed (as objects or services).
-    Startup objects must implement the java.lang.Runnable interface. Order of execution is expliclitly NOT defined.
+                    <create-object class="service.impl.BuilderMessagesFacet"/>
+                    <read-attribute attribute="messages-property" property="propertyName"/>
+                    <invoke-parent depth="1" method="addProperty"/>
 
-    <schema>
-      <element name="startup">
+                    <create-object class="service.impl.BuilderLogFacet"/>
+                    <read-attribute attribute="log-property" property="propertyName"/>
+                    <invoke-parent depth="2" method="addProperty"/>
 
-        Defines a service that implements the Runnable interface.
+                    <create-object class="service.impl.BuilderServiceIdFacet"/>
+                    <read-attribute attribute="service-id-property" property="propertyName"/>
+                    <invoke-parent depth="3" method="addProperty"/>
 
-       <attribute name="object" translator="object">
-          Reference to the object implementing Runnable.
-        </attribute>
+                    <create-object class="service.impl.BuilderErrorHandlerFacet"/>
+                    <read-attribute attribute="error-handler-property" property="propertyName"/>
+                    <invoke-parent depth="4" method="addProperty"/>
 
-        <rules>
-          <push-attribute attribute="object"/>
-          <invoke-parent method="addElement"/>
-        </rules>
-      </element>
+                    <create-object class="service.impl.BuilderClassResolverFacet"/>
+                    <read-attribute attribute="class-resolver-property" property="propertyName"/>
+                    <invoke-parent depth="5" method="addProperty"/>
+
+                    <create-object class="service.impl.BuilderErrorLogFacet"/>
+                    <read-attribute attribute="error-log-property" property="propertyName"/>
+                    <invoke-parent depth="6" method="addProperty"/>
+                </rules>
+                <element name="string">
+
+                    A string value constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="null"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="int">
+
+                    An integer value constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="int"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="long">
+
+                    A long (64-bit) integer value constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="long"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="boolean">
+
+                    A boolean value constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="enumeration,java.lang.Boolean,true=TRUE,false=FALSE"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="service">
+
+                    A constructor parameter providing the identified Gaderian service.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="service"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="configuration">
+
+                    A constructor parameter providing a Gaderian configuration point (as a List).
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="configuration"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="resource">
+
+                    A Resource constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="resource"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="log">
+
+                    Placeholder for a Log instance for the constructed service as constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderLogFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="error-handler">
+
+                    Placeholder for the module's ErrorHandler instance passed in as a constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderErrorHandlerFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="error-log">
+
+                    Placeholder for the service's ErrorLog instance passed in as a constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderErrorLogFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="class-resolver">
+
+                    Placeholder for the module's ClassResolver instance passed in as a constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderClassResolverFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="messages">
+
+                    Placeholder for a Messages object (from the invoking module) as constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderMessagesFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="service-id">
+
+                    Placeholder for the service id (of the constructed service) as constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderServiceIdFacet"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="object">
+
+                    Placeholder for an object provided by the object translator as a constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="object"/>
+                        <read-content property="value"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="null">
+
+                    Placeholder for a null object provided by the object translator as a constructor parameter.
+
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="object"/>
+                        <invoke-parent depth="7" method="addParameter"/>
+                    </rules>
+                </element>
+
+                <element name="set">
+
+                    Configures a property of the service instance.
+
+                    <attribute name="property" required="true">The name of a property of the service instance to
+                        configure.
+                    </attribute>
+                    <attribute name="value" required="true">The value to set the property to. The value will be
+                        converted to the type of the property.
+                    </attribute>
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="smart"/>
+                        <read-attribute attribute="property" property="propertyName"/>
+                        <read-attribute attribute="value" property="value"/>
+                        <invoke-parent depth="7" method="addProperty"/>
+                    </rules>
+                </element>
+
+                <element name="set-object">
+
+                    Configures a property of the service instance using an object.
+
+                    <attribute name="property" required="true">The name of a property of the service instance to
+                        configure.
+                    </attribute>
+                    <attribute name="value" required="true">The value to set the property to, in the form of a prefix
+                        and a locator for that prefix. Prefixes are defined by the ObjectProviders configuration point.
+                        Each prefix provides a different interpretation for the locator, such as a service id or class
+                        name.
+                    </attribute>
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="object"/>
+                        <read-attribute attribute="property" property="propertyName"/>
+                        <read-attribute attribute="value" property="value"/>
+                        <invoke-parent depth="7" method="addProperty"/>
+                    </rules>
+                </element>
+
+                <element name="set-service">
+
+                    Configures a property of the service instance to another service.
+
+                    <attribute name="property" required="true">The name of the property of the service instance to
+                        configure.
+                    </attribute>
+                    <attribute name="service-id" required="true">The id of the service.</attribute>
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="service"/>
+                        <read-attribute attribute="property" property="propertyName"/>
+                        <read-attribute attribute="service-id" property="value"/>
+                        <invoke-parent depth="7" method="addProperty"/>
+                    </rules>
+                </element>
+
+                <element name="set-configuration">
+
+                    Configures a property of the service instance to the elements contributed to an configuration point.
+
+                    <attribute name="property" required="true">The name of the property of the service instance to
+                        configure.
+                    </attribute>
+                    <attribute name="configuration-id" required="true">The id of the configuration point to access.
+                    </attribute>
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="configuration"/>
+                        <read-attribute attribute="property" property="propertyName"/>
+                        <read-attribute attribute="configuration-id" property="value"/>
+                        <invoke-parent depth="7" method="addProperty"/>
+                    </rules>
+                </element>
+
+                <element name="set-resource">
+
+                    Configures a property of the service instance to a resource.
+
+                    <attribute name="property" required="true">The name of the property of the service instance to
+                        configure.
+                    </attribute>
+                    <attribute name="path" required="true">The path, relative to the module's deployment descriptor, of
+                        the resource.
+                    </attribute>
+                    <rules>
+                        <create-object class="service.impl.BuilderPropertyFacet"/>
+                        <set-property property="translator" value="resource"/>
+                        <read-attribute attribute="property" property="propertyName"/>
+                        <read-attribute attribute="path" property="value"/>
+                        <invoke-parent depth="7" method="addProperty"/>
+                    </rules>
+                </element>
+
+                <element name="event-listener">
+
+                    Registers the new services as an event listener for events produced by the specified service.
+
+                    <attribute name="service-id" required="true" translator="service">The service which will produce
+                        events.
+                    </attribute>
+                    <attribute name="event-set">If given, the name of an event set for which the service will be
+                        registered. If omitted, the service will be registered for all events sets for which it
+                        implements the necessary listener interfaces.
+                    </attribute>
+                    <rules>
+                        <create-object class="service.impl.EventRegistration"/>
+                        <read-attribute attribute="service-id" property="producer"/>
+                        <read-attribute attribute="event-set" property="eventSetName"/>
+                        <invoke-parent depth="7" method="addEventRegistration"/>
+                    </rules>
+                </element>
+            </element>
+        </parameters-schema>
+
+        <create-instance class="service.impl.BuilderFactory" model="primitive"/>
+    </service-point>
+
+    <service-point id="ThreadEventNotifier" interface="org.ops4j.gaderian.service.ThreadEventNotifier">
+
+        Service used by other services to be alerted when a thread is cleaned up (typically, at the end of a request or
+        transaction).
+
+        <create-instance class="service.impl.ThreadEventNotifierImpl"/>
+    </service-point>
+
+    <service-point id="ThreadLocalStorage" interface="org.ops4j.gaderian.service.ThreadLocalStorage">
+
+        Service which manages a thread-local map of data items.
+        This can be used for temporary storage of information when local variables can't be used.
+        All stored items are released when the thread is cleaned up.
+        Note: this service should be considered deprecated; use the threaded service model
+        instead.
+
+        <create-instance model="threaded" class="service.impl.ThreadLocalStorageImpl"/>
+    </service-point>
+
+    <configuration-point id="ServiceModels">
+
+        Defines service models, providing a name and a class for each.
+
+        <schema>
+
+            Describes contributions that define new types of service models by providing service model factories.
+
+            <element name="service-model">
+                <attribute name="name" required="true" unique="true">The name of the service model, which must be
+                    unique.
+                </attribute>
+                <attribute name="class" required="false" translator="instance">The name of the service model factory
+                    class to instantiate.
+                </attribute>
+                <conversion class="impl.ServiceModelContribution">
+                    <map attribute="class" property="factory"/>
+                </conversion>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <contribution configuration-id="ServiceModels">
+        <service-model class="impl.servicemodel.PrimitiveServiceModelFactory" name="primitive"/>
+        <service-model class="impl.servicemodel.SingletonServiceModelFactory" name="singleton"/>
+        <service-model class="impl.servicemodel.ThreadedServiceModelFactory" name="threaded"/>
+        <service-model class="impl.servicemodel.PooledServiceModelFactory" name="pooled"/>
+    </contribution>
+
+    <configuration-point id="Translators">
+
+        Used to define new translators that can be used in contribution conversion rules.
+        Translators must have unique names.
+
+        <schema>
+
+            Maps translator names to translator classes.
+
+            <element name="translator">Maps a translator name to a translator class.
+
+                <attribute name="name" required="true">A unique name for a translator.</attribute>
+                <attribute name="class" required="false" translator="class">The class to instantiate, which must
+                    implement the Translator interface.
+                </attribute>
+                <attribute name="service-id" required="false" translator="service">A service which implements the
+                    Translator interface.
+                </attribute>
+                <conversion class="impl.TranslatorContribution">
+                    <map attribute="class" property="translatorClass"/>
+                    <map attribute="service-id" property="translator"/>
+                </conversion>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <contribution configuration-id="Translators">
+        <translator class="schema.rules.BooleanTranslator" name="boolean"/>
+        <translator class="schema.rules.IntTranslator" name="int"/>
+        <translator class="schema.rules.EnumerationTranslator" name="enumeration"/>
+        <translator class="schema.rules.ConfigurationTranslator" name="configuration"/>
+        <translator class="schema.rules.ResourceTranslator" name="resource"/>
+        <translator class="schema.rules.LongTranslator" name="long"/>
+        <translator class="schema.rules.DoubleTranslator" name="double"/>
+        <translator class="schema.rules.ServicePointTranslator" name="service-point"/>
+        <translator class="schema.rules.QualifiedIdTranslator" name="qualified-id"/>
+        <translator class="schema.rules.IdListTranslator" name="id-list"/>
+        <translator name="object" service-id="ObjectTranslator"/>
+        <translator class="schema.rules.NullTranslator" name="null"/>
+    </contribution>
+
+    <service-point id="ShutdownCoordinator">
+
+        A source of event notifications for when the Registry is shutdown.
+
+        <invoke-factory>
+            <construct class="impl.ShutdownCoordinatorImpl">
+                <log/>
+            </construct>
+        </invoke-factory>
+    </service-point>
+
+    <configuration-point id="Startup">
+
+        A configuration to which startup objects may be contributed (as objects or services).
+        Startup objects must implement the java.lang.Runnable interface. Order of execution is expliclitly NOT defined.
+
+        <schema>
+            <element name="startup">
+
+                Defines a service that implements the Runnable interface.
+
+                <attribute name="object" translator="object">
+                    Reference to the object implementing Runnable.
+                </attribute>
+
+                <rules>
+                    <push-attribute attribute="object"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <service-point id="Startup" interface="java.lang.Runnable">
+
+        A service which is used to bootstrap Gaderian; it obtains the gaderian.Startup configuration and runs each
+        Runnable object or service within as the last step of the Registry construction phase.
+        Note that the execution order is arbitrary and the startup objects are NOT executed in separate threads.
+
+        <invoke-factory>
+            <construct class="impl.StartupImpl">
+                <set-configuration configuration-id="Startup" property="runnables"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
+
+    <configuration-point id="EagerLoad">
+
+        Configuration to which services may be contributed. The corresponding services are instantiated eagerly, as the
+        Registry is started.
+        The order in which services are instantiated is not specified.
+
+        <schema>
+            <element name="load">
+
+                Identifies a service that will be eagerly loaded.
+
+                <attribute name="service-id" required="true" translator="service-point"/>
+                <rules>
+                    <push-attribute attribute="service-id"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <service-point id="EagerLoad" interface="java.lang.Runnable">
+
+        Service that performs eager loading of other services. This service is contributed into the gaderian.Startup
+        configuration.
+
+        <invoke-factory model="primitive">
+            <construct class="service.impl.EagerLoader">
+                <set-configuration configuration-id="EagerLoad" property="servicePoints"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
+
+    <contribution configuration-id="Startup">
+        <startup object="service:EagerLoad"/>
+    </contribution>
+
+    <configuration-point id="ObjectProviders">
+
+        Services that can provide objects for the object translator.
+
+        <schema>
+            <element name="provider" key-attribute="prefix">
+                <attribute name="prefix">The prefix used to identify the provider.</attribute>
+                <attribute name="service-id" required="true" translator="service">The object providing service.
+                </attribute>
+                <rules>
+                    <push-attribute attribute="service-id"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <service-point id="ObjectTranslator" interface="org.ops4j.gaderian.schema.Translator" visibility="private">
+
+        Translator that works with ObjectProviders to find or create objects. In case of a missing colon in the input
+        value it will delegate to the smart translator.
+
+        <invoke-factory>
+            <construct
+                    class="service.impl.ObjectTranslator">
+                <set-configuration configuration-id="ObjectProviders" property="contributions"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
+
+    <service-point id="ServiceObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
+
+        ObjectProvider that can locate services. Mapped to the service: prefix.
+
+        <create-instance class="service.impl.ServiceObjectProvider"/>
+    </service-point>
+
+    <service-point id="ConfigurationObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
+
+        ObjectProvider that can locate configurations. Mapped to the configuration: prefix.
+
+        <create-instance class="service.impl.ConfigurationObjectProvider"/>
+    </service-point>
+
+    <service-point id="ObjectInstanceObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
+
+        ObjectProvider that will instantiate a new instance of a provided class.
+        Mapped to the instance: prefix.
+
+        <create-instance class="service.impl.ObjectInstanceObjectProvider"/>
+    </service-point>
+
+    <service-point id="ServicePropertyObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
+
+        ObjectProvider that will extra a property from a service.
+        Mapped to the service-property: prefix.
+
+        <create-instance class="service.impl.ServicePropertyObjectProvider"/>
+    </service-point>
+
+    <service-point id="ClassObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
+
+        ObjectProvider that can find Class objects Mapped to the class: prefix.
+
+        <create-instance class="service.impl.ClassObjectProvider"/>
+    </service-point>
+
+    <contribution configuration-id="ObjectProviders">
+        <provider prefix="service" service-id="ServiceObjectProvider"/>
+        <provider prefix="configuration" service-id="ConfigurationObjectProvider"/>
+        <provider prefix="instance" service-id="ObjectInstanceObjectProvider"/>
+        <provider prefix="service-property" service-id="ServicePropertyObjectProvider"/>
+        <provider prefix="class" service-id="ClassObjectProvider"/>
+    </contribution>
+
+    <service-point id="ThreadLocale" interface="org.ops4j.gaderian.service.ThreadLocale">
+
+        Stores the locale for the current thread. The default is determined when the Registry is first
+        constructed. This locale is used for any messages.
+
+        <invoke-factory service-id="ThreadLocaleFactory" model="threaded"/>
+
+    </service-point>
+
+    <service-point id="ThreadLocaleFactory" interface="ServiceImplementationFactory" parameters-occurs="none" visibility="private">
+
+        Special service implementation factory for the ThreadLocale service.
+
+        <create-instance class="service.impl.ThreadLocaleFactory"/>
+
+    </service-point>
+
+    <service-point id="InterfaceSynthesizer" interface="org.ops4j.gaderian.service.InterfaceSynthesizer">
+
+        Synthesizes a service interface from an ordinary JavaBean.
+
+        <invoke-factory>
+            <construct class="service.impl.InterfaceSynthesizerImpl">
+                <set-service property="classFactory" service-id="ClassFactory"/>
+            </construct>
+        </invoke-factory>
+
+    </service-point>
+
+    <schema id="BeanFactoryContribution">
+        Schema used with the gaderian.utilities.BeanFactoryBuilder service, to define configuration that accepts
+        definitions of classes
+        that may be vended by the generated BeanFactory.
+
+        <element name="bean">
+            Define one class of bean that may be vended. Beans must have either a public constructor that takes no
+            arguments,
+            or a public constructor that takes a single string argument (or both).
+            <attribute name="name" required="true" unique="true">A unique name for the bean.</attribute>
+            <attribute name="class" required="true" translator="class">The bean class that will be instantiated by the
+                factory.
+            </attribute>
+            <attribute name="cacheable" translator="boolean">Defines whether instances of the bean may be cached; the
+                default is specified by the factory.
+            </attribute>
+            <conversion class="factory.BeanFactoryContribution">
+                <map attribute="class" property="beanClass"/>
+            </conversion>
+        </element>
     </schema>
-  </configuration-point>
 
-  <service-point id="Startup" interface="java.lang.Runnable">
+    <service-point id="BeanFactoryBuilder" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-    A service which is used to bootstrap Gaderian; it obtains the gaderian.Startup configuration and runs each
-    Runnable object or service within as the last step of the Registry construction phase.
-    Note that the execution order is arbitrary and the startup objects are NOT executed in separate threads.
+        A service which builds Object Factories. Factories are driven by a configuration that conforms to the
+        gaderian.utilities.BeanFactoryContribution schema.
+        <parameters-schema>
+            <element name="factory">
+                <attribute name="vend-class" translator="class">The class (or interface) vended by this factory.
+                    Contributions must be assignable to this type, or will be ignored. The default value is
+                    java.lang.Object.
+                </attribute>
+                <attribute name="default-cacheable" translator="boolean">The default value for cacheable for any
+                    contributions that are not more specific. The default value is true.
+                </attribute>
+                <attribute name="configuration-id" required="true" translator="configuration">The configuration
+                    containing the contributions that define what classes are actually vended. The configuration must
+                    use the gaderian.utilities.BeanFactoryContribution schema.
+                </attribute>
+                <conversion class="factory.BeanFactoryParameter">
+                    <map attribute="configuration-id" property="contributions"/>
+                </conversion>
+            </element>
+        </parameters-schema>
+        <invoke-factory>
+            <construct class="factory.BeanFactoryBuilder"/>
+        </invoke-factory>
+    </service-point>
 
-    <invoke-factory>
-      <construct class="impl.StartupImpl">
-        <set-configuration configuration-id="Startup" property="runnables"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+    <service-point id="BeanFactoryObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider" visibility="private">
 
-  <configuration-point id="EagerLoad">
+        Provides the bean: object provider prefix.
 
-    Configuration to which services may be contributed. The corresponding services are instantiated eagerly, as the Registry is started.
-    The order in which services are instantiated is not specified.
+        <create-instance class="factory.BeanFactoryObjectProvider"/>
+    </service-point>
 
-    <schema>
-      <element name="load">
+    <contribution configuration-id="gaderian.ObjectProviders">
+        <provider prefix="bean" service-id="BeanFactoryObjectProvider"/>
+    </contribution>
 
-        Identifies a service that will be eagerly loaded.
 
-        <attribute name="service-id" required="true" translator="service-point"/>
-        <rules>
-          <push-attribute attribute="service-id"/>
-          <invoke-parent method="addElement"/>
-        </rules>
-      </element>
+    <service-point id="PipelineFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
+
+        A service implementation factory that assembles a pipeline of filters into a service.
+
+        <parameters-schema>
+
+            Provides the factory with the filter interface that complements the service interface,
+            the configuration data used to construct the pipeline and optionally,
+            a terminator service for the pipeline.
+
+            <element name="create-pipeline">
+                <attribute name="filter-interface" required="true" translator="class">
+                    The filter interface should have the same methods as the service interface,
+                    with an additional parameter for each method with the same type as the service interface.
+                </attribute>
+                <attribute name="configuration-id" required="true" translator="configuration">
+                    A configuration used to identify the filters (and optionally, the terminator) for the pipeline.
+                    The configuration should use the Pipeline schema.
+                </attribute>
+                <attribute name="terminator" translator="object">
+                    Optional terminator. May also be provided in the configuration.
+                    If in neither, a placeholder is provided.
+                </attribute>
+                <conversion class="pipeline.PipelineParameters">
+                    <map attribute="configuration-id" property="pipelineConfiguration"/>
+                </conversion>
+            </element>
+        </parameters-schema>
+
+        <invoke-factory>
+            <construct class="pipeline.PipelineFactory">
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+                <set-service property="defaultImplementationBuilder" service-id="DefaultImplementationBuilder"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
+
+    <schema id="Pipeline">
+        Used with the PipelineFactory to define the filters and optional terminator for a pipeline.
+
+        <element name="filter">
+            Defines a filter in terms of an object.
+
+            <attribute name="name" required="true" translator="qualified-id">
+                A name for the filter that is used when setting the order of the filters.
+            </attribute>
+            <attribute name="object" required="true" translator="object">The object to act as a filter.</attribute>
+            <attribute name="before" translator="id-list">A list of ids of other contributed filters that should precede
+                this filter in the pipeline.
+            </attribute>
+            <attribute name="after" translator="id-list">A list of ids of other contributed filters that should follow
+                this filter in the pipeline.
+            </attribute>
+            <conversion class="pipeline.FilterContribution">
+                <map attribute="object" property="filter"/>
+            </conversion>
+        </element>
+
+        <element name="terminator">
+            An object, implementing the pipeline's service interface,
+            that is invoked by the final filter in the pipeline.
+
+            <attribute name="object" required="true" translator="object"/>
+            <conversion class="pipeline.TerminatorContribution">
+                <map attribute="object" property="terminator"/>
+            </conversion>
+        </element>
     </schema>
-  </configuration-point>
 
-  <service-point id="EagerLoad" interface="java.lang.Runnable">
+    <service-point id="ServicePropertyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-    Service that performs eager loading of other services. This service is contributed into the gaderian.Startup configuration.
+        Creates a service that dynamically (i.e., on each service method invocation) obtains a property
+        from another service and forwards the invocation to the property. The property must be
+        the same type (or assignable to) the constructed service's interface. Typically,
+        the targeted service uses a threaded (or similar) service model, thus requiring dynamic,
+        rather than static, access.
 
-    <invoke-factory model="primitive">
-      <construct class="service.impl.EagerLoader">
-        <set-configuration configuration-id="EagerLoad" property="servicePoints"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+        <invoke-factory>
+            <construct class="impl.ServicePropertyFactory">
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+            </construct>
+        </invoke-factory>
 
-  <contribution configuration-id="Startup">
-    <startup object="service:EagerLoad"/>
-  </contribution>
+        <parameters-schema>
+            <element name="construct">
 
-  <configuration-point id="ObjectProviders">
+                <attribute name="service-id" required="true" translator="service-point">
 
-    Services that can provide objects for the object translator.
+                    The service which contains the property.
 
-    <schema>
-      <element name="provider" key-attribute="prefix">
-        <attribute name="prefix">The prefix used to identify the provider.</attribute>
-        <attribute name="service-id" required="true" translator="service">The object providing service.</attribute>
-        <rules>
-         <push-attribute attribute="service-id"/>
-         <invoke-parent method="addElement"/>
-        </rules>
-      </element>
+                </attribute>
+
+                <attribute name="property" required="true">
+
+                    The name of the property of the target service to expose.
+                </attribute>
+
+                <conversion class="impl.ServicePropertyFactoryParameter">
+                    <map attribute="service-id" property="servicePoint"/>
+                    <map attribute="property" property="propertyName"/>
+                </conversion>
+
+            </element>
+        </parameters-schema>
+
+    </service-point>
+
+
+    <schema id="StrategyRegistry">
+
+        Used with the gaderian.utilities.StrategyFactory to define a set of classes and corresponding
+        strategies
+
+        <element name="strategy">
+
+            <attribute name="class" translator="class" required="true">
+                The class (or interface) to register the stategy against.
+            </attribute>
+
+            <attribute name="object" translator="object" required="true">
+                The stategy instance that corresponds to objects of the given class.
+            </attribute>
+
+            <conversion class="strategy.StrategyContribution">
+                <map attribute="class" property="registerClass"/>
+                <map attribute="object" property="strategy"/>
+            </conversion>
+
+        </element>
+
     </schema>
-  </configuration-point>
 
-  <service-point id="ObjectTranslator" interface="org.ops4j.gaderian.schema.Translator" visibility="private">
+    <service-point id="StrategyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-    Translator that works with ObjectProviders to find or create objects. In case of a missing colon in the input value it will delegate to the smart translator.
+        Creates a service as a wrapper around a StrategyRegistry. The first parameter to
+        each method of the service interface is used to select a strategy instance, and then
+        the method implementation delegates to that instance.
 
-    <invoke-factory>
-      <construct
-        class="service.impl.ObjectTranslator">
-        <set-configuration configuration-id="ObjectProviders" property="contributions"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+        <invoke-factory>
+            <construct class="strategy.StrategyFactory">
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+            </construct>
+        </invoke-factory>
 
-  <service-point id="ServiceObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider"  visibility="private">
+        <parameters-schema>
+            <element name="construct">
+                <attribute name="configuration-id" translator="configuration" required="true">
+                    A configuration utilizing the gaderian.utilities.StrategyRegistry schema, which
+                    defines the classes and matching strategies.
+                </attribute>
+                <attribute name="parameter-index" required="false">
+                    The index (zero-based) of the parameter to be used to determine which
+                    strategy to use.
+                </attribute>
+                <conversion class="strategy.StrategyParameter">
+                    <map attribute="configuration-id" property="contributions"/>
+                    <map attribute="parameter-index" property="parameterIndex"/>
+                </conversion>
+            </element>
+        </parameters-schema>
 
-    ObjectProvider that can locate services. Mapped to the service: prefix.
+    </service-point>
 
-    <create-instance class="service.impl.ServiceObjectProvider"/>
-  </service-point>
+    <service-point id="ChainBuilder" interface="org.ops4j.gaderian.chain.ChainBuilder">
 
-  <service-point id="ConfigurationObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider"  visibility="private">
+        Constructs an Gang of Four Chain of Command implementation
+        for an interface, and a list of objects
+        implementing that interface. Primarily used
+        by the ChainFactory service implementation factory.
 
-    ObjectProvider that can locate configurations. Mapped to the configuration: prefix.
+        <invoke-factory>
+            <construct class="chain.ChainBuilderImpl">
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+            </construct>
+        </invoke-factory>
 
-    <create-instance class="service.impl.ConfigurationObjectProvider"/>
-  </service-point>
+    </service-point>
 
-  <service-point id="ObjectInstanceObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider"  visibility="private">
+    <schema id="ChainContribution">
 
-    ObjectProvider that will instantiate a new instance of a provided class.
-    Mapped to the instance: prefix.
+        Contribution used to set up a chain of commands for use with ChainFactory.
 
-    <create-instance class="service.impl.ObjectInstanceObjectProvider"/>
-  </service-point>
+        <element name="command">
+            <attribute name="id" unique="true" required="true" translator="qualified-id">
+                An id for the command, which is used when ordering the commands.
+            </attribute>
+            <attribute name="before" translator="id-list">
+                List of command ids which should be processed after this command.
+            </attribute>
+            <attribute name="after" translator="id-list">
+                List of command ids which should be processed before this command.
+            </attribute>
+            <attribute name="object" translator="object" required="true">
+                The object implementing the command interface.
+            </attribute>
 
-  <service-point id="ServicePropertyObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider"  visibility="private">
+            <conversion class="chain.ChainContribution">
+                <map attribute="object" property="command"/>
+            </conversion>
+        </element>
 
-    ObjectProvider that will extra a property from a service.
-    Mapped to the service-property: prefix.
+    </schema>
 
-    <create-instance class="service.impl.ServicePropertyObjectProvider"/>
-  </service-point>
+    <service-point id="ChainFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-  <service-point id="ClassObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider"  visibility="private">
+        Service implementation factory that produces a chain of command based on a
+        configuration point that conforms tothe gaderian.utilities.ChainContribution schema.
 
-    ObjectProvider that can find Class objects Mapped to the class: prefix.
+        <invoke-factory>
+            <construct class="chain.ChainFactory">
+                <set-service property="chainBuilder" service-id="ChainBuilder"/>
+            </construct>
+        </invoke-factory>
 
-    <create-instance class="service.impl.ClassObjectProvider"/>
-  </service-point>
+        <parameters-schema>
+            <element name="construct">
+                <attribute name="configuration-id" required="true" translator="configuration">
+                    The configuration (conforming to the ChainContribution schema).
+                </attribute>
 
-  <contribution configuration-id="ObjectProviders">
-    <provider prefix="service" service-id="ServiceObjectProvider"/>
-    <provider prefix="configuration" service-id="ConfigurationObjectProvider"/>
-    <provider prefix="instance" service-id="ObjectInstanceObjectProvider"/>
-    <provider prefix="service-property" service-id="ServicePropertyObjectProvider"/>
-    <provider prefix="class" service-id="ClassObjectProvider"/>
-  </contribution>
+                <rules>
+                    <push-attribute attribute="configuration-id"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
 
-  <service-point id="ThreadLocale" interface="org.ops4j.gaderian.service.ThreadLocale">
+            </element>
+        </parameters-schema>
 
-    Stores the locale for the current thread. The default is determined when the Registry is first
-    constructed.  This locale is used for any messages.
+    </service-point>
 
-    <invoke-factory service-id="ThreadLocaleFactory" model="threaded"/>
+    <service-point id="DefaultImplementationBuilder">
 
-  </service-point>
+        A service which can create a default implementation of an arbitrary interface. The instance returned does
+        nothing.
+        Returned instances are cached and re-used.
 
-  <service-point id="ThreadLocaleFactory" interface="ServiceImplementationFactory" parameters-occurs="none" visibility="private">
+        <invoke-factory>
+            <construct class="impl.DefaultImplementationBuilderImpl">
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-    Special service implementation factory for the ThreadLocale service.
+    <service-point id="PlaceholderFactory"
+                   interface="org.ops4j.gaderian.ServiceImplementationFactory"
+                   parameters-occurs="none">
 
-    <create-instance class="service.impl.ThreadLocaleFactory"/>
+        A service implementation factory that builds a default implementation of a service.
+        The service implementation is a placeholder that does nothing.
 
-  </service-point>
+        <invoke-factory>
+            <construct class="impl.PlaceholderFactory">
+                <set-service property="builder" service-id="DefaultImplementationBuilder"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-  <service-point id="InterfaceSynthesizer" interface="org.ops4j.gaderian.service.InterfaceSynthesizer">
-
-    Synthesizes a service interface from an ordinary JavaBean.
-
-    <invoke-factory>
-      <construct class="service.impl.InterfaceSynthesizerImpl">
-        <set-service property="classFactory" service-id="ClassFactory"/>
-      </construct>
-    </invoke-factory>
-
-  </service-point>
+    <service-point id="JavaProxyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
+        Core service implementation factory that constructs proxies (plain Java proxies) for a specific service. Factory
+        parameters are used to specify the java.lang.reflect.InvocationHandler (defined as a Gaderian service) that
+        should be used for for each service invocation.
+        <parameters-schema>
+            <element name="impl">
+                <attribute name="service" required="true" translator="object"/>
+                <rules>
+                    <push-attribute attribute="service"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </parameters-schema>
+        <invoke-factory>
+            <construct class="org.ops4j.gaderian.impl.JavaProxyFactory"/>
+        </invoke-factory>
+    </service-point>
 
 </module>
