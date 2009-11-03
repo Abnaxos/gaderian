@@ -50,6 +50,9 @@ public class AssemblyInstructionImpl extends BaseLocatable implements AssemblyIn
 
     private boolean _autowireServices;
 
+    /** @since gaderian-1.1 - always perform null checks by default */ 
+    private boolean _performNullChecks = true;
+
     public void addProperty(BuilderFacet facet)
     {
         _properties.add(facet);
@@ -239,5 +242,15 @@ public class AssemblyInstructionImpl extends BaseLocatable implements AssemblyIn
 
             throw ex;
         }
+    }
+
+    public void setPerformNullChecks(final boolean performNullChecks)
+    {
+        _performNullChecks = performNullChecks;
+    }
+
+    public boolean getPerformNullChecks()
+    {
+        return _performNullChecks;
     }
 }

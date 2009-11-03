@@ -264,17 +264,18 @@
                 <attribute name="class-resolver-property">The name of a property to assign the module's ClassResolver
                     to.
                 </attribute>
-                <attribute name="autowire-services" translator="boolean" default="true">If true, the BuilderFactory will
-                    attempt to connect unclaimed properties to services.
-                </attribute>
+                <attribute name="autowire-services" translator="boolean" default="true">If true, the BuilderFactory will attempt to connect unclaimed properties to services</attribute>
                 <attribute name="error-log-property">The name of a property to assign the service's ErrorLog to.
                 </attribute>
 
+                <attribute name="perform-null-checks" translator="boolean" default="true">If true (the default), all fields annotated with the @Required annotation will be checked that they have been assigned a value.  If false, this check will be skipped</attribute>
                 <rules>
                     <create-object class="service.impl.BuilderParameter"/>
                     <read-attribute attribute="class" property="className"/>
                     <read-attribute attribute="initialize-method" property="initializeMethod"/>
                     <read-attribute attribute="autowire-services" property="autowireServices"/>
+                    <read-attribute attribute="perform-null-checks" property="performNullChecks"/>
+                    
                     <invoke-parent method="addElement"/>
 
                     <create-object class="service.impl.BuilderMessagesFacet"/>

@@ -56,7 +56,7 @@ public class BuilderFactoryLogic
         _serviceId = factoryParameters.getServiceId();
         _contributingModule = factoryParameters.getInvokingModule();
 
-        // Check whether annotations are in this class loader or not
+        // Check whether annotations are available in this class loader or not
         _annotationsEnabled = _contributingModule.getClassResolver().checkForClass( "org.ops4j.gaderian.annotations.validation.Required" ) != null;
 
     }
@@ -91,7 +91,7 @@ public class BuilderFactoryLogic
         // Allow the decorator to decorate for lifecycle calls etc
         serviceClass = ClassDecorator.decorate( serviceClass, _parameter, _annotationsEnabled );
 
-        List parameters = _parameter.getParameters();
+        final List parameters = _parameter.getParameters();
 
         final Object coreServiceInstance;
         if ( _parameter.getAutowireServices() && parameters.isEmpty() )
@@ -103,8 +103,8 @@ public class BuilderFactoryLogic
             coreServiceInstance = instantiateExplicitConstructorInstance( serviceClass, parameters );
         }
 
-        // We only do validation if annotations are enabled
-        if ( _annotationsEnabled )
+        // We only do validation if we are not skipping the check && annotations are enabled 
+        if (_parameter.getPerformNullChecks() && _annotationsEnabled )
         {
             // Validate the constructed instance - annotations and the like
             ServiceInstanceUtils.validate( serviceClass, coreServiceInstance );

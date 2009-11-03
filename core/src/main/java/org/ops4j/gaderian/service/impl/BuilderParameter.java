@@ -103,6 +103,16 @@ public class BuilderParameter extends BaseLocatable
         return _assemblyInstruction.getAutowireServices();
     }
 
+    public void setPerformNullChecks(boolean performNullChecks)
+    {
+        _assemblyInstruction.setPerformNullChecks(performNullChecks);
+    }
+    
+    public boolean getPerformNullChecks()
+    {
+        return _assemblyInstruction.getPerformNullChecks();
+    }
+    
     /** @since 1.1 */
     public BuilderFacet getFacetForType(ServiceImplementationFactoryParameters factoryParameters,
             Class targetType)

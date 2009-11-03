@@ -289,5 +289,23 @@ public class TestBuilderFactory extends GaderianCoreTestCase
 
     }
 
+    public void testRequiredAnnotationSkipNullChecks() throws Exception
+    {
+        Registry r = buildFrameworkRegistry("RequiredAnnotationSkipNullChecks.xml", false);
+
+        try
+        {
+            final RequiredAnnotation annotation = r.getService(RequiredAnnotation.class);
+            annotation.doIt();
+            
+        }
+        catch (ApplicationRuntimeException e)
+        {
+            unreachable();
+        }
+
+
+    }
+
 
 }

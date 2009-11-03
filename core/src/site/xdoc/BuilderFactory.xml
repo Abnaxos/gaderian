@@ -33,7 +33,7 @@
 &lt;construct
     class="..." autowire-services="..." log-property="..." messages-property="..."
     service-id-property="..." initialize-method="..." error-log-property="..."
-    error-handler-property="..." class-resolver-property="..."&gt;
+    error-handler-property="..." class-resolver-property="..." perform-null-checks="..."&gt;
 
     &lt;log/&gt;
     &lt;messages/&gt;
@@ -145,6 +145,14 @@
 					<td>Allows the service id of the <em>constructed</em> service to be
 						assigned to a property of the service implementation.</td>
 				</tr>
+
+                <tr>
+                    <td>perform-null-checks</td>
+                    <td>no</td>
+                    <td>If true (the default), then the BuilderFactory will validate that all fields annotated with the @Required annotation have been assigned a value.  If false, this check will be skipped.
+                    </td>
+                </tr>
+                
 			</table>
 			<p>The remaining elements are enclosed by the &lt;construct&gt; element,
 				and are used to supply constructor parameters and configure properties
