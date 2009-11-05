@@ -23,6 +23,7 @@
   </properties>
   <body>
       <section name="References">
+          
           <p>Below is a list of reference information available for the various parts of Gaderian; how to use and configure components and resources</p>
           <ul>
               <li>
@@ -30,9 +31,6 @@
               </li>
               <li>
                   <a href="configurations.html">Configurations</a>
-              </li>
-              <li>
-                  <a href="hivedoc.html">HiveDoc</a>
               </li>
               <li>
                   <a href="descriptor.html">Module Descriptor</a>
@@ -48,6 +46,9 @@
               </li>
               <li>
                   <a href="instance-initialization.html">Instance Initialization</a>
+              </li>
+              <li>
+                  <a href="module-reports.html">Module Reports</a>
               </li>
 
           </ul>

@@ -32,6 +32,7 @@
                 <li>Activate</li>
                 <li>Invocation Complete</li>
                 <li>Passivate</li>
+                <li>Invocation Completed</li>
                 <li>Shutdown Signalled</li>
                 <li>Shutdown</li>
             </ul>
@@ -43,7 +44,7 @@
             <subsection name="Activate">
             </subsection>
 
-            <subsection name="Invocation Complete">
+            <subsection name="Invocation Started">
             </subsection>
 
             <subsection name="Passivate">

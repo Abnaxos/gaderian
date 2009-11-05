@@ -30,14 +30,16 @@
 
         <head>
             <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-9000238-1");
-pageTracker._trackPageview();
-} catch(err) {}</script>
+                var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+                document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js'
+                type='text/javascript'%3E%3C/script%3E"));
+            </script>
+            <script type="text/javascript">
+                try {
+                var pageTracker = _gat._getTracker("UA-9000238-1");
+                pageTracker._trackPageview();
+                } catch(err) {}
+            </script>
         </head>
 
         <breadcrumbs>
@@ -56,12 +58,12 @@ pageTracker._trackPageview();
             <item name="References" collapse="true" href="references.html">
                 <item name="Services" href="services.html"/>
                 <item name="Configurations" href="configurations.html"/>
-                <item name="Module Reports" href="module-reports.html"/>
                 <item name="Module Descriptor" href="descriptor.html"/>
                 <item name="Contribution Processing Rules" href="rules.html"/>
                 <item name="Conditional Contributions" href="conditional.html"/>
                 <item name="Serializing Services" href="serializing.html"/>
                 <item name="Instance Initialization" href="instance-initialization.html"/>
+                <item name="Module Reports" href="module-reports.html"/>
             </item>
 
 
@@ -78,7 +80,7 @@ pageTracker._trackPageview();
 
         <menu ref="modules"/>
 
-        <menu ref="reports" inherit="bottom" />
+        <menu ref="reports" inherit="bottom"/>
 
         <menu name="Other Resources" inherit="bottom">
             <item name="Home" href="/index.html"/>

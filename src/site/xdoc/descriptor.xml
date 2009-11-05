@@ -14,1005 +14,1081 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
-  <properties>
-    <title>Gaderian Module Descriptor</title>
-  </properties>
-  <body>
-      <section name="Gaderian Module Descriptor">
-    <p>The purpose of the module descriptor is to provide a runtime and
-      compile-time description of each Gaderian module in terms of service and
-      configuration extension points and contributions to those extension
-      points.
-    </p>
-    <p>The descriptor is named
-      <code>module.xml</code>
-      and is stored in the
-      META-INF/org/ops4j/gaderian directory of the module.
-    </p>
-    <p>The root element of the descriptor is the
-      <a href="descriptor.html#module">&lt;module&gt;</a>
-      element.
-    </p>
-      </section>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+    <properties>
+        <title>Gaderian Module Descriptor</title>
+    </properties>
+    <body>
+        <section name="Gaderian Module Descriptor Overview">
+            <p>The purpose of the module descriptor is to provide a runtime and
+                compile-time description of each Gaderian module in terms of service and
+                configuration extension points and contributions to those extension
+                points.
+            </p>
+            <p>The descriptor is named
+                <code>module.xml</code>
+                and is stored in the META-INF/org/ops4j/gaderian directory of the module.
+            </p>
+            <p>The root element of the descriptor is the
+                <a href="descriptor.html#module">&lt;module&gt;</a>
+                element.</p>
+            <p>A sample module is shown below, attempting to show some of the more common a descriptor.
+            </p>
 
-    <section name="assembly">
-      <p>&lt;assembly&gt; is used to define an attribute within an
-        <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
-        element. Inside
-        a
-        <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
-        , only known attributes are allowed in elements; unknown
-        attributes will be logged as an error and ignored. In addition, some
-        attributes are required; again, errors occur if the contributed element
-        does not provide a value for the attribute.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>autowire-services</td>
-          <td>boolean</td>
-          <td>no</td>
-          <td>The name of the attribute.</td>
-        </tr>
-        <tr>
-          <td>initialize-method</td>
-          <td>string</td>
-          <td>no</td>
-          <td>If true, the attribute must be provided in the contributed
-            configuration element. The default is false.
-          </td>
-        </tr>
-      </table>
-      <p>
-        <a href="assembly.html">documented separately</a>
-        .
-      </p>
-    </section>
-    <section name="attribute">
-      <p>&lt;attribute&gt; is used to define an attribute within an
-        <a href="descriptor.html#element">&lt;element&gt;</a>
-        . Inside
-        a
-        <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
-        , only known attributes are allowed in elements; unknown
-        attributes will be logged as an error and ignored. In addition, some
-        attributes are required; again, errors occur if the contributed element
-        does not provide a value for the attribute.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>name</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The name of the attribute.</td>
-        </tr>
-        <tr>
-          <td>required</td>
-          <td>boolean</td>
-          <td>no</td>
-          <td>If true, the attribute must be provided in the contributed
-            configuration element. The default is false.
-          </td>
-        </tr>
-        <tr>
-          <td>default</td>
-          <td>string</td>
-          <td>no</td>
-          <td>Specifies the default value for this attribute. This value is used
-            whenever this attribute has been omitted. Note that this default
-            value is just like a specified value also subject to symbol expansion
-            and translation.
-          </td>
-        </tr>
-        <tr>
-          <td>unique</td>
-          <td>boolean</td>
-          <td>no</td>
-          <td>If true, the attribute must contain a unique value with respect to
-            all other contributions to the same configuration point. The default is false.
-          </td>
-        </tr>
-        <tr>
-          <td>translator</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The
-            <a href="rules.html#Translators">translator</a>
-            configuration that is used to convert the attribute into a useable
-            type. By default, the attribute is treated as a single string.
-          </td>
-        </tr>
-      </table>
+            <subsection name="Sample Module">
+<pre>
+&lt;<a href="descriptor.html#module">module</a> id="gaderian.sample" version="1.0.0">
+    
+    &lt;<a href="descriptor.html#sub-module">sub-module</a> descriptor="some-sub-module.xml"/>
 
-    </section>
-    <section name="configuration-point">
-      <p>The &lt;configuration-point&gt; element defines a configuration extension
-        point.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The simple id of the service extension point. The fully qualified
-            id for the extension point is created by prefixing with the module's
-            id (and a dot).
-          </td>
-        </tr>
-        <tr>
-          <td>visibility</td>
-          <td>
-            <code>public | private</code>
-          </td>
-          <td>no</td>
-          <td>
-            If
-            <code>private</code>
-            is specified, then the configuration point may only be referenced
-            (or contributed to) from within the same module. It will not be visible to the application
-            (via the
-            <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a>
-            ) if private. The default is
-            <code>public</code>
-            .
-          </td>
-        </tr>
-        <tr>
-          <td>occurs</td>
-          <td>
-            <code>unbounded | 0..1 | 1 | 1..n | none</code>
-          </td>
-          <td>no</td>
-          <td>The number of contributions allowed:
-            <ul>
-              <li>
-                <strong>unbounded</strong>
-                (default): any number
-              </li>
-              <li>
-                <strong>0..1</strong>
-                : optional
-              </li>
-              <li>
-                <strong>1</strong>
-                : required
-              </li>
-              <li>
-                <strong>1..n</strong>
-                :
-                at least one
-              </li>
-              <li>
-                <strong>none</strong>
-                : none allowed
-              </li>
-            </ul>
-            <div class="frame note"><div class="label">Note</div><div class="content">
-              <strong>none</strong>
-              doesn't
-              make sense for occurances to a configuration point, but does occasionally make sense for parameters to a
-              factory.
-            </div></div>
-          </td>
-        </tr>
-        <tr>
-          <td>schema-id</td>
-          <td>string</td>
-          <td>no</td>
-          <td>Used to reference a
-            <a href="descriptor.html#schema">&lt;schema&gt;</a>
-            (in the same module, or a different
-            one) that defines the format of contributions into the configuration
-            point. This may be omitted, in which case the extension point will
-            contain a list of
-            <a href="gaderian/apidocs/org/ops4j/gaderian/Element.html">Element</a>
-            .
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#schema">&lt;schema&gt;</a>
-      </p>
-      <p> &lt;configuration-point&gt; only defines a configuration point, it does not
-        supply any data into that point. The &lt;contribution&gt; element is used to
-        provide such data.
-      </p>
-    </section>
-    <section name="contribution">
-      <p>The &lt;contribution&gt; element contributes elements to an existing
-        configuration extension point.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>configuration-id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>Either the id of an
-            <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
-            within the module, or
-            the fully qualified id of an &lt;configuration-point&gt; in another
-            module.
-          </td>
-        </tr>
-        <tr>
-          <td>if</td>
-          <td>string</td>
-          <td>no</td>
-          <td>A
-            <a href="conditional">conditional expression</a>
-            controlling whether the contribution is used or ignored.
-          </td>
-        </tr>
-      </table>
-      <p>The content of the &lt;contribution&gt; consists of elements. These elements
-        are converted, in accordance with the configuration point's
-        <a href="descriptor.html#schema">&lt;schema&gt;</a>
-        ,
-        into Java objects.
-      </p>
-    </section>
-    <section name="conversion">
-      <p>&lt;conversion&gt; is an alternative to
-        <a href="descriptor.html#rules">&lt;rules&gt;</a>
-        that is generally simpler
-        and more concise. An
-        <a href="descriptor.html#element">&lt;element&gt;</a>
-        should contain &lt;conversion&gt; or &lt;rules&gt;
-        but not both.
-      </p>
-      <p> &lt;conversion&gt; is geared towards the typical case; a straight-forward
-        mapping of the element to an instance of a Java class, and a mapping of
-        the element's attributes to the properties of the Java object.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>class</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The fully qualified name of a Java class to instantiate.</td>
-        </tr>
-        <tr>
-          <td>parent-method</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The name of a method of the parent object used to add the created
-            object to the parent. The default,
-            <code>addElement</code>
-            , is
-            appropriate for top-level &lt;element&gt;s.
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#map">&lt;map&gt;</a>
-      </p>
-      <p>Each attribute will be mapped to a property. A limited amount of name
-        mangling occurs: if the attribute name contains dashes, they are
-        removed, and the character following is converted to upper case. So, an
-        attribute named "complex-attribute-name" would be mapped to a property
-        named "complexAttributeName". Only attributes identified with a
-        <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
-        element will be mapped, others will be ignored.
-      </p>
-    </section>
-    <section name="create-instance">
-      <p> &lt;create-instance&gt; is used, within
-        <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-        and
-        <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
-        to create the core service implementation for a service by instantiating
-        a class. This is appropriate for simple services that require no
-        explicit configuration.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>class</td>
-          <td>class name</td>
-          <td>yes</td>
-          <td>The class name to instantiate. May use
-            <a href="instance-initialization">instance initializer</a>
-            syntax.
-          </td>
-        </tr>
-        <tr>
-          <td>model</td>
-          <td>
-            <code>primitive | singleton | threaded | pooled</code>
-          </td>
-          <td>no</td>
-          <td>The model used to construct and manage the service.
-            <strong>
-              singleton
-            </strong>
-            is the default.
-          </td>
-        </tr>
-      </table>
-      <p>Additional service models can be defined via the gaderian.ServiceModels
-        configuration point.
-      </p>
-    </section>
-    <section name="dependency">
-      <p> &lt;dependency&gt; is used, within
-        <a href="descriptor.html#module">&lt;module&gt;</a>
-        to specify a dependency upon another
-        required module.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>module-id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The id of the required module.</td>
-        </tr>
-        <tr>
-          <td>version</td>
-          <td>version number</td>
-          <td>no</td>
-          <td>The version of the required module as a dotted sequence of three numbers.
-            Example: "1.0.0". With no version specified any version of the required
-            module is matched.
-          </td>
-        </tr>
-      </table>
-      <p>In the future Gaderian will support other more sophisticated version matching
-        types for dependencies.
-      </p>
-    </section>
-    <section name="element">
-      <p>The &lt;element&gt; element is used to define an element in a the
-        <a href="descriptor.html#schema">&lt;schema&gt;</a>
-        . &lt;element&gt;
-        may also be nested within another &lt;element&gt;, to indicate an element
-        that may be enclosed within another element.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>name</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The name of the element.</td>
-        </tr>
-        <tr>
-          <td>content-translator</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The
-            <a href="rules.html#Translators">translator</a>
-            configuration that is used to convert the element's content into a
-            useable type. By default, the content is treated as a single string.
-          </td>
-        </tr>
-        <tr>
-          <td>key-attribute</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The name of this element's &lt;attribute&gt; whose
-            <em>translated</em>
-            value will
-            be used as a unique key for configuration contributions corresponding to this
-            element. The contributions can then be accessed in a Map using this key. The
-            specified &lt;attribute&gt; is implicitly marked as
-            <em>required</em>
-            and
-            <em>unique</em>
-            .
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
-        ,
-        <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
-        ,
-        <a href="descriptor.html#element">&lt;element&gt;</a>
-        ,
-        <a href="descriptor.html#rules">&lt;rules&gt;</a>
-      </p>
-      <p>Future enhancements to the Gaderian framework will include greater
-        sophistication in defining configuration content.
-      </p>
-    </section>
-    <section name="implementation">
-      <p>The
-        <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
-        element contributes a core implementation or
-        interceptors to a service extension point.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>service-id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The id of the service to extend; this may be a fully qualified id,
-            or the local id of a service within the same module.
-          </td>
-        </tr>
-        <tr>
-          <td>if</td>
-          <td>string</td>
-          <td>no</td>
-          <td>A
-            <a href="conditional">conditional expression</a>
-            controlling whether the contribution is used or ignored.
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#create-instance">&lt;create-instance&gt;</a>
-        ,
-        <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>
-        ,
-        <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
-      </p>
-    </section>
-    <section name="interceptor">
-      <p>&lt;interceptor&gt; contributes an interceptor factory to a service
-        extension point. An interceptor factory is a service which implements
-        the
-        <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceInterceptorFactory.html">ServiceInterceptorFactory
-        </a>
-        interface.
-      </p>
-      <p>When the service is constructed, each invoked interceptor factory will
-        fabricate an interceptor class to provide additional functionality for
-        the service.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>service-id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The id of the service that will create the interceptor for the
-            service. This may be the local id of a service defined within the
-            same module, or a fully qualified id.
-          </td>
-        </tr>
-        <tr>
-          <td>before</td>
-          <td>string</td>
-          <td>no</td>
-          <td>A list of interceptors whose behavior should come later in
-            execution than this interceptor.
-          </td>
-        </tr>
-        <tr>
-          <td>after</td>
-          <td>string</td>
-          <td>no</td>
-          <td>A list of interceptors whose behavior should come earlier in
-            execution than this interceptor.
-          </td>
-        </tr>
-        <tr>
-          <td>name</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The name to use for ordering this interceptor. Defaults to the service-id. This
-            comes in handy when using the same factory to create multiple unique interceptors which
-            should be able to be ordered with respect to one another.
-          </td>
-        </tr>
-      </table>
-      <p>Like a service implementation factory, a service interceptor factory
-        may need parameters. As with
-        <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
-        , parameters to the
-        interceptor factory are enclosed by the &lt;interceptor&gt; element. The
-        service interceptor factory will decode the parameters using the schema
-        identified by its
-        <code>parameters-schema-id</code>
-        attribute.
-      </p>
-      <p>Interceptor ordering is based on dependencies; each interceptor can
-        identify, by name, other interceptors. Interceptors in
-        the
-        <code>before</code>
-        list are deferred until after this interceptor.
-        Likewise, this interceptor is deferred until after all interceptors in
-        the
-        <code>after</code>
-        list.
-      </p>
-      <div class="frame note"><div class="label">Note</div><div class="content">The
-        <code>after</code>
-        dependencies will look familar to anyone who
-        has used
-        <a href="http://ant.apache.org/">Ant</a>
-        or any version
-        of Make.
-        <code>before</code>
-        dependencies are simply the opposite.
-      </div></div>
-      <p>The value for
-        <code>before</code>
-        or
-        <code>after</code>
-        is a list of
-        interceptor names seperated by commas. Service ids may be unqualified if they
-        are within the same module. Alternately, the fixed value
-        <code>*</code>
-        may be used instead of a list: this indicates that the interceptor
-        should be ordered absolutely first or absolutely last.
-      </p>
-    </section>
-    <section name="invoke-factory">
-      <p>The &lt;invoke-factory&gt; element is used to provide a service
-        implementation for a service by invoking another service, a factory
-        service.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>service-id</td>
-          <td>string</td>
-          <td>no</td>
-          <td>The id of the factory service. This may be a simple id for a
-            service within the same module, or a fully qualified service id. The default, if not
-            specified, is
-            <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a>
-            .
-          </td>
-        </tr>
-        <tr>
-          <td>model</td>
-          <td>
-            <code>primitive | singleton | threaded | pooled</code>
-          </td>
-          <td>no</td>
-          <td>The model used to construct and manage the service.
-            <strong>
-              singleton
-            </strong>
-            is the default.
-          </td>
-        </tr>
-      </table>
-      <p>A service factory defines its parameters in terms of a schema. The
-        content of the &lt;invoke-factory&gt; (excluding any
-        <a href="descriptor.html#assembly">&lt;assembly&gt;</a>
-        elements) is
-        converted, in accordance with the factory's schema, and provided to the factory.
-      </p>
-      <p>The &lt;invoke-factory&gt; element may additionally contain
-        <a href="descriptor.html#assembly">&lt;assembly&gt;</a>
-        elements to
-        initialize the service implementation created by the factory.
-      </p>
-      <div class="frame note"><div class="label">Note</div><div class="content">
-        Additional service models can be defined via the gaderian.ServiceModels
-        configuration point.
-      </div></div>
-    </section>
-    <section name="map">
-      <p>The &lt;map&gt; element appears within
-        <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
-        to override the default
-        mapping from an attribute to a property. By default, the property name
-        is expected to match the attribute name (with the name mangling
-        described in the description of
-        <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
-        ); the &lt;map&gt; element is
-        used to handle exceptions to the rule.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>attribute</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The name of the attribute, which should match a name defined by an
-            <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
-            (of the enclosing
-            <a href="descriptor.html#element">&lt;element&gt;</a>
-            ).
-          </td>
-        </tr>
-        <tr>
-          <td>property</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The corresponding property (of the Java object specified by the
-            enclosing
-            <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
-            )
-          </td>
-        </tr>
-      </table>
-    </section>
-    <section name="module">
-      <p>The &lt;module&gt; element is the root element.</p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The id should be a dotted sequence, like a package name. In
-            general, the module id should
-            <em>be</em>
-            the package name.
-          </td>
-        </tr>
-        <tr>
-          <td>version</td>
-          <td>version number</td>
-          <td>yes</td>
-          <td>The version of the module as a dotted sequence of three numbers.
-            Example: "1.0.0"
-          </td>
-        </tr>
-        <tr>
-          <td>package</td>
-          <td>string</td>
-          <td>no</td>
-          <td>
-            The package which contains Java types within the module. Defaults to the
-            module's id if not specified.
-          </td>
-        </tr>
-          <tr>
-          <td>default-service-factory-id</td>
-          <td>string</td>
-          <td>no</td>
-          <td>
-            The service id of the service implementation factory which should be considered the default factory for this
-              module. Defaults to 'gaderain.BuilderFactory' if not specified.
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
-        ,
-        <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
-        ,
-        <a href="descriptor.html#dependency">&lt;dependency&gt;</a>
-        ,
-        <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
-        ,
-        <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-        ,
-        <a href="descriptor.html#schema">&lt;schema&gt;</a>
-        ,
-        <a href="descriptor.html#sub-module">&lt;sub-module&gt;</a>
-      </p>
+    &lt;<a href="descriptor.html#service-point">service-point</a> id="ServiceA" interface="ServiceA">
+        &lt;<a href="descriptor.html#create-instance">create-instance</a> class="ServiceAImpl"/>
+    &lt;/service-point>
 
-      <p>
-        Every module is mapped to a
-        <em>Java package</em>
-        , using the package attribute (or the module's id if not specified). When a class name
-        is referenced within a module, the name will be searched for within the package if not found normally. This
-        applies to all contributions, etc.,
-        within the module ... virtually anywhere a Java class name can be used. Literally, if the class can't be found
-        by the provided type, the
-        module's package name is prefixed and a second search is attempted. The interface attribute of the
-        <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-        element
-        is slightly different.
-      </p>
-    </section>
-    <section name="parameters-schema">
+    &lt;service-point id="ServiceB" interface="ServiceB">
+        &lt;<a href="descriptor.html#invoke-factory">invoke-factory</a>
+            &lt;<a href="gaderian/BuilderFactory.html#construct">construct</a> class="ServiceBImpl"/>
+        &lt;/invoke-factory>
+    &lt;/service-point>
 
-      <p>The &lt;parameters-schema&gt; element is identical to the
-        <a href="descriptor.html#schema">&lt;schema&gt;</a>
-        element, but only appears
-        inside
-        <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-        , to define the schema for the parameters for a service implementation factory or service interceptor factory.
-      </p>
-      <div class="frame note"><div class="label">Note</div><div class="content">This element and the owning
-        <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-        element's
-        <code>parameters-schema-id</code>
-        attribute are mutually exclusive.
-      </div></div>
+    &lt;<a href="descriptor.html#implementation">implementation</a> service-id="ServiceB">
+        &lt;<a href="descriptor.html#interceptor">interceptor</a> service-id="gaderian.LoggingInterceptor">
+            &lt;include method="no*"/>
+            &lt;exclude method="always*"/>
+        &lt;/interceptor>
+    &lt;/implementation>
+
+    &lt;<a href="descriptor.html#configuration-point">configuration-point</a> id="SomeConfiguration">
+        &lt;<a href="descriptor.html#schema">schema</a>>
+          &lt;<a href="descriptor.html#element">element</a> name="element">
+            &lt;<a href="descriptor.html#attribute">attribute</a> name="key"/>
+            &lt;attribute name="value"/>
+          &lt;/element>
+          &lt;<a href="descriptor.html#rules">rules</a>>
+            <a href="rules.html">see rules for content</a>
+          &lt;/rules>
+        &lt;/schema>
+    &lt;/configuration-point>
+
+    &lt;<a href="descriptor.html#contribution">contribution</a> configuration-id="SomeConfiguration">
+        &lt;element key="AKey" value="AValue"/>
+    &lt;/contribution>
+
+    &lt;schema id="ASchema">
+        &lt;element name="ABean">
+            &lt;attribute name="aProperty" required="true"/>
+            &lt;<a href="descriptor.html#conversion">conversion</a> class="ABean">
+                &lt;<a href="descriptor.html#map">map</a> attribute="aProperty" property="someProperty"/>
+            &lt;/conversion>
+        &lt;/element>
+    &lt;/schema>
+
+&lt;/module>
+</pre>
+
+        </subsection>
     </section>
 
-    <section name="rules">
-      <p> &lt;rules&gt; is a container for element and attribute parsing rules within
-        an
-        <a href="descriptor.html#element">&lt;element&gt;</a>
-        . These rules are responsible for converting the contributed
-        element and its attributes into objects and object properties. The
-        available rules are
-        <a href="rules">documented separately</a>
-        .
-      </p>
-    </section>
-    <section name="schema">
-      <p>The &lt;schema&gt; element is used to describe the format of element
-        contributions to an
-        <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
-        , or parameters provided to a
-        service or interceptor factory.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>Assigns a local id to the schema that may be referenced elsewhere.</td>
-        </tr>
-        <tr>
-          <td>visibility</td>
-          <td>
-            <code>public | private</code>
-          </td>
-          <td>no</td>
-          <td>
-            If
-            <code>private</code>
-            is specified, then the schema may only be referenced
-            from within the same module. The default is
-            <code>public</code>
-            .
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#element">&lt;element&gt;</a>
-      </p>
-      <p>At a future time, the &lt;schema&gt; element will be extended to provide
-        more options, to provide more precise control over the elements that may
-        be provided in an &lt;contribution&gt;. At this time, a &lt;schema&gt; is simply a
-        list of &lt;element&gt; elements.
-      </p>
+        <section name="Element Descriptions">
 
-        <div class="frame warning">
-            <div class="label">Warning</div>
-            <div class="content">
-                When &lt;schema&gt; appears directly within
+            <p>The content of a module descriptor is described, element by element, in more detail below.</p>
+
+    <subsection name="module">
+            <p>The &lt;module&gt; element is the root element.</p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The id should be a dotted sequence, like a package name. In
+                        general, the module id should
+                        <em>be</em>
+                        the package name.
+                    </td>
+                </tr>
+                <tr>
+                    <td>version</td>
+                    <td>version number</td>
+                    <td>yes</td>
+                    <td>The version of the module as a dotted sequence of three numbers.
+                        Example: "1.0.0"
+                    </td>
+                </tr>
+                <tr>
+                    <td>package</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>
+                        The package which contains Java types within the module. Defaults to the
+                        module's id if not specified.
+                    </td>
+                </tr>
+                <tr>
+                    <td>default-service-factory-id</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>
+                        The service id of the service implementation factory which should be considered the default
+                        factory for this
+                        module. Defaults to 'gaderain.BuilderFactory' if not specified.
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
+                ,
                 <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
-                , or &lt;parameters-schema&gt;
-                appears directly within
+                ,
+                <a href="descriptor.html#dependency">&lt;dependency&gt;</a>
+                ,
+                <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
+                ,
                 <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
-                , then the
-                <code>id</code>
+                ,
+                <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                ,
+                <a href="descriptor.html#sub-module">&lt;sub-module&gt;</a>
+            </p>
+
+            <p>
+                Every module is mapped to a
+                <em>Java package</em>
+                , using the package attribute (or the module's id if not specified). When a class name
+                is referenced within a module, the name will be searched for within the package if not found normally.
+                This
+                applies to all contributions, etc.,
+                within the module ... virtually anywhere a Java class name can be used. Literally, if the class can't be
+                found
+                by the provided type, the
+                module's package name is prefixed and a second search is attempted. The interface attribute of the
+                <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
+                element
+                is slightly different.
+            </p>
+        </subsection>
+
+        <subsection name="contribution">
+            <p>The &lt;contribution&gt; element contributes elements to an existing
+                configuration extension point.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>configuration-id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>Either the id of an
+                        <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
+                        within the module, or
+                        the fully qualified id of an &lt;configuration-point&gt; in another
+                        module.
+                    </td>
+                </tr>
+                <tr>
+                    <td>if</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>A
+                        <a href="conditional">conditional expression</a>
+                        controlling whether the contribution is used or ignored.
+                    </td>
+                </tr>
+            </table>
+            <p>The content of the &lt;contribution&gt; consists of elements. These elements
+                are converted, in accordance with the configuration point's
+                <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                ,
+                into Java objects.
+            </p>
+        </subsection>
+
+        <subsection name="configuration-point">
+            <p>The &lt;configuration-point&gt; element defines a configuration extension
+                point.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The simple id of the service extension point. The fully qualified
+                        id for the extension point is created by prefixing with the module's
+                        id (and a dot).
+                    </td>
+                </tr>
+                <tr>
+                    <td>visibility</td>
+                    <td>
+                        <code>public | private</code>
+                    </td>
+                    <td>no</td>
+                    <td>
+                        If
+                        <code>private</code>
+                        is specified, then the configuration point may only be referenced
+                        (or contributed to) from within the same module. It will not be visible to the application
+                        (via the
+                        <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a>
+                        ) if private. The default is
+                        <code>public</code>
+                        .
+                    </td>
+                </tr>
+                <tr>
+                    <td>occurs</td>
+                    <td>
+                        <code>unbounded | 0..1 | 1 | 1..n | none</code>
+                    </td>
+                    <td>no</td>
+                    <td>The number of contributions allowed:
+                        <ul>
+                            <li>
+                                <strong>unbounded</strong>
+                                (default): any number
+                            </li>
+                            <li>
+                                <strong>0..1</strong>
+                                : optional
+                            </li>
+                            <li>
+                                <strong>1</strong>
+                                : required
+                            </li>
+                            <li>
+                                <strong>1..n</strong>
+                                :
+                                at least one
+                            </li>
+                            <li>
+                                <strong>none</strong>
+                                : none allowed
+                            </li>
+                        </ul>
+                        <div class="frame note">
+                            <div class="label">Note</div>
+                            <div class="content">
+                                <strong>none</strong>
+                                doesn't
+                                make sense for occurances to a configuration point, but does occasionally make sense for
+                                parameters to a
+                                factory.
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>schema-id</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>Used to reference a
+                        <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                        (in the same module, or a different
+                        one) that defines the format of contributions into the configuration
+                        point. This may be omitted, in which case the extension point will
+                        contain a list of
+                        <a href="gaderian/apidocs/org/ops4j/gaderian/Element.html">Element</a>
+                        .
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#schema">&lt;schema&gt;</a>
+            </p>
+            <p> &lt;configuration-point&gt; only defines a configuration point, it does not
+                supply any data into that point. The &lt;contribution&gt; element is used to
+                provide such data.
+            </p>
+        </subsection>
+
+        <subsection name="dependency">
+            <p> &lt;dependency&gt; is used, within
+                <a href="descriptor.html#module">&lt;module&gt;</a>
+                to specify a dependency upon another
+                required module.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>module-id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The id of the required module.</td>
+                </tr>
+                <tr>
+                    <td>version</td>
+                    <td>version number</td>
+                    <td>no</td>
+                    <td>The version of the required module as a dotted sequence of three numbers.
+                        Example: "1.0.0". With no version specified any version of the required
+                        module is matched.
+                    </td>
+                </tr>
+            </table>
+            <p>In the future Gaderian will support other more sophisticated version matching
+                types for dependencies.
+            </p>
+        </subsection>
+
+        <subsection name="implementation">
+            <p>The
+                <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
+                element contributes a core implementation or
+                interceptors to a service extension point.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>service-id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The id of the service to extend; this may be a fully qualified id,
+                        or the local id of a service within the same module.
+                    </td>
+                </tr>
+                <tr>
+                    <td>if</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>A
+                        <a href="conditional">conditional expression</a>
+                        controlling whether the contribution is used or ignored.
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#create-instance">&lt;create-instance&gt;</a>
+                ,
+                <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>
+                ,
+                <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
+            </p>
+        </subsection>
+
+        <subsection name="service-point">
+            <p>The &lt;service-point&gt; element defines a service extension point.</p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The simple id of the service extension point. The fully qualified
+                        id for the extension point is created by prefixing with the module's
+                        id (and a dot).
+                    </td>
+                </tr>
+                <tr>
+                    <td>interface</td>
+                    <td>class name</td>
+                    <td>no</td>
+                    <td>The name of the Java interface
+                        (
+                        <a href="services.html#Bean+Services">or class</a>
+                        ) supplied by this
+                        service extension point. If no value is provided, the interface defaults to the
+                        service id (and will then be qualified by the module's package).
+                    </td>
+                </tr>
+                <tr>
+                    <td>visibility</td>
+                    <td>
+                        <code>public | private</code>
+                    </td>
+                    <td>no</td>
+                    <td>
+                        If
+                        <code>private</code>
+                        is specified, then the service may only be referenced
+                        (or contributed to) from within the same module. It will not be visible to the application
+                        (via the
+                        <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a>
+                        ) if private. The default is
+                        <code>public</code>
+                        . It is common
+                        for a module to have several public services acting as a facade over many more private services.
+                    </td>
+                </tr>
+                <tr>
+                    <td>parameters-schema-id</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>Used to reference a
+                        <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                        (in the same module, or a different
+                        one) that defines parameters used by the service. This is used when
+                        the service being defined is a
+                        <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceImplementationFactory.html">
+                            ServiceImplementationFactory
+                        </a>
+                        or
+                        a
+                        <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceInterceptorFactory.html">
+                            ServiceInterceptorFactory
+                        </a>
+                        .
+                    </td>
+                </tr>
+                <tr>
+                    <td>parameters-occurs</td>
+                    <td>
+                        <code>unbounded | 0..1 | 1 | 1..n | none</code>
+                    </td>
+                    <td>no</td>
+                    <td>The number of parameter element contributions allowed:
+                        <ul>
+                            <li>
+                                <strong>unbounded</strong>
+                                : any number
+                            </li>
+                            <li>
+                                <strong>0..1</strong>
+                                : optional
+                            </li>
+                            <li>
+                                <strong>1</strong>
+                                (default) : required
+                            </li>
+                            <li>
+                                <strong>1..n</strong>
+                                : at
+                                least one
+                            </li>
+                            <li>
+                                <strong>none</strong>
+                                : none allowed
+                            </li>
+                        </ul>
+
+
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#create-instance">&lt;create-instance&gt;</a>
+                ,
+                <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>
+                ,
+                <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
+                ,
+                <a href="descriptor.html#parameters-schema">&lt;parameters-schema&gt;</a>
+            </p>
+
+            <p>
+                If the specified interface name is unqualified (does not contain a period), then it is prefixed with the
+                module's package name.
+                Note that this is slightly different than how partial class names are resolved elsewhere in
+                a module descriptor.
+            </p>
+
+
+        </subsection>
+
+        <subsection name="schema">
+            <p>The &lt;schema&gt; element is used to describe the format of element
+                contributions to an
+                <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
+                , or parameters provided to a
+                service or interceptor factory.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>Assigns a local id to the schema that may be referenced elsewhere.</td>
+                </tr>
+                <tr>
+                    <td>visibility</td>
+                    <td>
+                        <code>public | private</code>
+                    </td>
+                    <td>no</td>
+                    <td>
+                        If
+                        <code>private</code>
+                        is specified, then the schema may only be referenced
+                        from within the same module. The default is
+                        <code>public</code>
+                        .
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#element">&lt;element&gt;</a>
+            </p>
+            <p>At a future time, the &lt;schema&gt; element will be extended to provide
+                more options, to provide more precise control over the elements that may
+                be provided in an &lt;contribution&gt;. At this time, a &lt;schema&gt; is simply a
+                list of &lt;element&gt; elements.
+            </p>
+
+            <div class="frame warning">
+                <div class="label">Warning</div>
+                <div class="content">
+                    When &lt;schema&gt; appears directly within
+                    <a href="descriptor.html#configuration-point">&lt;configuration-point&gt;</a>
+                    , or &lt;parameters-schema&gt;
+                    appears directly within
+                    <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
+                    , then the
+                    <code>id</code>
+                    and
+                    <code>visibility</code>
+                    attributes are not allowed.
+                </div>
+            </div>
+
+        </subsection>
+
+        <subsection name="sub-module">
+            <p>The &lt;sub-module&gt; element is used to identify an additional Gaderian
+                module deployment descriptor. This is used when a single JAR file
+                contains logically distinct packages, each of which should be treated as
+                an individual Gaderian module. This can also be useful as a way to
+                reduce developer conflict against a single, large, central module
+                descriptor by effectively breaking it into smaller pieces. Sub-modules
+                identified in this way must still have their own unique module id.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>descriptor</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>Location of the module descriptor.</td>
+                </tr>
+                <tr>
+                    <td>if</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>A
+                        <a href="conditional">conditional expression</a>
+                        controlling whether the sub-module is included or ignored.
+                    </td>
+                </tr>
+            </table>
+            <p>The descriptor should be specified as a relative path, either the name
+                of another module descriptor within the same folder, or within a child
+                folder.
+            </p>
+        </subsection>
+
+        <subsection name="attribute">
+            <p>&lt;attribute&gt; is used to define an attribute within an
+                <a href="descriptor.html#element">&lt;element&gt;</a>
+                . Inside
+                a
+                <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
+                , only known attributes are allowed in elements; unknown
+                attributes will be logged as an error and ignored. In addition, some
+                attributes are required; again, errors occur if the contributed element
+                does not provide a value for the attribute.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The name of the attribute.</td>
+                </tr>
+                <tr>
+                    <td>required</td>
+                    <td>boolean</td>
+                    <td>no</td>
+                    <td>If true, the attribute must be provided in the contributed
+                        configuration element. The default is false.
+                    </td>
+                </tr>
+                <tr>
+                    <td>default</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>Specifies the default value for this attribute. This value is used
+                        whenever this attribute has been omitted. Note that this default
+                        value is just like a specified value also subject to symbol expansion
+                        and translation.
+                    </td>
+                </tr>
+                <tr>
+                    <td>unique</td>
+                    <td>boolean</td>
+                    <td>no</td>
+                    <td>If true, the attribute must contain a unique value with respect to
+                        all other contributions to the same configuration point. The default is false.
+                    </td>
+                </tr>
+                <tr>
+                    <td>translator</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The
+                        <a href="rules.html#Translators">translator</a>
+                        configuration that is used to convert the attribute into a useable
+                        type. By default, the attribute is treated as a single string.
+                    </td>
+                </tr>
+            </table>
+
+        </subsection>
+
+        <subsection name="conversion">
+            <p>&lt;conversion&gt; is an alternative to
+                <a href="descriptor.html#rules">&lt;rules&gt;</a>
+                that is generally simpler
+                and more concise. An
+                <a href="descriptor.html#element">&lt;element&gt;</a>
+                should contain &lt;conversion&gt; or &lt;rules&gt;
+                but not both.
+            </p>
+            <p> &lt;conversion&gt; is geared towards the typical case; a straight-forward
+                mapping of the element to an instance of a Java class, and a mapping of
+                the element's attributes to the properties of the Java object.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>class</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The fully qualified name of a Java class to instantiate.</td>
+                </tr>
+                <tr>
+                    <td>parent-method</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The name of a method of the parent object used to add the created
+                        object to the parent. The default,
+                        <code>addElement</code>
+                        , is
+                        appropriate for top-level &lt;element&gt;s.
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#map">&lt;map&gt;</a>
+            </p>
+            <p>Each attribute will be mapped to a property. A limited amount of name
+                mangling occurs: if the attribute name contains dashes, they are
+                removed, and the character following is converted to upper case. So, an
+                attribute named "complex-attribute-name" would be mapped to a property
+                named "complexAttributeName". Only attributes identified with a
+                <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
+                element will be mapped, others will be ignored.
+            </p>
+        </subsection>
+        
+        <subsection name="create-instance">
+            <p> &lt;create-instance&gt; is used, within
+                <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
                 and
-                <code>visibility</code>
-                attributes are not allowed.            </div>
-        </div>
+                <a href="descriptor.html#implementation">&lt;implementation&gt;</a>
+                to create the core service implementation for a service by instantiating
+                a class. This is appropriate for simple services that require no
+                explicit configuration.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>class</td>
+                    <td>class name</td>
+                    <td>yes</td>
+                    <td>The class name to instantiate. May use
+                        <a href="instance-initialization">instance initializer</a>
+                        syntax.
+                    </td>
+                </tr>
+                <tr>
+                    <td>model</td>
+                    <td>
+                        <code>primitive | singleton | threaded | pooled</code>
+                    </td>
+                    <td>no</td>
+                    <td>The model used to construct and manage the service.
+                        <strong>
+                            singleton
+                        </strong>
+                        is the default.
+                    </td>
+                </tr>
+            </table>
+            <p>Additional service models can be defined via the gaderian.ServiceModels
+                configuration point.
+            </p>
+        </subsection>
 
-    </section>
-    <section name="service-point">
-      <p>The &lt;service-point&gt; element defines a service extension point.</p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>id</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>The simple id of the service extension point. The fully qualified
-            id for the extension point is created by prefixing with the module's
-            id (and a dot).
-          </td>
-        </tr>
-        <tr>
-          <td>interface</td>
-          <td>class name</td>
-          <td>no</td>
-          <td>The name of the Java interface
-            (
-            <a href="services.html#Bean+Services">or class</a>
-            ) supplied by this
-            service extension point. If no value is provided, the interface defaults to the
-            service id (and will then be qualified by the module's package).
-          </td>
-        </tr>
-        <tr>
-          <td>visibility</td>
-          <td>
-            <code>public | private</code>
-          </td>
-          <td>no</td>
-          <td>
-            If
-            <code>private</code>
-            is specified, then the service may only be referenced
-            (or contributed to) from within the same module. It will not be visible to the application
-            (via the
-            <a href="gaderian/apidocs/org/ops4j/gaderian/Registry.html">Registry</a>
-            ) if private. The default is
-            <code>public</code>
-            . It is common
-            for a module to have several public services acting as a facade over many more private services.
-          </td>
-        </tr>
-        <tr>
-          <td>parameters-schema-id</td>
-          <td>string</td>
-          <td>no</td>
-          <td>Used to reference a
-            <a href="descriptor.html#schema">&lt;schema&gt;</a>
-            (in the same module, or a different
-            one) that defines parameters used by the service. This is used when
-            the service being defined is a
-            <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceImplementationFactory.html">
-              ServiceImplementationFactory
-            </a>
-            or
-            a
-            <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceInterceptorFactory.html">ServiceInterceptorFactory
-            </a>
-            .
-          </td>
-        </tr>
-        <tr>
-          <td>parameters-occurs</td>
-          <td>
-            <code>unbounded | 0..1 | 1 | 1..n | none</code>
-          </td>
-          <td>no</td>
-          <td>The number of parameter element contributions allowed:
-            <ul>
-              <li>
-                <strong>unbounded</strong>
-                : any number
-              </li>
-              <li>
-                <strong>0..1</strong>
-                : optional
-              </li>
-              <li>
-                <strong>1</strong>
-                (default) : required
-              </li>
-              <li>
-                <strong>1..n</strong>
-                : at
-                least one
-              </li>
-              <li>
-                <strong>none</strong>
-                : none allowed
-              </li>
-            </ul>
+        <subsection name="element">
+            <p>The &lt;element&gt; element is used to define an element in a the
+                <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                . &lt;element&gt;
+                may also be nested within another &lt;element&gt;, to indicate an element
+                that may be enclosed within another element.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The name of the element.</td>
+                </tr>
+                <tr>
+                    <td>content-translator</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The
+                        <a href="rules.html#Translators">translator</a>
+                        configuration that is used to convert the element's content into a
+                        useable type. By default, the content is treated as a single string.
+                    </td>
+                </tr>
+                <tr>
+                    <td>key-attribute</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The name of this element's &lt;attribute&gt; whose
+                        <em>translated</em>
+                        value will
+                        be used as a unique key for configuration contributions corresponding to this
+                        element. The contributions can then be accessed in a Map using this key. The
+                        specified &lt;attribute&gt; is implicitly marked as
+                        <em>required</em>
+                        and
+                        <em>unique</em>
+                        .
+                    </td>
+                </tr>
+            </table>
+            <p>Contains:
+                <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
+                ,
+                <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
+                ,
+                <a href="descriptor.html#element">&lt;element&gt;</a>
+                ,
+                <a href="descriptor.html#rules">&lt;rules&gt;</a>
+            </p>
+            <p>Future enhancements to the Gaderian framework will include greater
+                sophistication in defining configuration content.
+            </p>
+        </subsection>
 
+        <subsection name="interceptor">
+            <p>&lt;interceptor&gt; contributes an interceptor factory to a service
+                extension point. An interceptor factory is a service which implements
+                the
+                <a href="gaderian/apidocs/org/ops4j/gaderian/ServiceInterceptorFactory.html">ServiceInterceptorFactory
+                </a>
+                interface.
+            </p>
+            <p>When the service is constructed, each invoked interceptor factory will
+                fabricate an interceptor class to provide additional functionality for
+                the service.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>service-id</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The id of the service that will create the interceptor for the
+                        service. This may be the local id of a service defined within the
+                        same module, or a fully qualified id.
+                    </td>
+                </tr>
+                <tr>
+                    <td>before</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>A list of interceptors whose behavior should come later in
+                        execution than this interceptor.
+                    </td>
+                </tr>
+                <tr>
+                    <td>after</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>A list of interceptors whose behavior should come earlier in
+                        execution than this interceptor.
+                    </td>
+                </tr>
+                <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The name to use for ordering this interceptor. Defaults to the service-id. This
+                        comes in handy when using the same factory to create multiple unique interceptors which
+                        should be able to be ordered with respect to one another.
+                    </td>
+                </tr>
+            </table>
+            <p>Like a service implementation factory, a service interceptor factory
+                may need parameters. As with
+                <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
+                , parameters to the
+                interceptor factory are enclosed by the &lt;interceptor&gt; element. The
+                service interceptor factory will decode the parameters using the schema
+                identified by its
+                <code>parameters-schema-id</code>
+                attribute.
+            </p>
+            <p>Interceptor ordering is based on dependencies; each interceptor can
+                identify, by name, other interceptors. Interceptors in
+                the
+                <code>before</code>
+                list are deferred until after this interceptor.
+                Likewise, this interceptor is deferred until after all interceptors in
+                the
+                <code>after</code>
+                list.
+            </p>
+            <p>The value for
+                <code>before</code>
+                or
+                <code>after</code>
+                is a list of
+                interceptor names seperated by commas. Service ids may be unqualified if they
+                are within the same module. Alternately, the fixed value
+                <code>*</code>
+                may be used instead of a list: this indicates that the interceptor
+                should be ordered absolutely first or absolutely last.
+            </p>
+        </subsection>
+        
+        <subsection name="invoke-factory">
+            <p>The &lt;invoke-factory&gt; element is used to provide a service
+                implementation for a service by invoking another service, a factory
+                service.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>service-id</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>The id of the factory service. This may be a simple id for a
+                        service within the same module, or a fully qualified service id. The default, if not
+                        specified, is
+                        <a href="gaderian/BuilderFactory.html">gaderian.BuilderFactory</a>
+                        .
+                    </td>
+                </tr>
+                <tr>
+                    <td>model</td>
+                    <td>
+                        <code>primitive | singleton | threaded | pooled</code>
+                    </td>
+                    <td>no</td>
+                    <td>The model used to construct and manage the service.
+                        <strong>
+                            singleton
+                        </strong>
+                        is the default.
+                    </td>
+                </tr>
+            </table>
+            <p>A service factory defines its parameters in terms of a schema. The
+                content of the &lt;invoke-factory&gt; (excluding any
+                <a href="descriptor.html#assembly">&lt;assembly&gt;</a>
+                elements) is
+                converted, in accordance with the factory's schema, and provided to the factory.
+            </p>
+            <p>The &lt;invoke-factory&gt; element may additionally contain
+                <a href="descriptor.html#assembly">&lt;assembly&gt;</a>
+                elements to
+                initialize the service implementation created by the factory.
+            </p>
+            <div class="frame note">
+                <div class="label">Note</div>
+                <div class="content">
+                    Additional service models can be defined via the gaderian.ServiceModels
+                    configuration point.
+                </div>
+            </div>
+        </subsection>
+        
+        <subsection name="map">
+            <p>The &lt;map&gt; element appears within
+                <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
+                to override the default mapping from an attribute to a property. By default, the property name
+                is expected to match the attribute name (with the name mangling
+                described in the description of
+                <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
+                ); the &lt;map&gt; element is
+                used to handle exceptions to the rule.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>attribute</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The name of the attribute, which should match a name defined by an
+                        <a href="descriptor.html#attribute">&lt;attribute&gt;</a>
+                        (of the enclosing
+                        <a href="descriptor.html#element">&lt;element&gt;</a>
+                        ).
+                    </td>
+                </tr>
+                <tr>
+                    <td>property</td>
+                    <td>string</td>
+                    <td>yes</td>
+                    <td>The corresponding property (of the Java object specified by the
+                        enclosing
+                        <a href="descriptor.html#conversion">&lt;conversion&gt;</a>
+                        )
+                    </td>
+                </tr>
+            </table>
+        </subsection>
 
-          </td>
-        </tr>
-      </table>
-      <p>Contains:
-        <a href="descriptor.html#create-instance">&lt;create-instance&gt;</a>
-        ,
-        <a href="descriptor.html#interceptor">&lt;interceptor&gt;</a>
-        ,
-        <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
-        ,
-        <a href="descriptor.html#parameters-schema">&lt;parameters-schema&gt;</a>
-      </p>
+        <subsection name="parameters-schema">
 
-      <p>
-        If the specified interface name is unqualified (does not contain a period), then it is prefixed with the
-        module's package name.
-        Note that this is slightly different than how partial class names are resolved elsewhere in
-        a module descriptor.
-      </p>
+            <p>The &lt;parameters-schema&gt; element is identical to the
+                <a href="descriptor.html#schema">&lt;schema&gt;</a>
+                element, but only appears
+                inside
+                <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
+                , to define the schema for the parameters for a service implementation factory or service interceptor
+                factory.
+            </p>
+            <div class="frame note">
+                <div class="label">Note</div>
+                <div class="content">This element and the owning
+                    <a href="descriptor.html#service-point">&lt;service-point&gt;</a>
+                    element's
+                    <code>parameters-schema-id</code>
+                    attribute are mutually exclusive.
+                </div>
+            </div>
+        </subsection>
 
+        <subsection name="rules">
+            <p> &lt;rules&gt; is a container for element and attribute parsing rules within
+                an
+                <a href="descriptor.html#element">&lt;element&gt;</a>
+                . These rules are responsible for converting the contributed
+                element and its attributes into objects and object properties. The
+                available rules are <a href="rules.html">documented separately</a>
+                .
+            </p>
+        </subsection>
 
-    </section>
-    <section name="sub-module">
-      <p>The &lt;sub-module&gt; element is used to identify an additional Gaderian
-        module deployment descriptor. This is used when a single JAR file
-        contains logically distinct packages, each of which should be treated as
-        an individual Gaderian module. This can also be useful as a way to
-        reduce developer conflict against a single, large, central module
-        descriptor by effectively breaking it into smaller pieces. Sub-modules
-        identified in this way must still have their own unique module id.
-      </p>
-      <table>
-        <tr>
-          <th>Attribute</th>
-          <th>Type</th>
-          <th>Required ?</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td>descriptor</td>
-          <td>string</td>
-          <td>yes</td>
-          <td>Location of the module descriptor.</td>
-        </tr>
-        <tr>
-          <td>if</td>
-          <td>string</td>
-          <td>no</td>
-          <td>A
-            <a href="conditional">conditional expression</a>
-            controlling whether the sub-module is included or ignored.
-          </td>
-        </tr>
-      </table>
-      <p>The descriptor should be specified as a relative path, either the name
-        of another module descriptor within the same folder, or within a child
-        folder.
-      </p>
-    </section>
-  </body>
+        <subsection name="assembly">
+            <p>&lt;assembly&gt; is used to define an attribute within an
+                <a href="descriptor.html#invoke-factory">&lt;invoke-factory&gt;</a>
+                element. Inside a
+                <a href="descriptor.html#contribution">&lt;contribution&gt;</a>
+                , only known attributes are allowed in elements; unknown
+                attributes will be logged as an error and ignored. In addition, some
+                attributes are required; again, errors occur if the contributed element
+                does not provide a value for the attribute.
+            </p>
+            <table>
+                <tr>
+                    <th>Attribute</th>
+                    <th>Type</th>
+                    <th>Required ?</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>autowire-services</td>
+                    <td>boolean</td>
+                    <td>no</td>
+                    <td>The name of the attribute.</td>
+                </tr>
+                <tr>
+                    <td>initialize-method</td>
+                    <td>string</td>
+                    <td>no</td>
+                    <td>If true, the attribute must be provided in the contributed
+                        configuration element. The default is false.
+                    </td>
+                </tr>
+            </table>
+            <p>The assembly concept is<a href="assembly.html">documented separately</a>.
+            </p>
+        </subsection>
+        </section>
+    </body>
 </document>

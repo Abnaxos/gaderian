@@ -24,21 +24,7 @@
 	<body>
              <section name="Serializing Services">
 <p>
-It is often useful, especially in a web-based application,
-to serialize services. In Gaderian 1.0, objects that had references to Gaderian services could not
-be serialized ... the services were not serializable.  You could make your service implemention implement
-Serializable, but that's not what client code sees ... client code sees the service <em>proxy</em>, which
-did not implement Serializable. End of story.
-</p>
-
-<div class="frame note"><div class="label">Note</div><div class="content">
-Service proxies are the objects that are obtained from the Registry, or injected into
-other services.  The proxies implement the service interface, but are generated on the fly.
-These service proxies are part of how Gaderian handles just-in-time service instantiation.
-</div></div>
-
-<p>
-Starting with Gaderian 1.1, service proxies are, themselves, serializable.  If you create objects that
+Service proxies are, themselves, serializable.  If you create objects that
 have references to Gaderian services, those objects can be serialized.  For example:
 </p>
 
