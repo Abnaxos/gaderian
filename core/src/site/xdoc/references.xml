@@ -31,9 +31,6 @@
                         <a href="BuilderFactory.html">Builder Factory</a>
                     </li>
                     <li>
-                        <a href="JavaProxyFactory.html">Java Proxy Factory</a>
-                    </li>
-                    <li>
                         <a href="PipelineFactory.html">Pipeline Factory</a>
                     </li>
                     <li>
@@ -48,6 +45,9 @@
                     <li>
                         <a href="DefaultImplementationFactory.html">Default Implementation Factory</a>
                     </li>
+                    <li>
+                        <a href="JavaProxyFactory.html">Java Proxy Factory</a>
+                    </li>
                 </ul>
             </subsection>
 
@@ -59,8 +59,6 @@
                     <li>
                         <a href="Translators.html">Translators</a>
                     </li>
-
-
                     <li>
                         <a href="SymbolSources.html">Symbol Sources</a>
                     </li>

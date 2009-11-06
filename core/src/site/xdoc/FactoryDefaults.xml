@@ -17,31 +17,41 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-      <title>Factory Defaults Configuration</title>
-   </properties>
-   <body>
+        <title>Factory Defaults Configuration</title>
+    </properties>
+    <body>
 
-       <section name="Factory Defaults Configuration">
-
-
-      <p>
-The <a href="module-report/config/gaderian.FactoryDefaults.html">FactoryDefaults</a> configuration
-is used to set default values for substitution symbols. Contributions look like:
-</p>
+        <section name="Factory Defaults Configuration">
 
 
-      <source >
+            <p>
+                The
+                <a href="module-report/config/gaderian.FactoryDefaults.html">FactoryDefaults</a>
+                configuration
+                is used to set default values for substitution symbols. Contributions look like:
+            </p>
+
+
+            <source>
 &lt;default symbol="..." value="..."/&gt;
-</source>
+            </source>
 
 
-<p>
-Values defined here can be overriden by making a contribution to
-<a href="ApplicationDefaults.html">gaderian.ApplicationDefaults</a>.
-</p>
+            <p>
+                Values defined here can be overriden by making a contribution to
+                <a href="ApplicationDefaults.html">gaderian.ApplicationDefaults</a>.
+            </p>
 
 
-       </section>
+            <subsection name="Example">
+                <source>
+&lt;contribution configuration-id="gaderian.FactoryDefaults">
+  &lt;default symbol="..." value="..."/>
+&lt;/contribution>
+                </source>
+            </subsection>
 
-  </body>
+        </section>
+
+    </body>
 </document>

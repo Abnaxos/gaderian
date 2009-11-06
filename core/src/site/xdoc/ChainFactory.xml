@@ -38,7 +38,7 @@
                 <p>The factory expects a single parameter element:</p>
 
                 <source>
-                    &lt;construct configuration-id="..."/&gt;
+&lt;construct configuration-id="..."/&gt;
                 </source>
                 <p>The configuration-id identifies a configuration that implements the
                     <a href="module-report/schema/gaderian.ChainContribution.html">gaderian.ChainContribution</a>
@@ -54,7 +54,7 @@
                 </p>
 
                 <source>
-                    &lt;command id="..." before="..." after="..." object="..."/&gt;
+&lt;command id="..." before="..." after="..." object="..."/&gt;
                 </source>
                 <p>Each command has an id (which is qualified with the module id) and may specify a list of commands
                     which

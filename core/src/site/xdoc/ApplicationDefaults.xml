@@ -28,6 +28,17 @@
          contribution format is the same FactoryDefaults:</p>
       <source><![CDATA[
   <default symbol="..." value="..."/>]]></source>
+
+           <subsection name="Example">
+               <source>
+&lt;contribution configuration-id="gaderian.ApplicationDefaults">
+  &lt;default symbol="..." value="..."/>
+&lt;/contribution>
+               </source>
+           </subsection>
        </section>
+       
+       
+       
    </body>
 </document>
