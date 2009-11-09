@@ -30,6 +30,7 @@
 
      <scm>
         <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian/tools/maven-gaderian-skin</connection>
+        <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian/tools/maven-gaderian-skin</developerConnection>
         <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian/tools/maven-gaderian-skin</url>
     </scm>
 
