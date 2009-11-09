@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-
+<!-- START SNIPPET: full -->
 <module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline">
     
     <service-point id="StringToUpperTerminator" visibility="private" interface="StringToUpper">
@@ -58,3 +58,4 @@
     </contribution>
 
 </module>
+<!-- END SNIPPET: full -->

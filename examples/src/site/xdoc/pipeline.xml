@@ -28,29 +28,47 @@
         <section name="Using the Pipeline Service Factory">
 
             <p>This example demonstrates the use of the Pipeline service factory.</p>
-            <subsection name="settersRegistry.xml">
+            <subsection name="Module Descriptor">
+                <p>The folling shows module descriptor of a service a pipeline in front of a terminating service.</p>
+                <p>The pipeline consists of 2 filters:</p>
+                <ul>
+                    <li>A validation filter which simply checks the incoming parameter for nulls</li>
+                    <li>A 'magic' filter, which will return a different value if the magic word is being
+                    passed as a parameter</li>
+                </ul>
 
-         <macro name="snippet">
-                <param name="id" value="full"/>
-                <param name="url" value="http://scm.ops4j.org/browse/~raw,r=15234/OPS4J/laboratory/hivemind/devel/examples/src/main/resources/org/ops4j/gaderian/examples/pipeline/pipeline.xml"/>
-                </macro>
-            </subsection>
-            <subsection name="Service and Service Filter Interfaces">
-                
-         <macro name="snippet">
-                <param name="id" value="full"/>
-                <param name="url"
-                       value="http://scm.ops4j.org/browse/~raw,r=15234/OPS4J/laboratory/hivemind/devel/examples/src/main/java/org/ops4j/gaderian/examples/pipeline/StringToUpper.java"/>
-                </macro>
+                <p>
+                    Finally, the pipeline is terminated by a simple (private) service, which just converts the parameter
+                    passed into it into upper case and returns it.
+                </p>
 
                 <macro name="snippet">
-                       <param name="id" value="full"/>
-                       <param name="url"
-                              value="http://scm.ops4j.org/browse/~raw,r=15234/OPS4J/laboratory/hivemind/devel/examples/src/main/java/org/ops4j/gaderian/examples/pipeline/StringToUpper.java"/>
-                       </macro>
-                
+                    <param name="id" value="full"/>
+                    <param name="url" value="http://codestat.ops4j.org/browse/~raw,r=HEAD/OPS4J/projects/gaderian/examples/src/main/resources/org/ops4j/gaderian/examples/pipeline/pipeline.xml"/>
+                </macro>
+
             </subsection>
-            
+
+            <subsection name="Service and Service Filter Interfaces">
+
+                <p>Below is the service interface, defining the <code>toUpper</code> method.</p>
+
+                <macro name="snippet">
+
+                    <param name="id" value="full"/>
+                    <param name="url"
+                           value="http://codestat.ops4j.org/browse/~raw,r=HEAD/OPS4J/projects/gaderian/examples/src/main/java/org/ops4j/gaderian/examples/pipeline/StringToUpper.java"/>
+                </macro>
+
+                <p>And the below interface defines the corresponding filter interface for the <code>StringToUpper</code> interfce</p>
+                <macro name="snippet">
+                    <param name="id" value="full"/>
+                    <param name="url"
+                           value="http://codestat.ops4j.org/browse/~raw,r=HEAD/OPS4J/projects/gaderian/examples/src/main/java/org/ops4j/gaderian/examples/pipeline/StringToUpper.java"/>
+                </macro>
+
+            </subsection>
+
         </section>
     </body>
 </document>
