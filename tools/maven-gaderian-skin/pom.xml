@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.ops4j.gaderian.tools</groupId>
     <artifactId>maven-gaderian-skin</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Gaderian Site Skin</name>
     <description>Gaderian Maven2 Site Skin</description>
@@ -30,9 +30,9 @@
     </build>
 
      <scm>
-        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/gaderian/maven-gaderian-skin-1.1</connection>
-        <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/qa/gaderian/maven-gaderian-skin-1.1</developerConnection>
-        <url>http://scm.ops4j.org/browse/OPS4J/qa/gaderian/maven-gaderian-skin-1.1</url>
+        <connection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian/tools/maven-gaderian-skin</connection>
+        <developerConnection>scm:svn:https://scm.ops4j.org/repos/ops4j/projects/gaderian/tools/maven-gaderian-skin</developerConnection>
+        <url>http://scm.ops4j.org/browse/OPS4J/projects/gaderian/tools/maven-gaderian-skin</url>
     </scm>
 
 </project>
