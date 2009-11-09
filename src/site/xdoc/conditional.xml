@@ -47,11 +47,15 @@
       and, or and not operators, and parenthesis to control order of evaluation.
     </p>
 
-    <p>
-      For example, the expression <code>class org.springframework.beans.factory.BeanFactory</code> would evaluate to true if the BeanFactory
-      class was on the classpath.
-    </p>
+        <p>Conditions that can currently be evaluated are:</p>
+        
+        <ul>
+            <li><a href="#Class_Keyword">class</a></li>
+            <li><a href="#Property_Keyword">property</a></li>
+            <li><a href="#OS_Keyword">os</a></li>
+        </ul>
 
+        <subsection name="Syntax">
     <p>
       The format for conditional expressions is:
     </p>
@@ -63,30 +67,59 @@ expression := <em>term</em> <code>or</code> <em>expression</em>
 
 term       := ( <em>expression</em> )
            := <code>not</code> ( <em>expression</em> )
-           := <code>property</code> <em>symbol</em>
-           := <code>class</code> <em>symbol</em>
+           := <code><a href="#Property_Keyword">property</a></code> <em>symbol</em>
+           := <code><a href="#Class_Keyword">class</a></code> <em>symbol</em>
+           := <code><a href="#OS_Keyword">os</a></code> <em>symbol</em>
 </source>
 
 <p>
-The keywords ("and", "or", "not", "property", "class") are <em>not</em> case sensitive.
+The keywords ("and", "or", "not", "property", "class", "os") are <em>not</em> case sensitive.  Symbols are Java identifiers and their value depend on the keyword preceding them; they are either JVM system properties, fully qualified Java class names or a specific keyword enumeration. In addition, they
+may contain the dash character.  Whitespace is ignored.
 </p>
+            <h4>Examples</h4>
+<source>
+"class java.lang.String and not (property acme)"
+</source>
+<source>
+"not (class java.lang.String)"
+</source>
+<source>
+"os LINUX"
+</source>
 
-<p>
-Symbols are Java identifiers ... they are either JVM system properties or fully qualified Java class names. In addition, they
-may contain the dash character.
-</p>
+        </subsection>
 
-<p>
-Whitespace is ignored.
-</p>
+        <subsection name="Property Keyword">
+            <p>The <code>property</code> keyword treats its symbol as a JVM system property, as with <code>Boolean.getBoolean()</code>.</p>
+        </subsection>
 
-<p>
-The <code>property</code> keyword treats its symbol as a JVM system property, as with <code>Boolean.getBoolean()</code>.
-</p>
+        <subsection name="Class Keyword">
+            <p>The <code>class</code> keyword treats its symbol as a Java class name, evaluating to true if such a class exists.</p>
 
-<p>
-The <code>class</code> keyword treats its symbol as a Java class name, evaluating to true if such a class exists.
-</p>
+            <p>For example, the expression <code>class org.springframework.beans.factory.BeanFactory</code> would evaluate to true if the BeanFactory
+              class was on the classpath.</p>
+
+        </subsection>
+
+
+        <subsection name="OS Keyword">
+            <p>
+            The <code>os</code> keyword treats its symbol as an enumeration of operating system types, evaluating to true if the JVM
+                reported operating system type matches the specified type.  The operating system type is internally resolved using
+                the 'os.name' system property.   The possible values for this symbol are listed below.
+            </p>
+                    <table>
+                        <thead><tr><th>Symbol Value</th><th>Operating System</th></tr></thead>
+                        <tbody>
+                            <tr><td>LINUX</td><td>Linux based</td></tr>
+                            <tr><td>WINDOWS</td><td>Microsoft based</td></tr>
+                            <tr><td>AIX</td><td>IBM AIX based</td></tr>
+                            <tr><td>SUNOS</td><td>Sun OS (Solaris) based</td></tr>
+                            <tr><td>MAC</td><td>Apple Macintosh based (Mac/Darwin)</td></tr>
+                        </tbody>
+                    </table>
+        </subsection>
+
     </section>
 
   </body>

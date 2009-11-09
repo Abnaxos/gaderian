@@ -17,7 +17,7 @@ package org.ops4j.gaderian.examples.impl;
 import org.ops4j.gaderian.examples.Multiplier;
 
 /**
- * Implementation of the {@link org.ops4j.examples.Multiplier} interface.
+ * Implementation of the {@link org.ops4j.gaderian.examples.Multiplier} interface.
  *
  * @author Howard Lewis Ship
  */

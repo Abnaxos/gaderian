@@ -23,16 +23,21 @@ package org.ops4j.gaderian.conditional;
  */
 public interface EvaluationContext
 {
+    /** Returns the string of the currently running operating system.
+     *
+     * @param defaultValue The default value to use if the operating system can not be determined
+     * @return The
+     * @since Gaderian 1.1
+     */
+    public String getOperatingSystemProperty(String defaultValue);
     /**
      * Returns true if the given system property is set.
      */
-
     public boolean isPropertySet(String propertyName);
     
     /**
      * Returns true if the class, specified by FQCN, exists.
      * 
      */
-    
     public boolean doesClassExist(String className);
 }

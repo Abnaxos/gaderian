@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline">
+    
+    <service-point id="StringToUpperTerminator" visibility="private" interface="StringToUpper">
+        <create-instance class="impl.StringToUpperImpl"/>
+    </service-point>
+
+    <service-point id="StringToUpper" interface="StringToUpper">
+        <invoke-factory service-id="gaderian.PipelineFactory">
+            <create-pipeline
+                    filter-interface="StringToUpperFilter"
+                    configuration-id="StringToUpperPipeline"
+                    terminator="service:StringToUpperTerminator"/>
+
+        </invoke-factory>
+    </service-point>
+
+    <!-- Pipeline config -->
+    <configuration-point id="StringToUpperPipeline" schema-id="gaderian.Pipeline"/>
+
+    <!-- Validation filter -->
+    <service-point id="StringToUpperValidationFilter" interface="StringToUpperFilter" visibility="private">
+        <invoke-factory>
+            <construct class="impl.StringToUpperValidationFilter"/>
+        </invoke-factory>
+    </service-point>
+
+    <!-- Magic Token filter -->
+    <service-point id="StringToUpperMagicTokenFilter" interface="StringToUpperFilter" visibility="private">
+        <invoke-factory>
+            <construct class="impl.StringToUpperMagicTokenFilter"/>
+        </invoke-factory>
+    </service-point>
+
+    <contribution configuration-id="StringToUpperPipeline">
+        <filter before="*"
+                name="StringToUpperValidationFilter"
+                object="service:StringToUpperValidationFilter"/>
+        <filter after="StringToUpperValidationFilter"
+                name="StringToUpperMagicTokenFilter"
+                object="service:StringToUpperMagicTokenFilter"/>
+    </contribution>
+
+</module>

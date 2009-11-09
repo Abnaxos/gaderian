@@ -189,6 +189,18 @@ public class Parser
             return new NodeImpl(ev);
         }
 
+        if (isPeek(TokenType.OS))
+        {
+            next();
+
+            Token symbolToken = match(TokenType.SYMBOL);
+
+            Evaluator ev = new OSEvaluator(symbolToken.getValue());
+
+            return new NodeImpl(ev);
+        }
+
+
         throw new RuntimeException(ConditionalMessages.unparsedToken(next(), _input));
     }
 }

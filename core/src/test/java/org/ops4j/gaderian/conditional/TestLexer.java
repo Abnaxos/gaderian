@@ -26,16 +26,30 @@ public class TestLexer extends GaderianCoreTestCase
 {
     public void testKeywords()
     {
-        Lexer l = new Lexer("and OR Not class Property");
+        Lexer l = new Lexer("and OR Not class Property os");
 
         assertSame(TokenType.AND, l.next().getType());
         assertSame(TokenType.OR, l.next().getType());
         assertSame(TokenType.NOT, l.next().getType());
         assertSame(TokenType.CLASS, l.next().getType());
         assertSame(TokenType.PROPERTY, l.next().getType());
+        assertSame(TokenType.OS, l.next().getType());
 
         assertNull(l.next());
     }
+
+    public void testOSAndSymbol()
+       {
+           Lexer l = new Lexer("os LINUX");
+
+           assertSame(TokenType.OS, l.next().getType());
+           final Token symbolToken = l.next();
+           assertSame(TokenType.SYMBOL, symbolToken.getType());
+           assertEquals("LINUX", symbolToken.getValue());
+
+           assertNull(l.next());
+       }
+
 
     public void testComplexSymbol()
     {

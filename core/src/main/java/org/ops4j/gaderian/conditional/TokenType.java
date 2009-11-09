@@ -20,65 +20,7 @@ package org.ops4j.gaderian.conditional;
  * @author Howard M. Lewis Ship
  * @since 1.1
  */
-class TokenType
+enum TokenType
 {
-    /**
-     * An open parenthesis.
-     */
-
-    static final TokenType OPAREN = new TokenType("OPAREN");
-
-    /**
-     * A close parenthesis.
-     */
-
-    static final TokenType CPAREN = new TokenType("CPAREN");
-
-    /**
-     * The keyword "and"
-     */
-
-    static final TokenType AND = new TokenType("AND");
-
-    /**
-     * The keyword "or"
-     */
-
-    static final TokenType OR = new TokenType("OR");
-
-    /**
-     * The keyword "not"
-     */
-
-    static final TokenType NOT = new TokenType("NOT");
-
-    /**
-     * The keyword "property"
-     */
-
-    static final TokenType PROPERTY = new TokenType("PROPERTY");
-
-    /**
-     * The keyword "class"
-     */
-
-    static final TokenType CLASS = new TokenType("CLASS");
-
-    /**
-     * A symbol.
-     */
-
-    static final TokenType SYMBOL = new TokenType("SYMBOL");
-
-    private String _name;
-
-    private TokenType(String name)
-    {
-        _name = name;
-    }
-
-    public String toString()
-    {
-        return _name;
-    }
+    OPAREN,CPAREN,AND,OR,NOT,PROPERTY,CLASS,OS,SYMBOL
 }

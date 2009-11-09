@@ -21,8 +21,8 @@ import org.ops4j.gaderian.examples.TargetService;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 
 /**
- * Implementation of {@link org.ops4j.examples.TargetService} used
- * to demonstrate the {@link org.ops4j.examples.impl.ProxyLoggingInterceptorFactory}.
+ * Implementation of {@link org.ops4j.gaderian.examples.TargetService} used
+ * to demonstrate the {@link org.ops4j.gaderian.examples.impl.ProxyLoggingInterceptorFactory}.
  *
  * @author Howard Lewis Ship
  */

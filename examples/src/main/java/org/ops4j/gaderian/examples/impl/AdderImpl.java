@@ -17,7 +17,7 @@ package org.ops4j.gaderian.examples.impl;
 import org.ops4j.gaderian.examples.Adder;
 
 /**
- * Implementation of the {@link org.ops4j.examples.Adder} interface.
+ * Implementation of the {@link org.ops4j.gaderian.examples.Adder} interface.
  *
  * @author Howard Lewis Ship
  */

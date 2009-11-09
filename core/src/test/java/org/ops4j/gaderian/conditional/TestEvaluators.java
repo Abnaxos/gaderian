@@ -74,6 +74,52 @@ public class TestEvaluators extends GaderianCoreTestCase
         verifyAllRegisteredMocks();
     }
 
+    public void testOSEvaluatorMatchingOS()
+    {
+        EvaluationContext context = createMock(EvaluationContext.class);
+
+        expect(context.getOperatingSystemProperty( "generic" )).andReturn( "linux" );
+
+        replayAllRegisteredMocks();
+
+        OSEvaluator osEvaluator = new OSEvaluator("LINUX");
+
+        assertEquals(true, osEvaluator.evaluate(context, null));
+
+        verifyAllRegisteredMocks();
+    }
+
+    public void testOSEvaluatorNonMatchingOS()
+    {
+        EvaluationContext context = createMock(EvaluationContext.class);
+
+        expect(context.getOperatingSystemProperty( "generic" )).andReturn( "win" );
+
+        replayAllRegisteredMocks();
+
+        OSEvaluator osEvaluator = new OSEvaluator("LINUX");
+
+        assertEquals(false, osEvaluator.evaluate(context, null));
+
+        verifyAllRegisteredMocks();
+    }
+
+    public void testOSEvaluatorGeneric()
+    {
+        EvaluationContext context = createMock(EvaluationContext.class);
+
+        expect(context.getOperatingSystemProperty( "generic" )).andReturn( "non-matching" );
+
+        replayAllRegisteredMocks();
+
+        OSEvaluator osEvaluator = new OSEvaluator("GENERIC");
+
+        assertEquals(true, osEvaluator.evaluate(context, null));
+
+        verifyAllRegisteredMocks();
+    }
+
+
     public void testNotEvaluator()
     {
         EvaluationContext context = newContext();

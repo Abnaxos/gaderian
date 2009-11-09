@@ -23,6 +23,13 @@ import org.ops4j.gaderian.test.GaderianCoreTestCase;
  */
 public class TestEvaluationContext extends GaderianCoreTestCase
 {
+    public void testOperatingSystemProperty()
+    {
+        EvaluationContext ec = new EvaluationContextImpl(getClassResolver());
+        final String osName = System.getProperty( "os.name", "generic" ).toLowerCase();
+        assertEquals(osName,ec.getOperatingSystemProperty( "generic" ));
+    }
+
     public void testProperty()
     {
         EvaluationContext ec = new EvaluationContextImpl(getClassResolver());

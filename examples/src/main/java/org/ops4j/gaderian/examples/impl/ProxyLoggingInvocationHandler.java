@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.ops4j.gaderian.service.impl.LoggingUtils;
 
 /**
- * An invocation handler used by {@link org.ops4j.examples.impl.ProxyLoggingInterceptorFactory}.
+ * An invocation handler used by {@link org.ops4j.gaderian.examples.impl.ProxyLoggingInterceptorFactory}.
  * Logs all method invocations, return values and exceptions.  Note that, unlike the real
  * LoggingInterceptor, <code>toString()</code> will just pass through to the delegate service object
  * (typically, the core service implementation).

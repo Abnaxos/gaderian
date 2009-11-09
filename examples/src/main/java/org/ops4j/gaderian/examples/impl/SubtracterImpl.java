@@ -17,7 +17,7 @@ package org.ops4j.gaderian.examples.impl;
 import org.ops4j.gaderian.examples.Subtracter;
 
 /**
- * Implementation of the {@link org.ops4j.examples.Subtracter} interface.
+ * Implementation of the {@link org.ops4j.gaderian.examples.Subtracter} interface.
  *
  * @author Howard Lewis Ship
  */

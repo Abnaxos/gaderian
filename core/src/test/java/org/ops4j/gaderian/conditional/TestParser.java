@@ -15,6 +15,7 @@
 package org.ops4j.gaderian.conditional;
 
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.easymock.EasyMock;
 
 /**
  * Tests for {@link org.ops4j.gaderian.conditional.Parser}.
@@ -33,6 +34,24 @@ public class TestParser extends GaderianCoreTestCase
         ClassNameEvaluator cne = (ClassNameEvaluator) ev;
 
         assertEquals("foo", cne.getClassName());
+    }
+
+    public void testOSKeyWord()
+    {
+        Parser p = new Parser();
+        Node n = p.parse("os LINUX");
+
+        Evaluator ev = ((NodeImpl) n).getEvaluator();
+        OSEvaluator ose = (OSEvaluator) ev;
+
+        assertEquals(OperatingSystem.LINUX, ose.getOperatingSystem());
+
+        final EvaluationContext context = createMock( EvaluationContext.class );
+        EasyMock.expect(context.getOperatingSystemProperty( "generic" )).andReturn( "linux" );
+        replayAllRegisteredMocks();
+        assertTrue(ose.evaluate( context,n));
+        verifyAllRegisteredMocks();
+
     }
 
     public void testExtraToken()
@@ -163,4 +182,5 @@ public class TestParser extends GaderianCoreTestCase
 
         assertEquals("bar", ev2.getClassName());
     }
+    
 }

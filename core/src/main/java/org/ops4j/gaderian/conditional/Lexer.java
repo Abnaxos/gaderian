@@ -42,6 +42,8 @@ class Lexer
 
     private static final Token CLASS = new Token(TokenType.CLASS);
 
+    private static final Token OS = new Token(TokenType.OS);
+
     Lexer(String input)
     {
         Defense.notNull(input, "input");
@@ -133,6 +135,9 @@ class Lexer
 
         if (symbol.equalsIgnoreCase("class"))
             return CLASS;
+
+        if (symbol.equalsIgnoreCase("os"))
+            return OS;
 
         return new Token(TokenType.SYMBOL, symbol);
     }

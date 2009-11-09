@@ -32,6 +32,17 @@ public class EvaluationContextImpl implements EvaluationContext
         _resolver = resolver;
     }
 
+    /** Simply attempts to retrieve the operating system information from the system property 'os.name'.
+     *
+     * @param defaultValue The default value to use if the operating system can not be determined
+     * @return The system property if defined, otherwise the default value
+     * @since Gaderian 1.1
+     */
+    public String getOperatingSystemProperty( final String defaultValue )
+    {
+        return System.getProperty( "os.name", defaultValue).toLowerCase();
+    }
+
     public boolean isPropertySet(String propertyName)
     {
         return Boolean.getBoolean(propertyName);

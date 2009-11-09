@@ -168,5 +168,10 @@
 
             </subsection>
         </section>
+
+        <section name="Examples">
+            <p>Please see <a href="../gaderian-examples/pipeline.html">pipeline examples</a> for a sample implementation.</p>
+        </section>
+
     </body>
 </document>

@@ -17,6 +17,13 @@
 
     <description>Gaderian is a component assembly and configuration framework</description>
 
+    <repositories>
+        <repository>
+            <id>ops4j</id>
+            <url>http://repository.ops4j.org/maven2/</url>
+        </repository>
+    </repositories>
+    
     <organization>
         <name>OPS4J - Open Participation Software for Java</name>
         <url>http://www.ops4j.org/</url>

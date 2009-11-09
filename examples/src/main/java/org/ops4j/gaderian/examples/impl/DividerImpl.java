@@ -17,7 +17,7 @@ package org.ops4j.gaderian.examples.impl;
 import org.ops4j.gaderian.examples.Divider;
 
 /**
- * Implementation of the {@link org.ops4j.examples.Divider} interface.
+ * Implementation of the {@link org.ops4j.gaderian.examples.Divider} interface.
  *
  * @author Howard Lewis Ship
  */

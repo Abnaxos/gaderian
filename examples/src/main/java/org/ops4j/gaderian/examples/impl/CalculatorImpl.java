@@ -21,7 +21,7 @@ import org.ops4j.gaderian.examples.Multiplier;
 import org.ops4j.gaderian.examples.Subtracter;
 
 /**
- * Implementation of the {@link org.ops4j.examples.Calculator}
+ * Implementation of the {@link org.ops4j.gaderian.examples.Calculator}
  * service interface. Acts as a facade, delegating each operation to other
  * services.  The <code>gaderian.BuilderFactory</code>
  *
