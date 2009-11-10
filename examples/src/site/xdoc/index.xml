@@ -41,6 +41,7 @@
 			<li><a href="logging.html">Logging Interceptor</a>: Interceptors, ServiceInterceptorFactory</li>
 			<li><a href="setters.html">Setters</a>: Setter based dependency injection</li>
 			<li><a href="pipeline.html">Pipeline</a>: Pipeline Service Factory, Contributions, visibility</li>
+			<li><a href="strategy.html">Strategy</a>: Strategy Service Factory, Contributions, visibility</li>
 		</ul>
 	</subsection>
       </section>

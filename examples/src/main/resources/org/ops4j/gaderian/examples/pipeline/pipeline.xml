@@ -16,11 +16,22 @@
 -->
 <!-- START SNIPPET: full -->
 <module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline">
-    
+
+    <!-- Defines the terminator service (service which is invoked at the end of the pipeline) for the pipeline.  This
+    is defined as private to this module to ensure autowiring of the service interface itself (defined below) still
+    works.
+    -->
     <service-point id="StringToUpperTerminator" visibility="private" interface="StringToUpper">
         <create-instance class="impl.StringToUpperImpl"/>
     </service-point>
 
+    <!-- Defines the actual service point which will be invoked.  This is the entry-point for the pipeline and defines
+    all the properties of it:
+      - The service factory specified is the PipelineFactory
+      - Filter interface: Interface of the filters within the pipeline
+      - Configuration Identifier: The identifier of the configuration point containing contributed filters for the pipeline
+      - Terminator: The (optional) service which should be the end of the pipeline
+    -->
     <service-point id="StringToUpper" interface="StringToUpper">
         <invoke-factory service-id="gaderian.PipelineFactory">
             <create-pipeline
@@ -31,15 +42,21 @@
         </invoke-factory>
     </service-point>
 
-    <!-- Pipeline config -->
+    <!-- Pipeline config - this defines the configuration point to which filters are contributed for this pipeline -->
     <configuration-point id="StringToUpperPipeline" schema-id="gaderian.Pipeline"/>
 
-    <!-- Validation filter -->
+    <!-- Validation filter - defined as private to this module -->
     <service-point id="StringToUpperValidationFilter" interface="StringToUpperFilter" visibility="private">
         <invoke-factory>
             <construct class="impl.StringToUpperValidationFilter"/>
         </invoke-factory>
     </service-point>
+
+    <!-- Contribution of the validation filter into the pipeline configuration -->
+    <contribution configuration-id="StringToUpperPipeline">
+        <filter before="*" name="StringToUpperValidationFilter"
+                object="service:StringToUpperValidationFilter"/>
+    </contribution>
 
     <!-- Magic Token filter -->
     <service-point id="StringToUpperMagicTokenFilter" interface="StringToUpperFilter" visibility="private">
@@ -48,14 +65,12 @@
         </invoke-factory>
     </service-point>
 
+    <!-- Contribution of the 'magic' filter into the pipeline configuration -->
     <contribution configuration-id="StringToUpperPipeline">
-        <filter before="*"
-                name="StringToUpperValidationFilter"
-                object="service:StringToUpperValidationFilter"/>
-        <filter after="StringToUpperValidationFilter"
-                name="StringToUpperMagicTokenFilter"
+        <filter after="StringToUpperValidationFilter" name="StringToUpperMagicTokenFilter"
                 object="service:StringToUpperMagicTokenFilter"/>
     </contribution>
+
 
 </module>
 <!-- END SNIPPET: full -->

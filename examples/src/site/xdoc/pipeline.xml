@@ -29,7 +29,7 @@
 
             <p>This example demonstrates the use of the Pipeline service factory.</p>
             <subsection name="Module Descriptor">
-                <p>The folling shows module descriptor of a service a pipeline in front of a terminating service.</p>
+                <p>The following shows a module descriptor for a service consisting of a pipeline in front of a terminating service.</p>
                 <p>The pipeline consists of 2 filters:</p>
                 <ul>
                     <li>A validation filter which simply checks the incoming parameter for nulls</li>
@@ -38,7 +38,7 @@
                 </ul>
 
                 <p>
-                    Finally, the pipeline is terminated by a simple (private) service, which just converts the parameter
+                    The pipeline is terminated by a simple (private to the module) service, which simply converts the parameter
                     passed into it into upper case and returns it.
                 </p>
 

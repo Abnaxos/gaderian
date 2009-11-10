@@ -3,11 +3,12 @@ package org.ops4j.gaderian.examples.pipeline;
 import junit.framework.TestCase;
 import org.ops4j.gaderian.examples.ExampleUtils;
 import org.ops4j.gaderian.Registry;
+import org.ops4j.gaderian.testutils.GaderianTestCase;
 
 /**
  * @author Johan Lindquist
  */
-public class TestPipeline extends TestCase
+public class TestPipeline extends GaderianTestCase
 {
     public StringToUpper _stringToUpper;
 
@@ -29,6 +30,7 @@ public class TestPipeline extends TestCase
         try
         {
             _stringToUpper.toUpper( null );
+            unreachable();
         }
         catch ( IllegalArgumentException e )
         {
