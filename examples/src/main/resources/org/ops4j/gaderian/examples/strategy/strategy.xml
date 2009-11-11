@@ -17,50 +17,59 @@
 <!-- START SNIPPET: full -->
 <module id="strategy.example" version="1.0.0" package="org.ops4j.gaderian.examples.strategy">
 
+    <!-- Defines the actual service point which will be invoked by clients.  This is the entry-point for the strategy
+    and defines the properties of it:
+      - The service factory specified is the StrategyFactory
+      - Configuration Identifier: The identifier of the configuration point containing contributed strategies
+    -->
     <service-point id="StringManipulator" interface="StringManipulator">
         <invoke-factory service-id="gaderian.StrategyFactory">
             <construct configuration-id="StringManipulators"/>
         </invoke-factory>
     </service-point>
 
-    <!-- -->
+    <!-- Defines the configuration point to which strategies may contribute to -->
     <configuration-point id="StringManipulators" schema-id="gaderian.StrategyRegistry"/>
 
-    <!-- -->
+    <!-- Defines a strategy which handles invokations not matching any other strategy -->
     <service-point id="UnhandledStringManipulator" interface="StringManipulator" visibility="private">
         <invoke-factory>
             <construct class="impl.UnhandledStringManipulator"/>
         </invoke-factory>
     </service-point>
 
-    <!-- -->
+    <!-- Contributes the unhandled string manipulator service to the set of handled strategies.  This contribution
+     specifies that the parent type 'org.ops4j.gaderian.examples.strategy.StringManipulation' should be handled by
+     the unhandled string manipulator service.  This also means that if a sub-class of 'StringManipulation' is passed
+     into the method and no other strategy has registered themselves to handle that type, this contribution will match.
+    -->
     <contribution configuration-id="StringManipulators">
         <strategy class="org.ops4j.gaderian.examples.strategy.StringManipulation" object="service:UnhandledStringManipulator"/>
     </contribution>
 
-    <!-- -->
+    <!-- Defines a strategy which handles requests to manipulate the incoming string into upper case -->
     <service-point id="ToUpperCaseStringManipulator" interface="StringManipulator" visibility="private">
         <invoke-factory>
             <construct class="impl.ToUpperCaseStringManipulator"/>
         </invoke-factory>
     </service-point>
 
-    <!-- -->
+    <!-- Contributes the to-upper-case  string manipulator service to the set of handled strategies -->
     <contribution configuration-id="StringManipulators">
         <strategy class="org.ops4j.gaderian.examples.strategy.ToUpperCaseStringManipulation" object="service:ToUpperCaseStringManipulator"/>
     </contribution>
 
-    <!-- -->
+    <!-- Defines a strategy which handles requests to manipulate the incoming string into lower case -->
     <service-point id="ToLowerCaseStringManipulator" interface="StringManipulator" visibility="private">
         <invoke-factory>
             <construct class="impl.ToLowerCaseStringManipulator"/>
         </invoke-factory>
     </service-point>
 
-    <!-- -->
+    <!-- Contributes the to-lower-case string manipulator service to the set of handled strategies -->
     <contribution configuration-id="StringManipulators">
         <strategy class="org.ops4j.gaderian.examples.strategy.ToLowerCaseStringManipulation" object="service:ToLowerCaseStringManipulator"/>
     </contribution>
 
 </module>
-        <!-- END SNIPPET: full -->
+<!-- END SNIPPET: full -->

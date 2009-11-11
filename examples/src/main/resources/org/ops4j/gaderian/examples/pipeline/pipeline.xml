@@ -17,7 +17,7 @@
 <!-- START SNIPPET: full -->
 <module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline">
 
-    <!-- Defines the terminator service (service which is invoked at the end of the pipeline) for the pipeline.  This
+    <!-- Defines the terminating service (service which is invoked at the end of the pipeline) for the pipeline.  This
     is defined as private to this module to ensure autowiring of the service interface itself (defined below) still
     works.
     -->
@@ -25,8 +25,8 @@
         <create-instance class="impl.StringToUpperImpl"/>
     </service-point>
 
-    <!-- Defines the actual service point which will be invoked.  This is the entry-point for the pipeline and defines
-    all the properties of it:
+    <!-- Defines the actual service point which will be invoked by clients.  This is the entry-point for the pipeline
+    and defines all the properties of it:
       - The service factory specified is the PipelineFactory
       - Filter interface: Interface of the filters within the pipeline
       - Configuration Identifier: The identifier of the configuration point containing contributed filters for the pipeline

@@ -1,6 +1,7 @@
 package org.ops4j.gaderian.examples.strategy;
 
-/**
+/** Base class used as the signature type in the <code>StringManipulator</code> example.  Simple wraps a string internally
+ * which sub-classes of this class may allow to manipulate in some way.
  * @author Johan Lindquist
  */
 public abstract class StringManipulation
