@@ -20,11 +20,11 @@ public class TestChain extends GaderianTestCase
 
     public void testFishClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.SHARK );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.SHARK );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.FISH, animalClassification );
 
-        animalClassification = _animalClassifier.classifiy( Animal.TUNA );
+        animalClassification = _animalClassifier.classify( Animal.TUNA );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.FISH, animalClassification );
 
@@ -32,11 +32,11 @@ public class TestChain extends GaderianTestCase
 
     public void testBirdsClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.PINGVIN );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.PINGVIN );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.BIRDS, animalClassification );
 
-        animalClassification = _animalClassifier.classifiy( Animal.EAGLE );
+        animalClassification = _animalClassifier.classify( Animal.EAGLE );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.BIRDS, animalClassification );
 
@@ -44,11 +44,11 @@ public class TestChain extends GaderianTestCase
 
     public void testMammalsClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.WOLF );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.WOLF );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.MAMMALS, animalClassification );
 
-        animalClassification = _animalClassifier.classifiy( Animal.COW );
+        animalClassification = _animalClassifier.classify( Animal.COW );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.MAMMALS, animalClassification );
 
@@ -56,11 +56,11 @@ public class TestChain extends GaderianTestCase
 
      public void testInsectsClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.WOLF );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.WOLF );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.MAMMALS, animalClassification );
 
-        animalClassification = _animalClassifier.classifiy( Animal.COW );
+        animalClassification = _animalClassifier.classify( Animal.COW );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.MAMMALS, animalClassification );
 
@@ -68,7 +68,7 @@ public class TestChain extends GaderianTestCase
 
     public void testInvertebratesClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.SPIDER );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.SPIDER );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.INVERTEBRATES , animalClassification );
 
@@ -77,7 +77,7 @@ public class TestChain extends GaderianTestCase
 
     public void testVertebratesClassification() throws Exception
     {
-        AnimalClassification animalClassification = _animalClassifier.classifiy( Animal.TURTLE );
+        AnimalClassification animalClassification = _animalClassifier.classify( Animal.TURTLE );
         assertNotNull( animalClassification );
         assertEquals( AnimalClassification.VERTEBRATES, animalClassification );
 

@@ -14,34 +14,40 @@
         <menu name="Core">
 
             <item name="Introduction" href="index.html"/>
-            <item name="References" collapse="true" href="references.html">
-                
-                <item name="Symbol Sources" href="SymbolSources.html"/>
-                <item name="FactoryDefaults" href="FactoryDefaults.html"/>
-                <item name="ApplicationDefaults" href="ApplicationDefaults.html"/>
-                
-                <item name="ObjectProviders" href="ObjectProviders.html"/>
-                <item name="Translators" href="Translators.html"/>
 
-                <item name="ServiceModels" href="ServiceModels.html"/>
+            <item name="Service Instantiation" href="service-instantiation.html" collapse="true">
                 <item name="BuilderFactory" href="BuilderFactory.html"/>
-                <item name="EagerLoad" href="EagerLoad.html"/>
-                <item name="ShutdownCoordinator" href="ShutdownCoordinator.html"/>
-                <item name="ThreadLocale" href="ThreadLocale.html"/>
-                <item name="ThreadLocalStorage" href="ThreadLocalStorage.html"/>
-                <item name="LoggingInterceptor" href="LoggingInterceptor.html"/>
-
-                <item name="Bean Factory Builder" href="BeanFactoryBuilder.html"/>
-                <item name="Chain Builder" href="ChainBuilder.html"/>
                 <item name="Chain Factory" href="ChainFactory.html"/>
-                <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
-                <item name="Java Proxy Factory" href="JDKProxyFactory.html"/>
+                <item name="Java Proxy Factory" href="JavaProxyFactory.html"/>
                 <item name="Pipeline Factory" href="PipelineFactory.html"/>
                 <item name="Service Property Factory" href="ServicePropertyFactory.html"/>
                 <item name="Strategy Factory" href="StrategyFactory.html"/>
-                
-
             </item>
+
+            <item name="Configurations" href="configuration.html" collapse="true">
+                <item name="Symbol Sources" href="SymbolSources.html"/>
+                <item name="Factory Defaults" href="FactoryDefaults.html"/>
+                <item name="Application Defaults" href="ApplicationDefaults.html"/>
+                <item name="Object Providers" href="ObjectProviders.html"/>
+                <item name="Translators" href="Translators.html"/>
+            </item>
+
+            <item name="Lifecycle" href="lifecycle.html" collapse="true">
+                <item name="Service Models" href="ServiceModels.html"/>
+                <item name="Shutdown Coordinator" href="ShutdownCoordinator.html"/>
+                <item name="Eager Load" href="EagerLoad.html"/>
+            </item>
+
+            <item name="Miscellaneous" href="miscellanous.html" collapse="true">
+                <item name="Thread Locale" href="ThreadLocale.html"/>
+                <item name="Thread Local Storage" href="ThreadLocalStorage.html"/>
+                <item name="Logging Interceptor" href="LoggingInterceptor.html"/>
+
+                <item name="Bean Factory Builder" href="BeanFactoryBuilder.html"/>
+                <item name="Chain Builder" href="ChainBuilder.html"/>
+                <item name="Default Implementation Builder" href="DefaultImplementationBuilder.html"/>
+            </item>
+
         </menu>
 
         <menu ref="parent"/>

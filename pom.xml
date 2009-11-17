@@ -255,6 +255,7 @@
                 <version>2.1</version>
                 <configuration>
                     <onlyCurrentVersion>true</onlyCurrentVersion>
+                    <statusIds>Resolved,Closed</statusIds>
                 </configuration>
                 <reportSets>
                     <reportSet>

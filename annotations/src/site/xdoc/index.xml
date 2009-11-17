@@ -32,20 +32,28 @@
                 the annotations without dragging in any additional dependencies. 
             </p>
 
+            <p>Please not that the usage of annotations are only applicable under certain circumstances and depend on the
+                service factory used.  The annotation in question will describe the context in which it applies.</p>
+
+
             <p>Currently, the annotations provided with Gaderian fall into the following main categories:</p>
             <ul>
+<!--
                 <li>
                     <a href="lifecycle.html">Lifecycle</a>: Defines lifecycle callback method annotations.
                 </li>
+-->
                 <li>
                     <a href="validation.html">Validation</a>: Defines various validation rules to use when validating an instantiated service
                 </li>
+<!--
                 <li>
                     <a href="registry.html">Registry Creation</a>: Defines annotations for constructing a registry using Java
                 </li>
                 <li>
                     <a href="miscellaneous.html">Miscellaneous</a>: All other annotations
                 </li>
+-->
             </ul>
 
         </section>

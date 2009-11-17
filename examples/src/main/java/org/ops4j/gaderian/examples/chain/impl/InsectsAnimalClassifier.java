@@ -9,7 +9,7 @@ import org.ops4j.gaderian.examples.chain.Animal;
  */
 public class InsectsAnimalClassifier implements AnimalClassifier
 {
-    public AnimalClassification classifiy( final Animal animal )
+    public AnimalClassification classify( final Animal animal )
     {
         switch ( animal )
         {

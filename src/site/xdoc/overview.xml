@@ -148,42 +148,6 @@
                   the correct approach.
               </em>
           </p>
-          <subsection name="Task: Log method entry and exit">
-              <h4>Typical Approach</h4>
-                  <source> <![CDATA[
-public String myMethod(String param)
-{
-  if (LOG.isDebugEnabled())
-    LOG.debug("myMethod(" + param + ")");
-
-  String result = // . . .
-
-  if (LOG.isDebugEnabled())
-    LOG.debug("myMethod() returns " + result);
-
-  return result;
-}]]> </source>
-                  <p>This approach doesn't do a good or consistent job when a method has multiple return points. It also
-                      creates many more branch points within the code ... basically, a lot of clutter. Finally, it
-                      doesn't report
-                      on exceptions thrown from within the method.
-                  </p>
-              <h4>Gaderian Approach</h4>
-                  <p>Let Gaderian add a
-                      <a href="gaderian/LoggingInterceptor.html">logging interceptor</a>
-                      to your
-                      service. It will consistently log method entry and exit, and log any exceptions thrown by the
-                      method.
-                  </p>
-                  <p>The following descriptor snippet defines a service, provides a core service implementation (using
-                      &lt;create-instance&gt;), and adds method logging (using &lt;interceptor&gt;):
-                  </p>
-                  <source><![CDATA[
-<service-point id="MyService" interface="com.myco.MyServiceInterface">
-  <create-instance class="com.myco.impl.MyServiceImpl"/>
-  <interceptor service-id="gaderian.LoggingInterceptor"/>
-</service-point>]]> </source>
-          </subsection>
           <subsection name="Task: Reference another service">
               <h4>Typical Approach</h4>
                   <source><![CDATA[
@@ -316,6 +280,42 @@ public void myMethod()
                           for testing.
                       </li>
                   </ul>
+          </subsection>
+          <subsection name="Task: Log method entry and exit">
+              <h4>Typical Approach</h4>
+                  <source> <![CDATA[
+public String myMethod(String param)
+{
+  if (LOG.isDebugEnabled())
+    LOG.debug("myMethod(" + param + ")");
+
+  String result = // . . .
+
+  if (LOG.isDebugEnabled())
+    LOG.debug("myMethod() returns " + result);
+
+  return result;
+}]]> </source>
+                  <p>This approach doesn't do a good or consistent job when a method has multiple return points. It also
+                      creates many more branch points within the code ... basically, a lot of clutter. Finally, it
+                      doesn't report
+                      on exceptions thrown from within the method.
+                  </p>
+              <h4>Gaderian Approach</h4>
+                  <p>Let Gaderian add a
+                      <a href="gaderian/LoggingInterceptor.html">logging interceptor</a>
+                      to your
+                      service. It will consistently log method entry and exit, and log any exceptions thrown by the
+                      method.
+                  </p>
+                  <p>The following descriptor snippet defines a service, provides a core service implementation (using
+                      &lt;create-instance&gt;), and adds method logging (using &lt;interceptor&gt;):
+                  </p>
+                  <source><![CDATA[
+<service-point id="MyService" interface="com.myco.MyServiceInterface">
+  <create-instance class="com.myco.impl.MyServiceImpl"/>
+  <interceptor service-id="gaderian.LoggingInterceptor"/>
+</service-point>]]> </source>
           </subsection>
       </section>
 

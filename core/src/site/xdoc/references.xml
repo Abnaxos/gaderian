@@ -51,7 +51,7 @@
                 </ul>
             </subsection>
 
-            <subsection name="Configuration">
+            <subsection name="Configurations">
                 <ul>
                     <li>
                         <a href="ObjectProviders.html">Object Providers</a>
@@ -71,10 +71,16 @@
                 </ul>
             </subsection>
 
-            <subsection name="Lifecycle Definitions">
+            <subsection name="Lifecycle">
                 <ul>
                     <li>
                         <a href="ServiceModels.html">Service Models</a>
+                    </li>
+                    <li>
+                    <a href="ShutdownCoordinator.html">Shutdown Coordinator</a>
+                    </li>
+                    <li>
+                    <a href="EagerLoad.html">Eager Load</a>
                     </li>
                 </ul>
             </subsection>

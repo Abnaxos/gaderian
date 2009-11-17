@@ -17,17 +17,99 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-    <title>Gaderian Core</title>
-  </properties>
-  <body>
+        <title>Gaderian Core</title>
+    </properties>
+    <body>
+        <section name="Gaderian Core">
+            <p>The Gaderian core, and the <a href="module-report/module/gaderian.html">gaderian</a> module,
+                provide the essential, core functionality of Gaderian.</p>
 
-    <section name="Gaderian Core">
+<subsection name="Service Instantiation">
+                <ul>
+                    <li>
+                        <a href="BuilderFactory.html">Builder Factory</a>
+                    </li>
+                    <li>
+                        <a href="JavaProxyFactory.html">Java Proxy Factory</a>
+                    </li>
+                    <li>
+                        <a href="PipelineFactory.html">Pipeline Factory</a>
+                    </li>
+                    <li>
+                        <a href="ServicePropertyFactory.html">Service Property Factory</a>
+                    </li>
+                    <li>
+                        <a href="StrategyFactory.html">Strategy Factory</a>
+                    </li>
+                    <li>
+                        <a href="ChainFactory.html">Chain Factory</a>
+                    </li>
+                    <li>
+                        <a href="DefaultImplementationFactory.html">Default Implementation Factory</a>
+                    </li>
+                </ul>
+            </subsection>
 
-      <p>The Gaderian core, and the <a href="module-report/module/gaderian.html">gaderian</a>
-        module,
-        provide the essential, core functionality of Gaderian.
-      </p>
-    </section>
+            <subsection name="Configurations">
+                <ul>
+                    <li>
+                        <a href="ObjectProviders.html">Object Providers</a>
+                    </li>
+                    <li>
+                        <a href="Translators.html">Translators</a>
+                    </li>
 
-  </body>
+
+                    <li>
+                        <a href="SymbolSources.html">Symbol Sources</a>
+                    </li>
+                    <li>
+                        <a href="FactoryDefaults.html">Factory Defaults</a>
+                    </li>
+                    <li>
+                        <a href="ApplicationDefaults.html">Application Defaults</a>
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Lifecycle">
+                <ul>
+                    <li>
+                        <a href="ServiceModels.html">Service Models</a>
+                    </li>
+                    <li>
+                    <a href="ShutdownCoordinator.html">Shutdown Coordinator</a>
+                    </li>
+                    <li>
+                    <a href="EagerLoad.html">Eager Load</a>
+                    </li>
+                </ul>
+            </subsection>
+
+            <subsection name="Miscellaneous">
+                <ul>
+                    <li>
+                        <a href="LoggingInterceptor.html">Logging Interceptor</a>
+                    </li>
+                    <li>
+                        <a href="ThreadLocale.html">Thread Locale</a>
+                    </li>
+                    <li>
+                        <a href="ThreadLocalStorage.html">Thread Local Storage</a>
+                    </li>
+
+                    <li>
+                        <a href="BeanFactoryBuilder.html">Bean Factory Builder</a>
+                    </li>
+                    <li>
+                        <a href="ChainBuilder.html">Chain Builder</a>
+                    </li>
+                </ul>
+            </subsection>
+        
+
+
+        </section>
+
+    </body>
 </document>

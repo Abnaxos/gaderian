@@ -15,6 +15,7 @@
             <item name="Setters" href="setters.html"/>
             <item name="Pipeline" href="pipeline.html"/>
             <item name="Strategy" href="strategy.html"/>
+            <item name="Chain" href="chain.html"/>
         </menu>
 
         <menu ref="parent"/>
