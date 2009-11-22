@@ -24,16 +24,13 @@
 
         <section name="Chain Factory Service">
 
-            <p>The
-                <a href="module-report/service/gaderian.ChainFactory.html">ChainFactory</a>
-                service implementation
-                factory is based on <a href="ChainBuilder.html">gaderian.ChainBuilder</a>. The chain's
-                command interface is the service interface, and the
+            <p>The<a href="module-report/service/gaderian.ChainFactory.html">ChainFactory</a>
+                service implementation factory is based on <a href="ChainBuilder.html">gaderian.ChainBuilder</a>.
+                The chain's command interface is the service interface, and the
                 service parameters identify the configuration that identifies the chain of commands.
             </p>
 
             <subsection name="Usage">
-
 
                 <p>The factory expects a single parameter element:</p>
 
@@ -56,13 +53,12 @@
                 <source>
 &lt;command id="..." before="..." after="..." object="..."/&gt;
                 </source>
+
                 <p>Each command has an id (which is qualified with the module id) and may specify a list of commands
-                    which
-                    precede or follow it.
+                    which precede or follow it.
                 </p>
                 <p>The object is specified as an<a href="module-report/config/ObjectProviders.html">object
-                    reference</a>.
-                </p>
+                    reference</a>.</p>
             </subsection>
         </section>
 

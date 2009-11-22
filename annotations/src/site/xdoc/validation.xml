@@ -21,7 +21,7 @@
     </properties>
     <body>
 
-        <section name="Validation Annotations ">
+        <section name="Validation Annotations">
 
             <p>The validation annotations are used to validate various aspects of service creation and instantiation.  They
             are an extension to the XML descriptors used to configure services in Gaderian.</p>
@@ -31,22 +31,31 @@
                 <li>@validate</li>
             </ul>
 
-            <subsection name="Validate">
+            <subsection name="@Validate">
 
-                <table>
-                    <tr>
-                        <td>Usage</td>
-                        <td>Field</td>
-                    </tr>
-                    <tr>
-                        <td>Context</td>
-                        <td>BuilderFactory</td>
-                    </tr>
-                </table>
+                <p>
+                    <strong>Usage:</strong> Field<br/>
+                    <strong>Context:</strong> BuilderFactory<br/>
+                </p>
 
                 <p>The <code>@validate</code> annotation is used to annotate that a particular field of a service implemention
                     must be assigned as part of autowiring the instance. If the annotation is present, Gaderian will check
                     to ensure that this is the case and if not, throw an appropriate error.</p>
+
+
+                <p>For example, in the below code sample, the _foo service field has been marked as required.</p>
+
+                <source>  ...
+
+  @Validate
+  private Foo _foo;
+
+  public void setFoo(final Foo foo)
+  {
+    _foo = foo;
+  }
+
+  ...</source>
 
             </subsection>
 

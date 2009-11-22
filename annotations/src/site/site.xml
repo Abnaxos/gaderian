@@ -11,26 +11,10 @@
 
     <body>
 
-        <menu name="Core">
+        <menu name="Annotations">
 
-            <item name="Introduction" href="index.html"/>
-            <item name="References" collapse="true" href="references.html">
-                
-                <item name="Symbol Sources" href="SymbolSources.html"/>
-                <item name="FactoryDefaults" href="FactoryDefaults.html"/>
-                <item name="ApplicationDefaults" href="ApplicationDefaults.html"/>
-                
-                <item name="ObjectProviders" href="ObjectProviders.html"/>
-                <item name="Translators" href="Translators.html"/>
-
-                <item name="ServiceModels" href="ServiceModels.html"/>
-                <item name="BuilderFactory" href="BuilderFactory.html"/>
-                <item name="EagerLoad" href="EagerLoad.html"/>
-                <item name="ShutdownCoordinator" href="ShutdownCoordinator.html"/>
-                <item name="ThreadLocale" href="ThreadLocale.html"/>
-                <item name="ThreadLocalStorage" href="ThreadLocalStorage.html"/>
-                <item name="LoggingInterceptor" href="LoggingInterceptor.html"/>
-                
+            <item name="Introduction" href="index.html" collapse="false">
+                <item name="Validation" href="validation.html"/>
             </item>
         </menu>
 

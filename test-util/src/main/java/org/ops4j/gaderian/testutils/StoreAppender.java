@@ -21,7 +21,7 @@ import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
- * Used to test logging provided by the {@link org.ops4j.gaderian.service.impl.LoggingInterceptorFactory}.
+ * Used to test logging calls.  Intercepts logging events and stores them for later retrieval
  *
  * @author Howard Lewis Ship
  */

@@ -114,39 +114,9 @@ public class BodyBuilder
      *            arguments used witht the format string
      */
 
-    public void addln(String pattern, Object[] arguments)
+    public void addln(String pattern, Object... arguments)
     {
         addln(MessageFormat.format(pattern, arguments));
-    }
-
-    /**
-     * Convience for {@link #addln(String, Object[])}
-     */
-
-    public void addln(String pattern, Object arg0)
-    {
-        addln(pattern, new Object[]
-        { arg0 });
-    }
-
-    /**
-     * Convience for {@link #addln(String, Object[])}.
-     */
-
-    public void addln(String pattern, Object arg0, Object arg1)
-    {
-        addln(pattern, new Object[]
-        { arg0, arg1 });
-    }
-
-    /**
-     * Convience for {@link #addln(String, Object[])}.
-     */
-
-    public void addln(String pattern, Object arg0, Object arg1, Object arg2)
-    {
-        addln(pattern, new Object[]
-        { arg0, arg1, arg2 });
     }
 
     /**

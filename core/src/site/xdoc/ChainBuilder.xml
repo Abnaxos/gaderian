@@ -24,11 +24,8 @@
         <section name="Chain Builder Service">
 
             <p>The
-                <a href="module-report/service/gaderian.ChainBuilder.html">ChainBuilder</a>
-                service implements the
-                Gang of Four
-                <em>Chain of Command</em>
-                pattern.
+                <a href="module-report/service/gaderian.ChainBuilder.html">ChainBuilder</a> service implements the
+                Gang of Four <em>Chain of Command</em> pattern.
             </p>
 
             <p>The ChainBuilder is provided with:</p>
@@ -50,21 +47,19 @@
             </ul>
 
             <p>From this, the ChainBuilder creates a new chain implementation object. The chain object implements the
-                command
-                interface.
+                command interface.
             </p>
 
             <p>Invoking a method on the chain object will, in turn, re-invoke the same method, with the same parameters,
-                on
-                each command object.
+                on each command object.
             </p>
 
             <p>If a command object returns a value that is not null, false or 0, then the chain terminates and returns
-                that
-                value. Command methods may take any number of parameters and may return any value type (including void).
+                that value. Command methods may take any number of parameters and may return any value type (including void).
             </p>
 
             <p>Commands are free to throw a checked or unchecked exception; these are not caught by the chain.</p>
+
         </section>
 
     </body>
