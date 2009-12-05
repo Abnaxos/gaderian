@@ -47,6 +47,7 @@ public class BuilderFactoryLogic
 
     private Module _contributingModule;
     private boolean _annotationsEnabled;
+    public Class _serviceClass;
 
     public BuilderFactoryLogic( ServiceImplementationFactoryParameters factoryParameters, BuilderParameter parameter )
     {
@@ -54,7 +55,11 @@ public class BuilderFactoryLogic
         _parameter = parameter;
 
         _serviceId = factoryParameters.getServiceId();
+
         _contributingModule = factoryParameters.getInvokingModule();
+
+        // Resolve the service class 
+        _serviceClass = _contributingModule.resolveType( _parameter.getClassName() );
 
         // Check whether annotations are available in this class loader or not
         _annotationsEnabled = _contributingModule.getClassResolver().checkForClass( "org.ops4j.gaderian.annotations.validation.Required" ) != null;
@@ -69,6 +74,13 @@ public class BuilderFactoryLogic
 
             _parameter.assemble( result, _factoryParameters );
 
+            // We only do validation if we are not skipping the check && annotations are enabled
+            if ( _parameter.getPerformNullChecks() && _annotationsEnabled )
+            {
+                // Validate the constructed instance - annotations and the like
+                ServiceInstanceUtils.validate( _serviceClass, result );
+            }
+
             return result;
         }
         catch ( Exception ex )
@@ -81,35 +93,28 @@ public class BuilderFactoryLogic
 
     private Object instantiateCoreServiceInstance()
     {
-        Class serviceClass = _contributingModule.resolveType( _parameter.getClassName() );
+        // Class serviceClass = _contributingModule.resolveType( _parameter.getClassName() );
 
-        if ( serviceClass.isInterface() || ( ( serviceClass.getModifiers() & Modifier.ABSTRACT ) != 0 ) )
+        if ( _serviceClass.isInterface() || ( ( _serviceClass.getModifiers() & Modifier.ABSTRACT ) != 0 ) )
         {
-            throw new ApplicationRuntimeException( ServiceMessages.absractClass( serviceClass.getName() ), _parameter.getLocation(), null );
+            throw new ApplicationRuntimeException( ServiceMessages.absractClass( _serviceClass.getName() ), _parameter.getLocation(), null );
         }
 
         // Allow the decorator to decorate for lifecycle calls etc
-        serviceClass = ClassDecorator.decorate( serviceClass, _parameter, _annotationsEnabled );
+        Class serviceClass = ClassDecorator.decorate( _serviceClass, _parameter, _annotationsEnabled );
 
         final List parameters = _parameter.getParameters();
 
         final Object coreServiceInstance;
         if ( _parameter.getAutowireServices() && parameters.isEmpty() )
         {
-            coreServiceInstance = instantiateConstructorAutowiredInstance( serviceClass );
+            return instantiateConstructorAutowiredInstance( serviceClass );
         }
         else
         {
-            coreServiceInstance = instantiateExplicitConstructorInstance( serviceClass, parameters );
+            return instantiateExplicitConstructorInstance( serviceClass, parameters );
         }
 
-        // We only do validation if we are not skipping the check && annotations are enabled 
-        if (_parameter.getPerformNullChecks() && _annotationsEnabled )
-        {
-            // Validate the constructed instance - annotations and the like
-            ServiceInstanceUtils.validate( serviceClass, coreServiceInstance );
-        }
-        return coreServiceInstance;
     }
 
     private Object instantiateExplicitConstructorInstance( Class serviceClass, List builderParameters )

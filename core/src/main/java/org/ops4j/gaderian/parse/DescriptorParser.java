@@ -227,7 +227,7 @@ public final class DescriptorParser extends AbstractParser
      */
     private void beginConfigurationPoint(String elementName)
     {
-        if (elementName.equals("schema"))
+        if ("schema".equals(elementName))
         {
             enterEmbeddedConfigurationPointSchema(elementName);
             return;
@@ -250,7 +250,7 @@ public final class DescriptorParser extends AbstractParser
 
     private void beginConversion(String elementName)
     {
-        if (elementName.equals("map"))
+        if ("map".equals(elementName))
         {
             ConversionDescriptor cd = (ConversionDescriptor) peekObject();
 
@@ -273,19 +273,19 @@ public final class DescriptorParser extends AbstractParser
 
     private void beginElement(String elementName)
     {
-        if (elementName.equals("attribute"))
+        if ("attribute".equals(elementName))
         {
             enterAttribute(elementName);
             return;
         }
 
-        if (elementName.equals("conversion"))
+        if ("conversion".equals(elementName))
         {
             enterConversion(elementName);
             return;
         }
 
-        if (elementName.equals("rules"))
+        if ("rules".equals(elementName))
         {
             enterRules(elementName);
             return;
@@ -293,7 +293,7 @@ public final class DescriptorParser extends AbstractParser
 
         // <element> is recursive ... possible, but tricky, if using Digester.
 
-        if (elementName.equals("element"))
+        if ("element".equals(elementName))
         {
             ElementModelImpl elementModel = (ElementModelImpl) peekObject();
 
@@ -307,19 +307,19 @@ public final class DescriptorParser extends AbstractParser
     private void beginImplementation(String elementName)
     {
 
-        if (elementName.equals("create-instance"))
+        if ("create-instance".equals(elementName))
         {
             enterCreateInstance(elementName);
             return;
         }
 
-        if (elementName.equals("invoke-factory"))
+        if ("invoke-factory".equals(elementName))
         {
             enterInvokeFactory(elementName);
             return;
         }
 
-        if (elementName.equals("interceptor"))
+        if ("interceptor".equals(elementName))
         {
             enterInterceptor(elementName);
             return;
@@ -343,47 +343,47 @@ public final class DescriptorParser extends AbstractParser
      */
     private void beginModule(String elementName)
     {
-        if (elementName.equals("configuration-point"))
+        if ("configuration-point".equals(elementName))
         {
             enterConfigurationPoint(elementName);
 
             return;
         }
 
-        if (elementName.equals("contribution"))
+        if ("contribution".equals(elementName))
         {
             enterContribution(elementName);
             return;
         }
 
-        if (elementName.equals("service-point"))
+        if ("service-point".equals(elementName))
         {
             enterServicePoint(elementName);
 
             return;
         }
 
-        if (elementName.equals("implementation"))
+        if ("implementation".equals(elementName))
         {
             enterImplementation(elementName);
 
             return;
         }
 
-        if (elementName.equals("schema"))
+        if ("schema".equals(elementName))
         {
             enterSchema(elementName);
             return;
         }
 
-        if (elementName.equals("sub-module"))
+        if ("sub-module".equals(elementName))
         {
             enterSubModule(elementName);
 
             return;
         }
 
-        if (elementName.equals("dependency"))
+        if ("dependency".equals(elementName))
         {
             enterDependency(elementName);
 
@@ -396,61 +396,61 @@ public final class DescriptorParser extends AbstractParser
     private void beginRules(String elementName)
     {
 
-        if (elementName.equals("create-object"))
+        if ("create-object".equals(elementName))
         {
             enterCreateObject(elementName);
             return;
         }
 
-        if (elementName.equals("invoke-parent"))
+        if ("invoke-parent".equals(elementName))
         {
             enterInvokeParent(elementName);
             return;
         }
 
-        if (elementName.equals("read-attribute"))
+        if ("read-attribute".equals(elementName))
         {
             enterReadAttribute(elementName);
             return;
         }
 
-        if (elementName.equals("read-content"))
+        if ("read-content".equals(elementName))
         {
             enterReadContent(elementName);
             return;
         }
 
-        if (elementName.equals("set-module"))
+        if ("set-module".equals(elementName))
         {
             enterSetModule(elementName);
             return;
         }
 
-        if (elementName.equals("set-property"))
+        if ("set-property".equals(elementName))
         {
             enterSetProperty(elementName);
             return;
         }
 
-        if (elementName.equals("push-attribute"))
+        if ("push-attribute".equals(elementName))
         {
             enterPushAttribute(elementName);
             return;
         }
 
-        if (elementName.equals("push-content"))
+        if ("push-content".equals(elementName))
         {
             enterPushContent(elementName);
             return;
         }
 
-        if (elementName.equals("set-parent"))
+        if ("set-parent".equals(elementName))
         {
             enterSetParent(elementName);
             return;
         }
 
-        if (elementName.equals("custom"))
+        if ("custom".equals(elementName))
         {
             enterCustom(elementName);
 
@@ -462,7 +462,7 @@ public final class DescriptorParser extends AbstractParser
 
     private void beginSchema(String elementName)
     {
-        if (elementName.equals("element"))
+        if ("element".equals(elementName))
         {
             SchemaImpl schema = (SchemaImpl) peekObject();
 
@@ -475,7 +475,7 @@ public final class DescriptorParser extends AbstractParser
 
     private void beginServicePoint(String elementName)
     {
-        if (elementName.equals("parameters-schema"))
+        if ("parameters-schema".equals(elementName))
         {
             enterParametersSchema(elementName);
             return;
@@ -491,7 +491,7 @@ public final class DescriptorParser extends AbstractParser
      */
     private void beginStart(String elementName)
     {
-        if (!elementName.equals("module"))
+        if (!"module".equals(elementName))
             throw new ApplicationRuntimeException(ParseMessages.notModule(
                     elementName,
                     getLocation()), getLocation(), null);

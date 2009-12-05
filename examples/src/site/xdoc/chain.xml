@@ -57,7 +57,7 @@
 
                     <param name="id" value="full"/>
                     <param name="url"
-                           value="http://codestat.ops4j.org/browse/~raw,r=HEAD/OPS4J/projects/gaderian/examples/src/main/java/org/ops4j/gaderian/examples/chain/AnimalClassfier.java"/>
+                           value="http://codestat.ops4j.org/browse/~raw,r=HEAD/OPS4J/projects/gaderian/examples/src/main/java/org/ops4j/gaderian/examples/chain/AnimalClassifier.java"/>
                 </macro>
 
             </subsection>
