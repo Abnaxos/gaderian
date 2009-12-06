@@ -558,8 +558,6 @@ public final class DescriptorParser extends AbstractParser
      */
     private void checkAttributes(String elementName)
     {
-        Iterator i = _attributes.keySet().iterator();
-
         ElementParseInfo epi = _elementParseInfo.get(elementName);
 
         // A few elements have no attributes at all.
@@ -571,11 +569,8 @@ public final class DescriptorParser extends AbstractParser
         }
 
         // First, check that each attribute is in the set of expected attributes.
-
-        while (i.hasNext())
+        for ( final String name : _attributes.keySet() )
         {
-            String name = (String) i.next();
-
             if (!epi.isKnown(name))
                 _errorHandler.error(
                         LOG,
@@ -586,10 +581,10 @@ public final class DescriptorParser extends AbstractParser
 
         // Now check that all required attributes have been specified.
 
-        i = epi.getRequiredNames();
+        Iterator<String> i = epi.getRequiredNames();
         while (i.hasNext())
         {
-            String name = (String) i.next();
+            String name = i.next();
 
             if (!_attributes.containsKey(name))
                 throw new ApplicationRuntimeException(ParseMessages.requiredAttribute(
@@ -1328,7 +1323,7 @@ public final class DescriptorParser extends AbstractParser
         String elementName = key.substring(9, lastdotx);
         String attributeName = key.substring(lastdotx + 1);
 
-        ElementParseInfo epi = (ElementParseInfo) _elementParseInfo.get(elementName);
+        ElementParseInfo epi = _elementParseInfo.get(elementName);
 
         if (epi == null)
         {

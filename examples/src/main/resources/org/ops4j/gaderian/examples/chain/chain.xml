@@ -15,7 +15,10 @@
    limitations under the License.
 -->
 <!-- START SNIPPET: full -->
-<module id="chain.example" version="1.0.0" package="org.ops4j.gaderian.examples.chain">
+<module id="chain.example" version="1.0.0" package="org.ops4j.gaderian.examples.chain"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
 
     <!-- Defines the actual service point which will be invoked by clients.  This is the entry-point for the pipeline
     and defines all the properties of it:
@@ -24,7 +27,7 @@
       - Terminator: The (optional) service which should be the end of the pipeline
     -->
     <service-point id="AnimalClassifier" interface="AnimalClassifier">
-        <invoke-factory service-id="gaderian.ChainFactory">
+        <invoke-factory xsi:type="ChainFactoryType" service-id="gaderian.ChainFactory">
             <construct
                     configuration-id="AnimalClassifiers"/>
         </invoke-factory>
@@ -35,7 +38,7 @@
 
     <!-- Validation filter - defined as private to this module -->
     <service-point id="VertebratesAnimalClassifier" interface="AnimalClassifier" visibility="private">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.VertebratesAnimalClassifier"/>
         </invoke-factory>
     </service-point>
@@ -48,7 +51,7 @@
 
     <!-- Validation filter - defined as private to this module -->
     <service-point id="InvertebratesAnimalClassifier" interface="AnimalClassifier" visibility="private">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.InvertebratesAnimalClassifier"/>
         </invoke-factory>
     </service-point>
@@ -61,7 +64,7 @@
 
      <!-- Validation filter - defined as private to this module -->
     <service-point id="BirdsAnimalClassifier" interface="AnimalClassifier" visibility="private">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.BirdsAnimalClassifier"/>
         </invoke-factory>
     </service-point>
@@ -74,7 +77,7 @@
 
     <!-- Validation filter - defined as private to this module -->
    <service-point id="MammalsAnimalClassifier" interface="AnimalClassifier" visibility="private">
-       <invoke-factory>
+       <invoke-factory xsi:type="BuilderFactoryType">
            <construct class="impl.MammalsAnimalClassifier"/>
        </invoke-factory>
    </service-point>
@@ -87,7 +90,7 @@
 
     <!-- Validation filter - defined as private to this module -->
    <service-point id="FishAnimalClassifier" interface="AnimalClassifier" visibility="private">
-       <invoke-factory>
+       <invoke-factory xsi:type="BuilderFactoryType">
            <construct class="impl.FishAnimalClassifier"/>
        </invoke-factory>
    </service-point>
@@ -100,7 +103,7 @@
 
    <!-- Validation filter - defined as private to this module -->
    <service-point id="InsectsAnimalClassifier" interface="AnimalClassifier" visibility="private">
-       <invoke-factory>
+       <invoke-factory xsi:type="BuilderFactoryType">
            <construct class="impl.InsectsAnimalClassifier"/>
        </invoke-factory>
    </service-point>

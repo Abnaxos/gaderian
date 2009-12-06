@@ -381,6 +381,14 @@ public abstract class AbstractParser extends DefaultHandler
             if (Gaderian.isBlank(key))
                 key = attributes.getQName(i);
 
+            // Ignore these as they are (currently) not handled by the parser
+            // But, by ignoring these, you can use the schema (xsd) for the
+            // module descriptors and not get errors during parsing
+            if (key.indexOf( "xmlns") > -1 || "xsi:type".equals(key))
+            {
+                continue;
+            }
+
             String value = attributes.getValue(i);
 
             result.put(key, value);

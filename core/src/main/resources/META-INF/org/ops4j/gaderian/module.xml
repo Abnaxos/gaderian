@@ -15,7 +15,10 @@
    limitations under the License.
 -->
 
-<module id="gaderian" version="1.1.0" package="org.ops4j.gaderian">
+<module id="gaderian" version="1.1.0" package="org.ops4j.gaderian"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
 
     The master module for Gaderian, defining core, universal functionality.
 
@@ -90,7 +93,7 @@
 
         SymbolSource implementation driven by the FactoryDefaults configuration point.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="service.impl.DefaultsSymbolSource">
                 <set-configuration configuration-id="FactoryDefaults" property="defaults"/>
             </construct>
@@ -106,7 +109,7 @@
 
         SymbolSource implementation driven by the ApplicationDefaults configuration point.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="service.impl.DefaultsSymbolSource">
                 <set-configuration
                         configuration-id="ApplicationDefaults" property="defaults"/>
@@ -159,7 +162,7 @@
         Logging occurs at level DEBUG and uses the service id as the logger.
         Method entry (with parameters) and method exit (with return value) are logged, as are any exceptions.
 
-        <invoke-factory model="primitive">
+        <invoke-factory model="primitive" xsi:type="BuilderFactoryType">
             <construct class="service.impl.LoggingInterceptorFactory">
                 <set-service property="factory" service-id="ClassFactory"/>
             </construct>
@@ -680,7 +683,7 @@
 
         A source of event notifications for when the Registry is shutdown.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.ShutdownCoordinatorImpl">
                 <log/>
             </construct>
@@ -715,7 +718,7 @@
         Runnable object or service within as the last step of the Registry construction phase.
         Note that the execution order is arbitrary and the startup objects are NOT executed in separate threads.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.StartupImpl">
                 <set-configuration configuration-id="Startup" property="runnables"/>
             </construct>
@@ -747,7 +750,7 @@
         Service that performs eager loading of other services. This service is contributed into the gaderian.Startup
         configuration.
 
-        <invoke-factory model="primitive">
+        <invoke-factory model="primitive" xsi:type="BuilderFactoryType">
             <construct class="service.impl.EagerLoader">
                 <set-configuration configuration-id="EagerLoad" property="servicePoints"/>
             </construct>
@@ -780,7 +783,7 @@
         Translator that works with ObjectProviders to find or create objects. In case of a missing colon in the input
         value it will delegate to the smart translator.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct
                     class="service.impl.ObjectTranslator">
                 <set-configuration configuration-id="ObjectProviders" property="contributions"/>
@@ -838,7 +841,7 @@
         Stores the locale for the current thread. The default is determined when the Registry is first
         constructed. This locale is used for any messages.
 
-        <invoke-factory service-id="ThreadLocaleFactory" model="threaded"/>
+        <invoke-factory xsi:type="ThreadLocaleFactoryType" service-id="ThreadLocaleFactory" model="threaded"/>
 
     </service-point>
 
@@ -854,7 +857,7 @@
 
         Synthesizes a service interface from an ordinary JavaBean.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="service.impl.InterfaceSynthesizerImpl">
                 <set-service property="classFactory" service-id="ClassFactory"/>
             </construct>
@@ -906,7 +909,7 @@
                 </conversion>
             </element>
         </parameters-schema>
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="factory.BeanFactoryBuilder"/>
         </invoke-factory>
     </service-point>
@@ -952,7 +955,7 @@
             </element>
         </parameters-schema>
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="pipeline.PipelineFactory">
                 <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
                 <set-service property="defaultImplementationBuilder" service-id="DefaultImplementationBuilder"/>
@@ -1000,7 +1003,7 @@
         the targeted service uses a threaded (or similar) service model, thus requiring dynamic,
         rather than static, access.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.ServicePropertyFactory">
                 <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
             </construct>
@@ -1061,7 +1064,7 @@
         each method of the service interface is used to select a strategy instance, and then
         the method implementation delegates to that instance.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="strategy.StrategyFactory">
                 <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
             </construct>
@@ -1093,7 +1096,7 @@
         implementing that interface. Primarily used
         by the ChainFactory service implementation factory.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="chain.ChainBuilderImpl">
                 <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
             </construct>
@@ -1131,7 +1134,7 @@
         Service implementation factory that produces a chain of command based on a
         configuration point that conforms tothe gaderian.utilities.ChainContribution schema.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="chain.ChainFactory">
                 <set-service property="chainBuilder" service-id="ChainBuilder"/>
             </construct>
@@ -1159,7 +1162,7 @@
         nothing.
         Returned instances are cached and re-used.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.DefaultImplementationBuilderImpl">
                 <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
             </construct>
@@ -1173,7 +1176,7 @@
         A service implementation factory that builds a default implementation of a service.
         The service implementation is a placeholder that does nothing.
 
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.PlaceholderFactory">
                 <set-service property="builder" service-id="DefaultImplementationBuilder"/>
             </construct>
@@ -1193,7 +1196,7 @@
                 </rules>
             </element>
         </parameters-schema>
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="org.ops4j.gaderian.impl.JavaProxyFactory"/>
         </invoke-factory>
     </service-point>

@@ -26,8 +26,8 @@ import java.util.Set;
  */
 public class ElementParseInfo
 {
-    private Set _knownAttributes = new HashSet();
-    private Set _requiredAttributes = new HashSet();
+    private Set<String> _knownAttributes = new HashSet<String>();
+    private Set<String> _requiredAttributes = new HashSet<String>();
 
     public void addAttribute(String name, boolean required)
     {
@@ -46,7 +46,7 @@ public class ElementParseInfo
      * Returns all the required attribute names as
      * an Iterator (of String).
      */
-    public Iterator getRequiredNames()
+    public Iterator<String> getRequiredNames()
     {
         return _requiredAttributes.iterator();
     }

@@ -15,7 +15,10 @@
    limitations under the License.
 -->
 <!-- START SNIPPET: full -->
-<module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline">
+<module id="pipeline.example" version="1.0.0" package="org.ops4j.gaderian.examples.pipeline"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+>
 
     <!-- Defines the terminating service (service which is invoked at the end of the pipeline) for the pipeline.  This
     is defined as private to this module to ensure autowiring of the service interface itself (defined below) still
@@ -33,7 +36,7 @@
       - Terminator: The (optional) service which should be the end of the pipeline
     -->
     <service-point id="StringToUpper" interface="StringToUpper">
-        <invoke-factory service-id="gaderian.PipelineFactory">
+        <invoke-factory xsi:type="PipelineFactoryType" service-id="gaderian.PipelineFactory">
             <create-pipeline
                     filter-interface="StringToUpperFilter"
                     configuration-id="StringToUpperPipeline"
@@ -47,7 +50,7 @@
 
     <!-- Validation filter - defined as private to this module -->
     <service-point id="StringToUpperValidationFilter" interface="StringToUpperFilter" visibility="private">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.StringToUpperValidationFilter"/>
         </invoke-factory>
     </service-point>
@@ -60,7 +63,7 @@
 
     <!-- Magic Token filter -->
     <service-point id="StringToUpperMagicTokenFilter" interface="StringToUpperFilter" visibility="private">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="impl.StringToUpperMagicTokenFilter"/>
         </invoke-factory>
     </service-point>

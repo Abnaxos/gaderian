@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0">
+    <xs:element name="module" type="ModuleType">
+        <xs:annotation>
+            <xs:documentation>Copyright 2009 OPS4J
+
+                Licensed under the Apache License, Version 2.0 (the "License");
+                you may not use this file except in compliance with the License.
+                You may obtain a copy of the License at
+
+                http://www.apache.org/licenses/LICENSE-2.0
+
+                Unless required by applicable law or agreed to in writing, software
+                distributed under the License is distributed on an "AS IS" BASIS,
+                WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+                See the License for the specific language governing permissions and
+                limitations under the License.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="ServicePointType">
+        <xs:sequence>
+            <xs:choice maxOccurs="1" minOccurs="0">
+                <xs:element type="InvokeFactoryType" name="invoke-factory"/>
+                <xs:element type="CreateInstanceType" name="create-instance"/>
+            </xs:choice>
+            <xs:element type="ParametersSchemaType" name="parameters-schema" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="interceptor" type="InterceptorType" minOccurs="0" maxOccurs="unbounded"/>
+
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="id" use="required"/>
+        <xs:attribute type="xs:string" name="interface" use="optional"/>
+        <xs:attribute type="VisibilityType" name="visibility" use="optional" default="singleton"/>
+        <xs:attribute type="xs:string" name="parameters-schema-id" use="optional"/>
+        <xs:attribute type="xs:string" name="parameters-occurs" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="ImplementationType">
+         <xs:sequence>
+             <xs:choice maxOccurs="1" minOccurs="0">
+                 <xs:element type="InvokeFactoryType" name="invoke-factory"/>
+                 <xs:element type="CreateInstanceType" name="create-instance"/>
+             </xs:choice>
+             <xs:element type="ParametersSchemaType" name="parameters-schema" minOccurs="0" maxOccurs="1"/>
+             <xs:element name="interceptor" type="InterceptorType" minOccurs="0" maxOccurs="unbounded"/>
+
+         </xs:sequence>
+         <xs:attribute type="xs:string" name="service-id" use="required"/>
+         <xs:attribute type="xs:string" name="if" use="optional"/>
+     </xs:complexType>
+
+
+    <xs:complexType name="InvokeFactoryType" abstract="true">
+        <xs:attribute type="xs:string" name="service-id" use="optional" default="BuilderFactory"/>
+        <xs:attribute type="xs:string" name="model" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="BuilderFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="BuilderFactoryConstructType" name="construct" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ThreadLocaleFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="StrategyFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="StrategyFactoryConstructType" name="construct" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PipelineFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="PipelineFactoryConstructType" name="create-pipeline" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ChainFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="ChainFactoryConstructType" name="construct" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CreateInstanceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="class" use="required"/>
+                <xs:attribute type="xs:string" name="model" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ServiceModelType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="class" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="InterceptorType">
+        <xs:sequence>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="service-id" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="BuilderFactoryConstructType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="messages" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element type="xs:string" name="service-id" minOccurs="0"/>
+            <xs:element type="xs:string" name="error-handler" minOccurs="0"/>
+            <xs:element type="xs:string" name="error-log" minOccurs="0"/>
+            <xs:element type="xs:string" name="class-resolver" minOccurs="0"/>
+            <xs:element type="xs:string" name="log" minOccurs="0"/>
+            <xs:element type="xs:string" name="string" minOccurs="0"/>
+            <xs:element type="xs:string" name="configuration" minOccurs="0"/>
+            <xs:element type="xs:string" name="int" minOccurs="0"/>
+            <xs:element type="xs:string" name="long" minOccurs="0"/>
+            <xs:element type="xs:string" name="resource" minOccurs="0"/>
+            <xs:element type="xs:string" name="service" minOccurs="0"/>
+            <xs:element type="xs:string" name="object" minOccurs="0"/>
+            <xs:element type="xs:string" name="null" minOccurs="0" fixed=""/>
+            <xs:element type="SetEventListenerType" name="event-listener" minOccurs="0"/>
+            <xs:element type="SetPropertyType" name="set" minOccurs="0"/>
+            <xs:element type="SetConfigurationType" name="set-configuration" minOccurs="0"/>
+            <xs:element type="SetResourceType" name="set-resource" minOccurs="0"/>
+            <xs:element type="SetServiceType" name="set-service" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="SetObjectType" name="set-object" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="class" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="StrategyFactoryConstructType">
+        <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="PipelineFactoryConstructType">
+        <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+        <xs:attribute type="xs:string" name="filter-interface" use="required"/>
+        <xs:attribute type="xs:string" name="terminator" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ChainFactoryConstructType">
+        <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="SetServiceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+                <xs:attribute type="xs:string" name="service-id" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetEventListenerType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="service-id" use="required"/>
+                <xs:attribute type="xs:string" name="name" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetResourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="required"/>
+                <xs:attribute type="xs:string" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetObjectType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="required"/>
+                <xs:attribute type="xs:string" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetPropertyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="required"/>
+                <xs:attribute type="xs:string" name="value" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SetConfigurationType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+                <xs:attribute type="xs:string" name="property" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ProviderType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="prefix" use="required"/>
+                <xs:attribute type="xs:string" name="service-id" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="DefaultsType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="value" use="required"/>
+                <xs:attribute type="xs:string" name="symbol" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ConversionType" mixed="true">
+        <xs:sequence>
+            <xs:element type="MapType" name="map" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="class" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="PushAttributeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="attribute" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ElementType">
+        <xs:sequence>
+            <xs:element type="AttributeType" name="attribute" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="ConversionType" name="conversion" minOccurs="0"/>
+            <xs:element type="ElementType" name="element" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="RulesType" name="rules" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="content-translator" use="optional"/>
+        <xs:attribute type="xs:string" name="key-attribute" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="SchemaType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="ElementType" name="element"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+        <xs:attribute type="xs:string" name="visibility" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="ReadAttributeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="attribute" use="optional"/>
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+                <xs:attribute type="xs:string" name="method" use="optional"/>
+                <xs:attribute type="xs:byte" name="depth" use="optional"/>
+                <xs:attribute type="xs:string" name="class" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ParametersSchemaType" mixed="true">
+        <xs:sequence>
+            <xs:element type="ElementType" name="element"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InvokeParentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="method" use="optional"/>
+                <xs:attribute type="xs:byte" name="depth" use="optional"/>
+                <xs:attribute type="xs:string" name="class" use="optional"/>
+                <xs:attribute type="xs:string" name="attribute" use="optional"/>
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ConfigurationPointType" mixed="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="SchemaType" name="schema"/>
+            <xs:element type="InvokeFactoryType" name="invoke-factory"/>
+            <xs:element type="ParametersSchemaType" name="parameters-schema"/>
+            <xs:element type="CreateInstanceType" name="create-instance"/>
+            <xs:element type="SymbolSourceType" name="source"/>
+            <xs:element type="ServiceModelType" name="service-model"/>
+            <xs:element type="TranslatorType" name="translator"/>
+            <xs:element type="StartupType" name="startup"/>
+            <xs:element type="ProviderType" name="provider"/>
+            <xs:element type="ElementType" name="element"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="id" use="optional"/>
+        <xs:attribute type="xs:string" name="schema-id" use="optional"/>
+        <xs:attribute type="xs:string" name="interface" use="optional"/>
+        <xs:attribute type="xs:string" name="visibility" use="optional"/>
+        <xs:attribute type="xs:string" name="parameters-schema-id" use="optional"/>
+        <xs:attribute type="xs:string" name="parameters-occurs" use="optional"/>
+        <xs:attribute type="xs:string" name="configuration-id" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="TranslatorType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:string" name="class"/>
+                <xs:attribute type="xs:string" name="service-id"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="StrategyType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="class"/>
+                <xs:attribute type="xs:string" name="object"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="CommandType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="after"/>
+                <xs:attribute type="xs:string" name="id"/>
+                <xs:attribute type="xs:string" name="object"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="PipelineType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="object"/>
+                <xs:attribute type="xs:string" name="before"/>
+                <xs:attribute type="xs:string" name="name"/>
+                <xs:attribute type="xs:string" name="after"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="MapType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="attribute" use="optional"/>
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="RulesType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="CreateObjectType" name="create-object"/>
+            <xs:element type="ReadAttributeType" name="read-attribute"/>
+            <xs:element type="InvokeParentType" name="invoke-parent"/>
+            <xs:element type="SetPropertyType" name="set-property"/>
+            <xs:element type="ReadContentType" name="read-content"/>
+            <xs:element type="PushAttributeType" name="push-attribute"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="CreateObjectType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="class" use="optional"/>
+                <xs:attribute type="xs:string" name="method" use="optional"/>
+                <xs:attribute type="xs:byte" name="depth" use="optional"/>
+                <xs:attribute type="xs:string" name="attribute" use="optional"/>
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="StartupType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="object"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="EagerLoadType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="service-id"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="ContributionType" abstract="true">
+        <xs:choice maxOccurs="unbounded" minOccurs="1">
+            <xs:element type="SymbolSourceType" name="source"/>
+            <xs:element type="ServiceModelType" name="service-model"/>
+            <xs:element type="TranslatorType" name="translator"/>
+            <xs:element type="CommandType" name="command"/>
+            <xs:element type="StrategyType" name="strategy"/>
+            <xs:element type="PipelineType" name="filter"/>
+            <xs:element type="StartupType" name="startup"/>
+            <xs:element type="EagerLoadType" name="load"/>
+            <xs:element type="ProviderType" name="provider"/>
+            <xs:element type="DefaultsType" name="default"/>
+            <xs:any namespace="##other" processContents="lax"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+        <xs:attribute type="xs:string" name="if" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="AbstractContributionType">
+
+    </xs:complexType>
+
+    <xs:complexType name="AttributeType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:boolean" name="required" use="optional" default="false"/>
+                <xs:attribute type="xs:string" name="translator" use="optional"/>
+                <xs:attribute type="xs:boolean" name="unique" use="optional" default="false"/>
+                <xs:attribute type="xs:string" name="default" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SubModuleType">
+        <xs:attribute name="descriptor" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="DependencyType">
+        <xs:attribute name="descriptor" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ModuleType">
+        <xs:choice maxOccurs="unbounded" minOccurs="0">
+            <xs:element type="ConfigurationPointType" name="configuration-point"/>
+            <xs:element type="ContributionType" name="contribution"/>
+            <xs:element type="DependencyType" name="dependency"/>
+            <xs:element type="SubModuleType" name="sub-module"/>
+            <xs:element type="SchemaType" name="schema"/>
+            <xs:element type="ServicePointType" name="service-point"/>
+            <xs:element type="ImplementationType" name="implementation"/>
+        </xs:choice>
+        <xs:attribute type="xs:string" name="id" use="required"/>
+        <xs:attribute type="xs:string" name="version" use="required"/>
+        <xs:attribute type="xs:string" name="package"/>
+    </xs:complexType>
+
+    <xs:complexType name="ReadContentType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="optional"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="SymbolSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="name" use="required"/>
+                <xs:attribute type="xs:string" name="before" use="optional"/>
+                <xs:attribute type="xs:string" name="after" use="optional"/>
+                <xs:attribute type="xs:string" name="service-id"/>
+                <xs:attribute type="xs:string" name="class"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:simpleType name="VisibilityType">
+        <xs:restriction xml:base="xs:string">
+            <xs:pattern value="primitive|singleton|pooled|threaded|.*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
