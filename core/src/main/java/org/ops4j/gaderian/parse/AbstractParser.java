@@ -376,18 +376,19 @@ public abstract class AbstractParser extends DefaultHandler
 
         for (int i = 0; i < count; i++)
         {
+            // We need to ignore some attributes when using schemas (xsds)
+            // in combination with Gaderian descriptors
+            // Currently the following attributes are ignored:
+            // - xsi:type
+            if (shouldIgnore(attributes,i))
+            {
+                continue;
+            }
+
             String key = attributes.getLocalName(i);
 
             if (Gaderian.isBlank(key))
                 key = attributes.getQName(i);
-
-            // Ignore these as they are (currently) not handled by the parser
-            // But, by ignoring these, you can use the schema (xsd) for the
-            // module descriptors and not get errors during parsing
-            if (key.indexOf( "xmlns") > -1 || "xsi:type".equals(key))
-            {
-                continue;
-            }
 
             String value = attributes.getValue(i);
 
@@ -395,6 +396,25 @@ public abstract class AbstractParser extends DefaultHandler
         }
 
         return result;
+    }
+
+    /** Chechs whether the attribute at index i should be ignored or not
+     *  Currently the following attributes are ignored:
+     * - xsi:type
+     *
+     * @param attributes The list of attributes to check
+     * @param i The current index
+     * @return True if the attributes should be ignored, otherwise false
+     */
+    private boolean shouldIgnore( final Attributes attributes, final int i )
+    {
+        // Ignore the xsi:type definitions as they are (currently) not used by the parser
+        // But, by ignoring these, you can use the schema (xsd) for the
+        // module descriptors and not get errors during parsing
+
+        final String qName = attributes.getQName( i );
+        return Gaderian.isNonBlank( qName ) && "xsi:type".equals( qName );
+
     }
 
     /**
@@ -412,19 +432,13 @@ public abstract class AbstractParser extends DefaultHandler
 
     public void endElement(String uri, String localName, String qName) throws SAXException
     {
-        end(getElementName(localName, qName));
+        end(localName);
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes)
             throws SAXException
     {
-        String elementName = getElementName(localName, qName);
-
-        begin(elementName, constructAttributesMap(attributes));
+        begin(localName, constructAttributesMap(attributes));
     }
 
-    private String getElementName(String localName, String qName)
-    {
-        return qName != null ? qName : localName;
-    }
 }

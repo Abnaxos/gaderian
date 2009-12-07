@@ -140,7 +140,12 @@ public class XmlResourceProcessor
             FactoryConfigurationError
     {
         if (_saxParser == null)
-            _saxParser = SAXParserFactory.newInstance().newSAXParser();
+        {
+            // Enable namespaces to ensure we parse usages of schemas correctly
+            final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+            parserFactory.setNamespaceAware( true );
+            _saxParser = parserFactory.newSAXParser();
+        }
         return _saxParser;
     }
 
