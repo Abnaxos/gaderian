@@ -14,6 +14,8 @@
 
 package org.ops4j.gaderian.utilities.groovy;
 
+import java.net.URL;
+
 import groovy.lang.Binding;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
@@ -23,11 +25,13 @@ import static org.easymock.EasyMock.reportMatcher;
 import org.easymock.IArgumentMatcher;
 import org.easymock.internal.EqualsMatcher;
 import org.ops4j.gaderian.ApplicationRuntimeException;
+import org.ops4j.gaderian.ClassResolver;
 import org.ops4j.gaderian.ErrorHandler;
 import org.ops4j.gaderian.Resource;
 import org.ops4j.gaderian.impl.DefaultErrorHandler;
 import org.ops4j.gaderian.parse.DescriptorParser;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.util.URLResource;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.helpers.AttributesImpl;
@@ -37,9 +41,6 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
     public void testBasicScript() throws Exception
     {
         ContentHandler mock = createMock(ContentHandler.class);
-        // control.setDefaultMatcher(new SAXEqualsMatcher());
-
-        //ContentHandler mock = (ContentHandler) control.getMock();
 
         mock.setDocumentLocator(GaderianBuilder.GROOVY_LOCATOR);
 
@@ -63,14 +64,18 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
 
     public void testLinePreciseErrorReporting() throws Exception
     {
-        Resource resource = getResource("missingModuleId.groovy");
-
         ErrorHandler handler = new DefaultErrorHandler();
         DescriptorParser parser = new DescriptorParser(handler);
 
-        parser.initialize(resource, getClassResolver());
+        ClassResolver classResolver = createMock( ClassResolver.class );
+        Resource resource = createMock( Resource.class );
 
-        GroovyCodeSource source = new GroovyCodeSource(resource.getResourceURL());
+        replayAllRegisteredMocks();
+
+        final URL resourceURL = getResourceURL( "missingModuleId.groovy" );
+        parser.initialize(new URLResource( resourceURL ), classResolver);
+
+        GroovyCodeSource source = new GroovyCodeSource( resourceURL );
 
         Script script = new GroovyShell().parse(source);
 
@@ -84,6 +89,7 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
         {
             assertExceptionRegexp(e,"Missing required attribute .+missingModuleId\\.groovy, line 15\\)\\.");
         }
+        verifyAllRegisteredMocks();
     }
 
     private void runScript(Script script, ContentHandler handler)
@@ -127,29 +133,4 @@ public class TestGaderianBuilder extends GaderianCoreTestCase
         return null;
     }
 
-    private static class SAXEqualsMatcher extends EqualsMatcher
-    {
-        protected boolean argumentMatches(Object expected, Object actual)
-        {
-            if ((expected instanceof Attributes) && (actual instanceof Attributes))
-            {
-                Attributes expectedAttributes = (Attributes) expected;
-                Attributes actualAttributes = (Attributes) actual;
-
-                if (expectedAttributes.getLength() != actualAttributes.getLength())
-                    return false;
-
-                for (int i = 0; i < expectedAttributes.getLength(); i++)
-                {
-                    if (!expectedAttributes.getLocalName(i)
-                            .equals(actualAttributes.getLocalName(i))
-                            || !expectedAttributes.getValue(i).equals(actualAttributes.getValue(i)))
-                        return false;
-                }
-                return true;
-            }
-
-            return super.argumentMatches(expected, actual);
-        }
-    }
 }

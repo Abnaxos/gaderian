@@ -137,7 +137,7 @@
                     <td>
                         The service id of the service implementation factory which should be considered the default
                         factory for this
-                        module. Defaults to 'gaderain.BuilderFactory' if not specified.
+                        module. Defaults to 'gaderian.BuilderFactory' if not specified.
                     </td>
                 </tr>
             </table>

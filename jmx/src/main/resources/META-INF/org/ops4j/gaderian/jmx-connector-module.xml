@@ -15,7 +15,11 @@
    limitations under the License.
 -->
 
-<module id="gaderian.management.connector" package="org.ops4j.gaderian.management" version="1.1.0">
+<module id="gaderian.management.connector" package="org.ops4j.gaderian.management" version="1.1.0"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:gaderian-jmx="http://www.ops4j.org/xml/schema/gaderian-jmx/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
 
   <service-point id="JMXConnectorServerFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory" >
     Used to construct JMXConnectorServer instances (interface JMXConnectorServerMBean).
@@ -31,7 +35,7 @@
         </conversion>
       </element>
     </parameters-schema>
-    <invoke-factory>
+    <invoke-factory xsi:type="BuilderFactoryType">
       <construct class="org.ops4j.gaderian.management.impl.JMXConnectorServerFactory">
         <service>gaderian.management.MBeanServer</service>
       </construct>
@@ -44,7 +48,7 @@
   	Mx4j HttpAdaptor service. Allows management of Mbeans via Http Server.
   	When registered using MBeanRegistry, the method start
   	must be declared as start-method.
-    <invoke-factory model="primitive">
+    <invoke-factory xsi:type="BuilderFactoryType" model="primitive">
       <construct class="mx4j.tools.adaptor.http.HttpAdaptor"
       	autowire-services="false">
         <set property="port" value="${management.http.Port}" />
@@ -59,7 +63,7 @@
   <service-point id="NamingServiceMBean" interface="org.ops4j.gaderian.management.mbeans.NamingServiceMBean">
   	Mx4j MBean that starts an RMI server. Needed for starting an JSR 160 connector
   	that uses the rmi protocol
-    <invoke-factory model="primitive">
+    <invoke-factory model="primitive" xsi:type="BuilderFactoryType">
       <construct class="org.ops4j.gaderian.management.mbeans.NamingService" >
         <set property="port" value="${management.namingservice.port}" />
       </construct>
@@ -67,8 +71,8 @@
   </service-point>
 
   <service-point id="JMXConnectorServerMBean" interface="javax.management.remote.JMXConnectorServerMBean">
-    <invoke-factory model="primitive" service-id="JMXConnectorServerFactory">
-      <connector jmx-service-url="${management.jmxconnector.ServiceUrl}" />
+    <invoke-factory xsi:type="gaderian-jmx:JMXConnectorServerFactoryType" model="primitive" service-id="JMXConnectorServerFactory">
+      <gaderian-jmx:connector jmx-service-url="${management.jmxconnector.ServiceUrl}" />
     </invoke-factory>
   </service-point>
 
@@ -82,7 +86,7 @@
   <!-- Setup Sun RI HTML Adaptor -->
 
   <service-point id="SunHttpAdaptorMBean" interface="javax.management.DynamicMBean">
-    <invoke-factory model="primitive">
+    <invoke-factory xsi:type="BuilderFactoryType" model="primitive">
       <construct class="com.sun.jdmk.comm.HtmlAdaptorServer"
       	autowire-services="false">
         <set property="port" value="${management.http.Port}" />

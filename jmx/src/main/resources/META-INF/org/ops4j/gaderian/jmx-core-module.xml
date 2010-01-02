@@ -15,12 +15,15 @@
    limitations under the License.
 -->
 
-<module id="gaderian.management" version="1.1.0" package="org.ops4j.gaderian.management" >
+<module id="gaderian.management" version="1.1.0" package="org.ops4j.gaderian.management"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
 
   <service-point id="MBeanServerFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory"
   	 parameters-occurs="none" >
     Used to construct MBeanServer instances
-    <invoke-factory>
+    <invoke-factory xsi:type="BuilderFactoryType">
       <construct class="org.ops4j.gaderian.management.impl.MBeanServerFactory">
       </construct>
     </invoke-factory>
@@ -35,7 +38,7 @@
   <service-point id="MBeanRegistry" interface="org.ops4j.gaderian.management.MBeanRegistry">
   	Service that registers MBeans in the an MBeanServer. The MBeans must
   	be defined as Gaderian services
-    <invoke-factory>
+    <invoke-factory xsi:type="BuilderFactoryType">
       <construct class="org.ops4j.gaderian.management.impl.MBeanRegistryImpl">
         <error-handler/>
         <log/>
@@ -66,7 +69,7 @@
   <service-point id="PerformanceMonitorFactory" interface="org.ops4j.gaderian.ServiceInterceptorFactory"
 		parameters-schema-id="gaderian.MethodFilter">
 	Interceptor factory that adds a MBean based performance monitor to a service
-	<invoke-factory>
+	<invoke-factory xsi:type="BuilderFactoryType">
 	   <construct class="org.ops4j.gaderian.management.impl.PerformanceMonitorFactory">
 			<service>MBeanRegistry</service>
 			<service>ObjectNameBuilder</service>
@@ -76,7 +79,7 @@
 
   <service-point id="ObjectNameBuilder" interface="org.ops4j.gaderian.management.ObjectNameBuilder">
 	Service for naming JMX MBeans. Generates unique ObjectNames for all exported MBeans
-	<invoke-factory>
+	<invoke-factory xsi:type="BuilderFactoryType">
 	   <construct class="org.ops4j.gaderian.management.impl.ObjectNameBuilderImpl">
 	   	 <set property="domain" value="${management.naming.domain}" />
        </construct>

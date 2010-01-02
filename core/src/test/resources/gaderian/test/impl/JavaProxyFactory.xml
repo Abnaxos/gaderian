@@ -15,17 +15,19 @@
    limitations under the License.
 -->
 
-<module id="gaderian.test" version="1.0.0">
+<module id="gaderian.test" version="1.0.0"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
     <service-point id="SimpleInvocationHandler" interface="java.lang.reflect.InvocationHandler">
-        <invoke-factory>
+        <invoke-factory xsi:type="BuilderFactoryType">
             <construct class="gaderian.test.impl.SimpleServiceInvocationHandlerImpl"/>
         </invoke-factory>
     </service-point>
 
 
     <service-point id="SimpleService" interface="gaderian.test.services.SimpleService">
-        <invoke-factory service-id="gaderian.JavaProxyFactory">
+        <invoke-factory xsi:type="JavaProxyFactoryType" service-id="gaderian.JavaProxyFactory">
             <impl service="service:SimpleInvocationHandler"/>
         </invoke-factory>
     </service-point>

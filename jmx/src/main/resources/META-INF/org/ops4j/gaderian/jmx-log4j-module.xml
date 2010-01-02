@@ -16,12 +16,15 @@
 -->
 
 <module id="gaderian.management.log4j" package="org.ops4j.gaderian.management.log4j" 
-  version="1.1.0">
+  version="1.1.0"
+  xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
   
   <service-point id="LogManagementMBean" interface="LogManagement">
   	Services for registering MBeans for Log4j Loggers. Level and Appenders
   	of the Loggers can then be managed.
-    <invoke-factory model="primitive">
+    <invoke-factory model="primitive" xsi:type="BuilderFactoryType">
       <construct class="LogManagementMBean">
 		<service>gaderian.management.ObjectNameBuilder</service>
 		<configuration>ManagedLog4jLoggers</configuration>

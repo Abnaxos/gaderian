@@ -15,7 +15,10 @@
    limitations under the License.
 -->
 
-<module id="gaderian.management.start" version="1.1.0" package="org.ops4j.gaderian.management" >
+<module id="gaderian.management.start" version="1.1.0" package="org.ops4j.gaderian.management"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
   
   <sub-module descriptor="jmx-core-module.xml"/>
 

@@ -14,158 +14,158 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<module id="gaderian.utilities" version="1.1.0" package="org.ops4j.gaderian.utilities"
+        xmlns="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        >
 
-<module id="gaderian.utilities" version="1.1.0" package="org.ops4j.gaderian.utilities">
+    Standard utilities for Gaderian, providing commonly used services.
 
-  Standard utilities for Gaderian, providing commonly used services.
+    <service-point id="RemoteExceptionCoordinator">
 
-  <service-point id="RemoteExceptionCoordinator">
+        Used to coordinate propogation of remote exceptions (typically, to allow cached remote data to be discarded
+        after a remote exception).
 
-    Used to coordinate propogation of remote exceptions (typically, to allow cached remote data to be discarded after a remote exception).
+        <create-instance class="impl.RemoteExceptionCoordinatorImpl" model="primitive"/>
+    </service-point>
 
-    <create-instance class="impl.RemoteExceptionCoordinatorImpl" model="primitive"/>
-  </service-point>
+    <service-point id="NameLookup">
 
-  <service-point id="NameLookup">
+        A service which can perform name lookups of objects using JNDI.
+        <invoke-factory xsi:type="BuilderFactoryType">
+            <construct class="impl.NameLookupImpl">
+                <set property="initialFactory" value="${java.naming.factory.initial}"/>
+                <set property="URLPackages" value="${java.naming.factory.url.pkgs}"/>
+                <set property="providerURL" value="${java.naming.provider.url}"/>
+                <set-service property="coordinator" service-id="RemoteExceptionCoordinator"/>
+                <event-listener service-id="RemoteExceptionCoordinator"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-    A service which can perform name lookups of objects using JNDI.
-    <invoke-factory>
-      <construct class="impl.NameLookupImpl">
-        <set property="initialFactory" value="${java.naming.factory.initial}"/>
-        <set property="URLPackages" value="${java.naming.factory.url.pkgs}"/>
-        <set property="providerURL" value="${java.naming.provider.url}"/>
-        <set-service property="coordinator" service-id="RemoteExceptionCoordinator"/>
-        <event-listener service-id="RemoteExceptionCoordinator"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+    <contribution configuration-id="gaderian.FactoryDefaults">
+        <default symbol="java.naming.factory.initial" value=""/>
+        <default symbol="java.naming.factory.url.pkgs" value=""/>
+        <default symbol="java.naming.provider.url" value=""/>
+    </contribution>
 
-  <contribution configuration-id="gaderian.FactoryDefaults">
-    <default symbol="java.naming.factory.initial" value=""/>
-    <default symbol="java.naming.factory.url.pkgs" value=""/>
-    <default symbol="java.naming.provider.url" value=""/>
-  </contribution>
+    <service-point id="EJBProxyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-  <service-point id="EJBProxyFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
+        Core service implementation factory that constructs dynamic proxies to EJB stateless session beans. Factory
+        parameters are used to specify the JNDI name of the EJB and the name of its home interface.
 
-    Core service implementation factory that constructs dynamic proxies to EJB stateless session beans. Factory parameters are used to specify the JNDI name of the EJB and the name of its home interface.
+        <parameters-schema>
+            <element name="construct">
 
-    <parameters-schema>
-      <element name="construct">
+                Specifies parameters needed to construct the EJB Proxy.
 
-        Specifies parameters needed to construct the EJB Proxy.
+                <attribute name="jndi-name" required="true">
+                    The JNDI Name of the EJB's home interface.
+                </attribute>
+                <attribute name="home-interface" required="true">
+                    Complete name of the EJB's home interface. The service interface must be the remote interface.
+                </attribute>
+                <attribute name="name-lookup-service-id" translator="service">
+                    Defines an alternate name lookup service to use when resolving JNDI names to EJB home interfaces.
+                    If not specified, the default service gaderian.NameLookup is used.
+                </attribute>
+                <conversion class="impl.EJBProxyParameters">
+                    <map attribute="jndi-name" property="jndiName"/>
+                    <map attribute="home-interface" property="homeInterfaceClassName"/>
+                    <map attribute="name-lookup-service-id" property="nameLookup"/>
+                </conversion>
+            </element>
+        </parameters-schema>
 
-        <attribute name="jndi-name" required="true">
-        The JNDI Name of the EJB's home interface.
-        </attribute>
-        <attribute name="home-interface" required="true">
-        Complete name of the EJB's home interface.  The service interface must be the remote interface.
-        </attribute>
-        <attribute name="name-lookup-service-id" translator="service">
-        Defines an alternate name lookup service to use when resolving JNDI names to EJB home interfaces.
-        If not specified, the default service gaderian.NameLookup is used.
-        </attribute>
-        <conversion class="impl.EJBProxyParameters">
-        <map attribute="jndi-name" property="jndiName"/>
-        <map attribute="home-interface" property="homeInterfaceClassName"/>
-        <map attribute="name-lookup-service-id" property="nameLookup"/>
-        </conversion>
-      </element>
-    </parameters-schema>
+        <invoke-factory xsi:type="BuilderFactoryType">
+            <construct class="impl.EJBProxyFactory">
+                <set-service property="nameLookup" service-id="NameLookup"/>
+                <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
+                <set-service property="coordinator" service-id="RemoteExceptionCoordinator"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-    <invoke-factory>
-      <construct class="impl.EJBProxyFactory">
-        <set-service property="nameLookup" service-id="NameLookup"/>
-        <set-service property="classFactory" service-id="gaderian.ClassFactory"/>
-        <set-service property="coordinator" service-id="RemoteExceptionCoordinator"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+    <service-point id="SpringLookupFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
 
-  <service-point id="SpringLookupFactory" interface="org.ops4j.gaderian.ServiceImplementationFactory">
+        A service implementation factory that obtains service implementations from a Spring BeanFactory.
 
-    A service implementation factory that obtains service implementations from a Spring BeanFactory.
+        <parameters-schema>
 
-    <parameters-schema>
+            Parameters are used to specify the bean name and, optionally, a non-default Spring
+            BeanFactory from which to obtain the bean.
 
-      Parameters are used to specify the bean name and, optionally, a non-default Spring
-      BeanFactory from which to obtain the bean.
+            <element name="lookup-bean">
+                <attribute name="name" required="true">
+                    The name of the Spring bean to obtain.
+                </attribute>
+                <attribute name="bean-factory" translator="object">
+                    An optional object implementing the Spring BeanFactory interface. The default,
+                    when not specified, is gaderian.utilities.DefaultSpringBeanFactory.
+                </attribute>
+                <conversion class="impl.SpringBeanParameter"/>
+            </element>
+        </parameters-schema>
+        <invoke-factory xsi:type="BuilderFactoryType">
+            <construct
+                    class="impl.SpringLookupFactory">
+                <set-service property="defaultBeanFactory" service-id="DefaultSpringBeanFactory"/>
+            </construct>
+        </invoke-factory>
+    </service-point>
 
-      <element name="lookup-bean">
-        <attribute name="name" required="true">
-          The name of the Spring bean to obtain.
-        </attribute>
-        <attribute name="bean-factory" translator="object">
-          An optional object implementing the Spring BeanFactory interface.  The default,
-          when not specified, is gaderian.utilities.DefaultSpringBeanFactory.
-        </attribute>
-        <conversion class="impl.SpringBeanParameter"/>
-      </element>
-    </parameters-schema>
-    <invoke-factory>
-      <construct
-        class="impl.SpringLookupFactory">
-        <set-service property="defaultBeanFactory" service-id="DefaultSpringBeanFactory"/>
-      </construct>
-    </invoke-factory>
-  </service-point>
+    <service-point id="DefaultSpringBeanFactoryHolder" interface="SpringBeanFactoryHolder">
+        Default source for Spring BeanFactories. External code can inject a BeanFactory here, where
+        it is available to the SpringLookupFactory service.
+        <create-instance class="impl.SpringBeanFactoryHolderImpl"/>
+    </service-point>
 
-  <service-point id="DefaultSpringBeanFactoryHolder" interface="SpringBeanFactoryHolder">
+    <service-point id="DefaultSpringBeanFactory" interface="org.springframework.beans.factory.BeanFactory">
+        The default Spring BeanFactory referenced by the SpringLookupFactory. This is a projection of the BeanFactory
+        held by the DefaultSpringBeanFactoryHolder service.
+        <invoke-factory service-id="gaderian.ServicePropertyFactory" xsi:type="ServicePropertyFactoryType">
+            <construct service-id="DefaultSpringBeanFactoryHolder" property="beanFactory"/>
+        </invoke-factory>
 
-    Default source for Spring BeanFactories.  External code can inject a BeanFactory here, where
-    it is available to the SpringLookupFactory service.
+    </service-point>
 
-    <create-instance class="impl.SpringBeanFactoryHolderImpl"/>
-  </service-point>
+    <service-point id="SpringObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider">
 
-  <service-point id="DefaultSpringBeanFactory" interface="org.springframework.beans.factory.BeanFactory">
+        Provides the "spring:" prefix, which looks up Spring beans in a Spring BeanFactory.
 
-    The default Spring BeanFactory referenced by the SpringLookupFactory. This is a projection of the BeanFactory
-    held by the DefaultSpringBeanFactoryHolder service.
+        <invoke-factory xsi:type="BuilderFactoryType">
+            <construct class="impl.SpringObjectProvider">
+                <set-object property="beanFactory" value="${gaderian.utilities.spring-bean-factory}"/>
+            </construct>
+        </invoke-factory>
 
-    <invoke-factory service-id="gaderian.ServicePropertyFactory">
-      <construct service-id="DefaultSpringBeanFactoryHolder" property="beanFactory"/>
-    </invoke-factory>
+    </service-point>
 
-  </service-point>
+    <contribution configuration-id="gaderian.FactoryDefaults">
+        <default symbol="gaderian.utilities.spring-bean-factory" value="service:DefaultSpringBeanFactory"/>
+    </contribution>
 
-  <service-point id="SpringObjectProvider" interface="org.ops4j.gaderian.service.ObjectProvider">
+    <contribution configuration-id="gaderian.ObjectProviders">
+        <provider prefix="spring" service-id="SpringObjectProvider"/>
+    </contribution>
 
-    Provides the "spring:" prefix, which looks up Spring beans in a Spring BeanFactory.
+    <service-point id="MethodInterceptorFactory" parameters-occurs="1" interface="org.ops4j.gaderian.ServiceInterceptorFactory">
+        <invoke-factory xsi:type="BuilderFactoryType">
+            <construct class="org.ops4j.gaderian.utilities.impl.MethodInterceptorFactory"/>
+        </invoke-factory>
 
-    <invoke-factory>
-      <construct class="impl.SpringObjectProvider">
-        <set-object property="beanFactory" value="${gaderian.utilities.spring-bean-factory}"/>
-      </construct>
-    </invoke-factory>
+        <parameters-schema>
+            <element name="impl">
+                <attribute name="object" required="true" translator="object">
+                    The implementation object which implements the MethodInterceptor interface.
+                </attribute>
 
-  </service-point>
-
-  <contribution configuration-id="gaderian.FactoryDefaults">
-    <default symbol="gaderian.utilities.spring-bean-factory" value="service:DefaultSpringBeanFactory"/>
-  </contribution>
-
-  <contribution configuration-id="gaderian.ObjectProviders">
-    <provider prefix="spring" service-id="SpringObjectProvider"/>
-  </contribution>
-
-  <service-point id="MethodInterceptorFactory" parameters-occurs="1" interface="org.ops4j.gaderian.ServiceInterceptorFactory">
-    <invoke-factory>
-      <construct class="org.ops4j.gaderian.utilities.impl.MethodInterceptorFactory" />
-    </invoke-factory>
-
-    <parameters-schema>
-      <element name="impl">
-        <attribute name="object" required="true" translator="object">
-          The implementation object which implements the MethodInterceptor interface.
-        </attribute>
-
-		<rules>
-		  <push-attribute attribute="object" />
-		  <invoke-parent method="addElement" />
-		</rules>
-      </element>
-    </parameters-schema>
-  </service-point>
+                <rules>
+                    <push-attribute attribute="object"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </parameters-schema>
+    </service-point>
 
 </module>

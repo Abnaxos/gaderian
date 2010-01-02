@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.ops4j.org/xml/schema/gaderian-util/module/v1.0.0"
+           xmlns:gaderian="http://www.ops4j.org/xml/schema/gaderian/module/v1.0.0"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+        >
+
+    <xs:complexType name="EJBProxyFactoryType">
+        <xs:complexContent>
+            <xs:extension base="gaderian:InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="EJBProxyFactoryConstructType" name="connector" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="EJBProxyFactoryConstructType">
+        <xs:attribute type="xs:string" name="jndi-name" use="required"/>
+        <xs:attribute type="xs:string" name="home-interface" use="required"/>
+        <xs:attribute type="xs:string" name="name-lookup-service-id"/>
+    </xs:complexType>
+
+    <xs:complexType name="SpringLookupFactoryType">
+        <xs:complexContent>
+            <xs:extension base="gaderian:InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="SpringLookupFactoryConstructType" name="lookup-bean" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="SpringLookupFactoryConstructType">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="bean-factory"/>
+        <xs:attribute type="xs:string" name="name-lookup-service-id"/>
+    </xs:complexType>
+
+    <xs:complexType name="MethodInterceptorFactoryType">
+        <xs:complexContent>
+            <xs:extension base="gaderian:InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="MethodInterceptorFactoryConstructType" name="impl" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="MethodInterceptorFactoryConstructType">
+        <xs:attribute type="xs:string" name="object" use="required"/>
+    </xs:complexType>
+
+    
+
+</xs:schema>

@@ -14,6 +14,7 @@
 
 package org.ops4j.gaderian.testutils;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -111,6 +112,15 @@ public abstract class GaderianTestCase extends TestCase
     protected static void unreachable()
     {
         throw new AssertionFailedError("This code should be unreachable.");
+    }
+
+    protected URL getResourceURL( final String file )
+    {
+        URL url = getClass().getResource(file);
+
+        if (url == null)
+            throw new NullPointerException("No resource named '" + file + "'.");
+        return url;
     }
 
     /**

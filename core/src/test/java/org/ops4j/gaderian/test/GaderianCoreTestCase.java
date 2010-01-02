@@ -42,18 +42,13 @@ public abstract class GaderianCoreTestCase extends GaderianTestCase
      */
     private ClassResolver _classResolver;
 
-    protected String _interceptedLoggerName;
-
     /**
      * Returns the given file as a {@link Resource} from the classpath. Typically, this is to find
      * files in the same folder as the invoking class.
      */
     protected Resource getResource(String file)
     {
-        URL url = getClass().getResource(file);
-
-        if (url == null)
-            throw new NullPointerException("No resource named '" + file + "'.");
+        URL url = getResourceURL( file );
 
         return new URLResource(url);
     }
@@ -138,17 +133,6 @@ public abstract class GaderianCoreTestCase extends GaderianTestCase
 
         builder.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(resolver));
         builder.addModuleDescriptorProvider(customProvider);
-
-        return builder.constructRegistry(Locale.getDefault());
-    }
-
-    /**
-     * Builds a registry from exactly the provided resource; this registry will not include the
-     * <code>gaderian</code> module.
-     */
-    protected Registry buildMinimalRegistry(Resource l) throws Exception
-    {
-        RegistryBuilder builder = new RegistryBuilder();
 
         return builder.constructRegistry(Locale.getDefault());
     }

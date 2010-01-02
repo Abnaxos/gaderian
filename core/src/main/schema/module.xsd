@@ -103,6 +103,27 @@
         </xs:complexContent>
     </xs:complexType>
 
+    <xs:complexType name="ServicePropertyFactoryType">
+        <xs:complexContent>
+            <xs:extension base="InvokeFactoryType">
+                <xs:sequence>
+                    <xs:element type="ServicePropertyFactoryConstructType" name="construct" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="JavaProxyFactoryType">
+           <xs:complexContent>
+               <xs:extension base="InvokeFactoryType">
+                   <xs:sequence>
+                       <xs:element type="JavaProxyFactoryConstructType" name="impl" minOccurs="0"/>
+                   </xs:sequence>
+               </xs:extension>
+           </xs:complexContent>
+       </xs:complexType>
+
+
     <xs:complexType name="CreateInstanceType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -128,6 +149,9 @@
     </xs:complexType>
 
     <xs:complexType name="BuilderFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element type="xs:string" name="messages" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element type="xs:string" name="service-id" minOccurs="0"/>
@@ -151,20 +175,53 @@
             <xs:element type="SetObjectType" name="set-object" minOccurs="0"/>
         </xs:sequence>
         <xs:attribute type="xs:string" name="class" use="optional"/>
+        <xs:attribute type="xs:string" name="autowire-services" use="optional" default="true"/>
+        <xs:attribute type="xs:string" name="log-property" use="optional"/>
+        <xs:attribute type="xs:string" name="messages-property" use="optional"/>
+        <xs:attribute type="xs:string" name="service-id-property" use="optional"/>
+        <xs:attribute type="xs:string" name="initialize-property" use="optional"/>
+        <xs:attribute type="xs:string" name="error-log-property" use="optional"/>
+        <xs:attribute type="xs:string" name="error-handler-property" use="optional"/>
+        <xs:attribute type="xs:string" name="class-resolver-property" use="optional"/>
+        <xs:attribute type="xs:string" name="perform-null-checks" use="optional" default="true"/>
     </xs:complexType>
 
     <xs:complexType name="StrategyFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
         <xs:attribute type="xs:string" name="configuration-id" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="PipelineFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
         <xs:attribute type="xs:string" name="configuration-id" use="required"/>
         <xs:attribute type="xs:string" name="filter-interface" use="required"/>
         <xs:attribute type="xs:string" name="terminator" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="ChainFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
         <xs:attribute type="xs:string" name="configuration-id" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ServicePropertyFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="service-id" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="JavaProxyFactoryConstructType">
+        <xs:annotation>
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="service" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="SetServiceType">
@@ -470,6 +527,7 @@
         <xs:attribute type="xs:string" name="id" use="required"/>
         <xs:attribute type="xs:string" name="version" use="required"/>
         <xs:attribute type="xs:string" name="package"/>
+        <xs:attribute type="xs:string" name="default-service-factory-id" use="optional" default="gaderian.BuilderFactory"/>
     </xs:complexType>
 
     <xs:complexType name="ReadContentType">
