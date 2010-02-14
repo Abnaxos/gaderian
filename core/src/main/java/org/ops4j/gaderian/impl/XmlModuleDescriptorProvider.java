@@ -16,9 +16,7 @@ package org.ops4j.gaderian.impl;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,7 +118,8 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
         if (LOG.isDebugEnabled())
             LOG.debug("Processing modules visible to " + resolver);
 
-        List<Resource> descriptors = new ArrayList<Resource>();
+        // Use a set to ensure unique resources being loaded - GAD-32
+        Set<Resource> descriptors = new HashSet<Resource>();
 
         ClassLoader loader = resolver.getClassLoader();
         Enumeration<URL> e = null;
@@ -139,10 +138,15 @@ public class XmlModuleDescriptorProvider implements ModuleDescriptorProvider
         {
             URL descriptorURL = e.nextElement();
 
-            descriptors.add(new URLResource(descriptorURL));
+            if (!descriptors.add(new URLResource(descriptorURL)))
+            {
+               LOG.warn("Class loader duplicated resource detected at '" + descriptorURL.toString() +"', will ignoring it (see GAD-32)" );
+            }
+
         }
 
-        return descriptors;
+        // Convert the set to the list that the API is expecting
+        return new ArrayList<Resource>( descriptors );
     }
 
     public List<ModuleDescriptor> getModuleDescriptors(ErrorHandler handler)
