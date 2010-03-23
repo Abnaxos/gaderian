@@ -81,7 +81,7 @@ import org.w3c.dom.Element;
  * <li>A unique id (unique within the file) is assigned to each &lt;module&gt;,
  * &lt;configuration-point&gt;, &lt;service-point&gt;, &lt;contribution&gt;, &tl;schema&gt; and
  * &lt;implementation&gt; (this is to make it easier to generate links and anchors)
- * <li>Unqualified ids are converted to qualified ids (whereever possible).
+ * <li>Unqualified ids are converted to qualified ids (wherever possible).
  * </ul>
  * 
  * @author Knut Wannheden

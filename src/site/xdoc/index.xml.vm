@@ -15,11 +15,10 @@
           <b>gaderian</b> ['gaderian]: <i>(Old English)</i> to assemble, to put together, to collect, to gather
         </div>
       </div>
+        
       <div id="downloadbox">
-        <h5>Get Gaderian!</h5>
-        <p>Please watch this space for the upcoming 1.0 release!
-
-          <span class="icon">
+        <p class="downloadboxtitle" >Get Gaderian!</p>
+        <p><span class="icon">
             <a href="downloads.html">
               <img src="images/folder-open.gif" border="0" alt="" title="download"/>
             </a>
@@ -31,7 +30,7 @@
         <br/>
 
         <div id="twitter">
-          <h5>Twitter</h5>
+          <p class="downloadboxtitle">Twitter</p>
           <ul id="twitter_update_list">
             <li>
               <span class="icon"><img src="images/twitter-loading.gif" alt=""/></span>
@@ -52,6 +51,7 @@
         <script type="text/javascript" src="http://twitter.com/statuses/user_timeline/gaderian.json?callback=twitterCallback2&amp;count=5"></script>
 
       </div>
+        
       <p>
         <strong>Gaderian</strong>
         is an services and configuration microkernel.
@@ -81,7 +81,7 @@
           define. Gaderian will integrate the
           contributions of such data from multiple modules and convert it all into
           data objects for you. Gaderian configurations allow for powerful,
-          data-driven solutions which combine seemlessly with the service
+          data-driven solutions which combine seamlessly with the service
           architecture.
         </li>
       </ul>

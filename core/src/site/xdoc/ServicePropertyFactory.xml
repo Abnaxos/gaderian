@@ -17,45 +17,49 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-      <title>gaderian.ServicePropertyFactory Service</title>
-   </properties>
-   <body>
+        <title>gaderian.ServicePropertyFactory Service</title>
+    </properties>
+    <body>
 
-       <section name="Service Property Factory Service">
+        <section name="Service Property Factory Service">
 
-      <p>The <a href="module-report/service/gaderian.ServicePropertyFactory.html">
-			ServicePropertyFactory</a> exposes a property of a service as a new service.
-      The property's type must the same as (or assignable to) the service interface.
-      </p>
-
-
-      <p>On each invocation of a service method, the property is re-acquired from
-        the property source service, and the method reinvoked on the active value.
-      This is useful when the value of the property can change at different times.  When using this
-      factory, and not the <code>service-property</code>, <a href="../gaderian/module-report/config/ObjectProviders.html">object provider</a>,
-      your code will always access the current value.
-      </p>
+            <p>The
+                <a href="module-report/service/gaderian.ServicePropertyFactory.html">
+                    ServicePropertyFactory
+                </a>
+                exposes a property of a service as a new service.
+                The property's type must the same as (or assignable to) the service interface.
+            </p>
 
 
-      <p>
-        This can invaluable when a small number of services use the threaded or pooled service models.
-        Other services can access information in those services transparently, without themselves having
-        to be threaded or pooled.
-      </p>
+            <p>On each invocation of a service method, the property is re-acquired from
+                the property source service, and the method reinvoked on the active value.
+                This is useful when the value of the property can change at different times. When using this
+                factory, and not the<code>service-property</code>,
+                <a href="../gaderian/module-report/config/ObjectProviders.html">object provider</a>,
+                your code will always access the current value.
+            </p>
 
 
-      <p>
-        A single parameter element is expected:
-      </p>
+            <p>
+                This can invaluable when a small number of services use the threaded or pooled service models.
+                Other services can access information in those services transparently, without themselves having
+                to be threaded or pooled.
+            </p>
 
 
-      <source xml:space="preserve">
+            <p>
+                A single parameter element is expected:
+            </p>
+
+
+            <source>
 &lt;construct service-id="..." property="..."/&gt;
-      </source>
+            </source>
 
-      <p>
-        Both attributes are required.
-      </p>
-       </section>
-	</body>
+            <p>
+                Both attributes are required.
+            </p>
+        </section>
+    </body>
 </document>

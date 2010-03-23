@@ -17,38 +17,67 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-      <title>gaderian.utilities.SpringLookupFactory Service</title>
-   </properties>
-   <body>
+        <title>gaderian.utilities.SpringLookupFactory Service</title>
+    </properties>
+    <body>
 
-       <section name="Spring Lookup Factory Service">
+        <section name="Spring Lookup Factory Service">
 
-      <p>The <a href="module-report/service/gaderian.utilities.SpringLookupFactory.html">
-			SpringLookupFactory</a> supports integration with the <a href="http://www.springframework.org">Spring</a>
-			framework, another open-source
-			lightweight container. SpringLookupFactory is a service constructor that
-			obtains a core service implementation from a Spring <code>BeanFactory</code>
-			.</p>
+            <p>The
+                <a href="module-report/service/gaderian.utilities.SpringLookupFactory.html">
+                    SpringLookupFactory
+                </a>
+                supports integration with the
+                <a href="http://www.springframework.org">Spring</a>
+                framework, another open-source
+                lightweight container. SpringLookupFactory is a service constructor that
+                obtains a core service implementation from a Spring
+                <code>BeanFactory</code>
+                .
+            </p>
 
-      <p>By default, the <code>BeanFactory</code> is
-      the
-      <a href="module-report/service/gaderian.utilities.DefaultSpringBeanFactory.html">DefaultSpringBeanFactory</a>
-      (which is a projection of the BeanFactory held by the
-          <a href="module-report/service/gaderian.utilities.DefaultSpringBeanFactoryHolder.html">
-			DefaultSpringBeanFactoryHolder</a> service).
+            <p>By default, the
+                <code>BeanFactory</code>
+                is
+                the
+                <a href="module-report/service/gaderian.utilities.DefaultSpringBeanFactory.html">
+                    DefaultSpringBeanFactory
+                </a>
+                (which is a projection of the BeanFactory held by the
+                <a href="module-report/service/gaderian.utilities.DefaultSpringBeanFactoryHolder.html">
+                    DefaultSpringBeanFactoryHolder
+                </a>
+                service).
 
-      Part of your application startup
-			code requires that you start a Spring instance and inform the <a href="apidocs/org/ops4j/gaderian/utilities/SpringBeanFactoryHolder.html#setBeanFactory(org.springframework.beans.factory.BeanFactory)">DefaultSpringBeanFactoryHolder</a> about it.</p>
+                Part of your application startup
+                code requires that you start a Spring instance and inform the
+                <a href="apidocs/org/ops4j/gaderian/utilities/SpringBeanFactoryHolder.html#setBeanFactory(org.springframework.beans.factory.BeanFactory)">
+                    DefaultSpringBeanFactoryHolder
+                </a>
+                about it.
+            </p>
 
-      <p>The SpringLookupFactory expects exactly <em>one</em> parameter element:</p>
+            <p>The SpringLookupFactory expects exactly
+                <em>one</em>
+                parameter element:
+            </p>
 
-      <source xml:space="preserve">
-&lt;lookup-bean name="..." bean-factory="..."/&gt; </source>
-		<p>The <code>name</code> attribute is the name of the bean to look for
-			inside the Spring BeanFactory.</p>
-		<p>The optional <code>bean-factory</code> attribute is an <a href="../gaderian/module-report/config/ObjectProviders.html">object reference</a> that
-      allows an alternate Spring BeanFactory to be used.</p>
-       </section>
-	</body>
+            <source>
+&lt;lookup-bean name="..." bean-factory="..."/&gt;
+           </source>
+            <p>The
+                <code>name</code>
+                attribute is the name of the bean to look for
+                inside the Spring BeanFactory.
+            </p>
+            <p>The optional
+                <code>bean-factory</code>
+                attribute is an
+                <a href="../gaderian/module-report/config/ObjectProviders.html">object reference</a>
+                that
+                allows an alternate Spring BeanFactory to be used.
+            </p>
+        </section>
+    </body>
 
 </document>

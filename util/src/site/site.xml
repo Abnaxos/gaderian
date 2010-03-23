@@ -6,19 +6,19 @@
     <skin>
         <groupId>org.ops4j.gaderian.tools</groupId>
         <artifactId>maven-gaderian-skin</artifactId>
-        <version>1.1</version>
+        <version>${gaderian.skin.version}</version>
 
     </skin>
 
     <body>
         
-        <menu name="Util">
+        <menu name="Utilities">
             <item name="Introduction" href="index.html"/>
             <item name="EJB Proxy Factory" href="EJBProxyFactory.html"/>
             <item name="Method Interceptor Factory" href="MethodInterceptorFactory.html"/>
             <item name="Name Lookup" href="NameLookup.html"/>
             <item name="Remote Exception Coordinator" href="RemoteExceptionCoordinator.html"/>
-            <item name="Spring Lookup Factory" href="SpringLookupFactory.xml"/>
+            <item name="Spring Lookup Factory" href="SpringLookupFactory.html"/>
         </menu>
 
         <menu ref="parent"/>

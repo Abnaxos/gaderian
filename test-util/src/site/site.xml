@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Gaderian Examples" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+<project name="Gaderian Util" xmlns="http://maven.apache.org/DECORATION/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
-
-
 
     <skin>
         <groupId>org.ops4j.gaderian.tools</groupId>
         <artifactId>maven-gaderian-skin</artifactId>
         <version>${gaderian.skin.version}</version>
+
     </skin>
 
     <body>
-
-        <menu name="Examples">
-            <item name="Calculator" href="calc.html"/>
-            <item name="Logging" href="logging.html"/>
-            <item name="Setters" href="setters.html"/>
-            <item name="Pipeline" href="pipeline.html"/>
-            <item name="Strategy" href="strategy.html"/>
-            <item name="Chain" href="chain.html"/>
+        
+        <menu name="Test Utilities">
+            <item name="Introduction" href="index.html"/>
         </menu>
 
         <menu ref="parent"/>

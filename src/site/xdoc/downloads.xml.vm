@@ -23,40 +23,88 @@
     </properties>
     <body>
         <section name="Current Version">
-          <p>The latest stable release of Gaderian is version ${project.version}</p>
+            <p>The latest stable release of Gaderian is version ${project.version}</p>
+
+            <subsection name="Downloads">
+
+                <p>Gaderian is available as full binary, source or documentation distributions.</p>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Format</th>
+                            <th>Binary</th>
+                            <th>Source</th>
+                            <th>Documentation</th>
+                        </tr>
+                    </thead>
+
+                    <tr>
+                        <td>tar.gz</td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.gz">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.gz">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.gz">
+                                download
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>zip</td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.zip">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.zip">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.zip">
+                                download
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>tar.bz2</td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.bz2">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.bz2">
+                                download
+                            </a>
+                        </td>
+                        <td>
+                            <a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.bz2">
+                                download
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
+            </subsection>
+
+            <subsection name="Maven 2">
+                <p>If you plan to use Gaderian and you are already using Maven 2.0, please see the<a href="maven.html">
+                    Using Gaderian with Maven 2.0</a>.
+                </p>
+            </subsection>
+
         </section>
-
-        <subsection name="Downloads">
-
-            <p>Gaderian is available as full binary, source or documentation distributions.</p>
-
-            <table>
-              <th>Format</th><th>Binary</th><th>Source</th><th>Documentation</th>
-              <tr>
-                <td>tar.gz</td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.gz">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.gz">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.gz">download</a></td>
-              </tr>
-              <tr>
-                <td>zip</td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.zip">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.zip">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.zip">download</a></td>
-              </tr>
-              <tr>
-                <td>tar.bz2</td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-bin.tar.bz2">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-src.tar.bz2">download</a></td>
-                <td><a href="http://repository.ops4j.org/maven2/org/ops4j/gaderian/gaderian-dist/${project.version}/gaderian-dist-${project.version}-doc.tar.bz2">download</a></td>
-              </tr>
-            </table>
-
-        </subsection>
-        
-        <subsection name="Maven 2">
-          <p>If you plan to use Gaderian and you are already using Maven 2.0, please see the <a href="maven.html">Using Gaderian with Maven 2.0</a>.</p>
-        </subsection>
 
     </body>
 </document>

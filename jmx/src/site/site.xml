@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="Gaderian Library" xmlns="http://maven.apache.org/DECORATION/1.0.0"
+<project name="Gaderian JMS" xmlns="http://maven.apache.org/DECORATION/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
 
     <skin>
         <groupId>org.ops4j.gaderian.tools</groupId>
         <artifactId>maven-gaderian-skin</artifactId>
-        <version>1.1</version>
+        <version>${gaderian.skin.version}</version>
     </skin>
 
     <body>

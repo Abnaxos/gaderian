@@ -17,15 +17,41 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
     <properties>
-      <title>Gaderian Util</title>
+      <title>Gaderian Utilities</title>
    </properties>
    <body>
-       <section name="Gaderian Utililities">
+       <section name="Gaderian Utilities">
            <p>
-               The Gaderian standard utililities (module
+               The Gaderian standard utilities (module
                <a href="module-report/module/gaderian.utilities.html">gaderian.utililities</a>), provides common
-               functionality used in most Gaderian applications.
+               functionality used in many Gaderian applications.
            </p>
+
+         <subsection name="Service Instantiation">
+           <ul>
+               <li>
+                 <a href="EJBProxyFactory.html">EJB Proxy Factory</a>
+               </li>
+             <li>
+               <a href="JavaProxyFactory.html">Spring Lookup Factory</a>
+             </li>
+             <li>
+               <a href="PipelineFactory.html">Method Interceptor Factory</a>
+             </li>
+           </ul>
+         </subsection>
+
+         <subsection name="Miscellaneous">
+           <ul>
+               <li>
+                 <a href="NameLookup.html">Name Lookup</a>
+               </li>
+             <li>
+               <a href="JavaProxyFactory.html">Remote Exception Coordinator</a>
+             </li>
+           </ul>
+         </subsection>
+
 
        </section>
 

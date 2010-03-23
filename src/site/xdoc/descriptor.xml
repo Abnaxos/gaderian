@@ -47,7 +47,7 @@
     &lt;/service-point>
 
     &lt;service-point id="ServiceB" interface="ServiceB">
-        &lt;<a href="descriptor.html#invoke-factory">invoke-factory</a>
+        &lt;<a href="descriptor.html#invoke-factory">invoke-factory</a> configuration-id="gaderian.BuilderFactory">
             &lt;<a href="gaderian/BuilderFactory.html#construct">construct</a> class="ServiceBImpl"/>
         &lt;/invoke-factory>
     &lt;/service-point>
