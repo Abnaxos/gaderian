@@ -63,7 +63,7 @@
                 <item name="Conditional Contributions" href="conditional.html"/>
                 <item name="Serializing Services" href="serializing.html"/>
                 <item name="Instance Initialization" href="instance-initialization.html"/>
-                <item name="Module Reports" href="module-reports.html"/>
+                <!--<item name="Module Reports" href="module-reports.html"/>-->
             </item>
 
 

@@ -37,13 +37,13 @@ import org.w3c.dom.NodeList;
 
 
 /**
+ * @author <a href="mailto:herzog@raffael.ch">Raffael Herzog</a>
  * @goal module-report
  * @requiresDependencyResolution runtime
  * @phase site
- *
- * @author <a href="mailto:herzog@raffael.ch">Raffael Herzog</a>
  */
-public class ModuleReportMojo extends AbstractMavenReport {
+public class ModuleReportMojo extends AbstractMavenReport
+{
 
     /**
      * @component
@@ -54,20 +54,20 @@ public class ModuleReportMojo extends AbstractMavenReport {
      * @parameter expression="module-report"
      * @required
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private String outputName;
 
     /**
      * @parameter expression="${project.reporting.outputDirectory}"
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private File outputDir;
 
     /**
      * @parameter expression="../apidocs"
      * @required
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private String javadocPath;
 
     /**
@@ -80,7 +80,7 @@ public class ModuleReportMojo extends AbstractMavenReport {
      * @required
      * @readonly
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private MavenProject project;
 
     /**
@@ -88,211 +88,257 @@ public class ModuleReportMojo extends AbstractMavenReport {
      * @required
      * @readonly
      */
-    @SuppressWarnings({ "UnusedDeclaration", "MismatchedQueryAndUpdateOfCollection" })
+    @SuppressWarnings( { "UnusedDeclaration", "MismatchedQueryAndUpdateOfCollection" } )
     private List<MavenProject> reactorProjects;
 
     /**
      * @parameter
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private String[] includes = { "**/module.xml" };
 
     /**
      * @parameter
      */
-    @SuppressWarnings({ "UnusedDeclaration" })
+    @SuppressWarnings( { "UnusedDeclaration" } )
     private String[] excludes = null;
 
     private List<File> hivemodules = null;
 
-    public boolean isExternalReport() {
+    public boolean isExternalReport()
+    {
         return true;
     }
 
     @Override
-    public boolean canGenerateReport() {
+    public boolean canGenerateReport()
+    {
         scan();
         return !hivemodules.isEmpty();
     }
 
-    protected void executeReport(Locale locale) throws MavenReportException {
+    protected void executeReport( Locale locale ) throws MavenReportException
+    {
         //if ( !project.isExecutionRoot() ) {
         //    getLog().warn("Not execution root, I should not have been called");
         //    return;
         //}
         scan();
-        if ( hivemodules.isEmpty() ) {
-            getLog().warn("No modules found");
+        if ( hivemodules.isEmpty() )
+        {
+            getLog().warn( "No modules found" );
             return;
         }
         RegistrySerializer serializer = new RegistrySerializer();
-        for ( File module : hivemodules ) {
-            getLog().info("Adding module: " + module);
-            serializer.addModuleDescriptorProvider(new XmlModuleDescriptorProvider(new DefaultClassResolver(), new FileResource(module.toString())));
+        for ( File module : hivemodules )
+        {
+            getLog().info( "Adding module: " + module );
+            serializer.addModuleDescriptorProvider( new XmlModuleDescriptorProvider( new DefaultClassResolver(), new FileResource( module.toString() ) ) );
         }
-        File outputDir = new File(this.outputDir, outputName);
-        if ( !outputDir.isDirectory() && !outputDir.mkdirs() ) {
-            throw new MavenReportException("Could not create directory " + outputDir);
+        File outputDir = new File( this.outputDir, outputName );
+        if ( !outputDir.isDirectory() && !outputDir.mkdirs() )
+        {
+            throw new MavenReportException( "Could not create directory " + outputDir );
         }
-        File outputFile = new File(outputDir, "index.html");
+        File outputFile = new File( outputDir, "index.html" );
         InputStream xslt = null;
         OutputStream registry = null;
-        try {
-            xslt = new BufferedInputStream(getClass().getResourceAsStream("module-report.xsl"));
-            registry = new BufferedOutputStream(new FileOutputStream(outputFile));
+        try
+        {
+            xslt = new BufferedInputStream( getClass().getResourceAsStream( "module-report.xsl" ) );
+            registry = new BufferedOutputStream( new FileOutputStream( outputFile ) );
             Document document = serializer.createRegistryDocument();
-            fixDOMTree(document);
-            Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(xslt));
-            transformer.setParameter("base.dir", outputDir);
+            fixDOMTree( document );
+            Transformer transformer = TransformerFactory.newInstance().newTransformer( new StreamSource( xslt ) );
+            transformer.setParameter( "base.dir", outputDir );
             // FIXME: make this configurable
-            if ( linkJavadoc && project.isExecutionRoot() ) {
-                transformer.setParameter("javadoc.path", javadocPath);
+            if ( linkJavadoc && project.isExecutionRoot() )
+            {
+                transformer.setParameter( "javadoc.path", javadocPath );
             }
-            else {
-                transformer.setParameter("javadoc.path", "");
+            else
+            {
+                transformer.setParameter( "javadoc.path", "" );
             }
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(registry);
-            transformer.transform(source, result);
+            DOMSource source = new DOMSource( document );
+            StreamResult result = new StreamResult( registry );
+            transformer.transform( source, result );
         }
-        catch ( TransformerConfigurationException e ) {
-            throw new MavenReportException("Could not write " + outputFile, e);
+        catch ( TransformerConfigurationException e )
+        {
+            throw new MavenReportException( "Could not write " + outputFile, e );
         }
-        catch ( TransformerException e ) {
-            throw new MavenReportException("Could not write " + outputFile, e);
+        catch ( TransformerException e )
+        {
+            throw new MavenReportException( "Could not write " + outputFile, e );
         }
-        catch ( FileNotFoundException e ) {
-            throw new MavenReportException("Could not write " + outputFile, e);
+        catch ( FileNotFoundException e )
+        {
+            throw new MavenReportException( "Could not write " + outputFile, e );
         }
-        finally {
-            if ( xslt != null ) {
-                try {
+        finally
+        {
+            if ( xslt != null )
+            {
+                try
+                {
                     xslt.close();
                 }
-                catch ( IOException e ) {
-                    getLog().warn("Error closing XSLT file", e);
+                catch ( IOException e )
+                {
+                    getLog().warn( "Error closing XSLT file", e );
                 }
 
             }
-            if ( registry != null ) {
-                try {
+            if ( registry != null )
+            {
+                try
+                {
                     registry.close();
                 }
-                catch ( IOException e ) {
-                    getLog().warn("Error closing output file " + outputFile, e);
+                catch ( IOException e )
+                {
+                    getLog().warn( "Error closing output file " + outputFile, e );
                 }
 
             }
         }
-        try {
-            copyResource("module-report.css", outputDir);
-            copyResource("private.png", outputDir);
-            copyResource("public.png", outputDir);
+        try
+        {
+            copyResource( "module-report.css", outputDir );
+            copyResource( "private.png", outputDir );
+            copyResource( "public.png", outputDir );
         }
-        catch ( IOException e ) {
-            throw new MavenReportException("Error copying resources", e);
+        catch ( IOException e )
+        {
+            throw new MavenReportException( "Error copying resources", e );
         }
     }
 
-    private void scan() {
-        if ( hivemodules == null ) {
+    private void scan()
+    {
+        if ( hivemodules == null )
+        {
             hivemodules = new LinkedList<File>();
-            if ( project.isExecutionRoot() ) {
-                for ( MavenProject prj : reactorProjects ) {
-                    scanProject(prj);
+            if ( project.isExecutionRoot() )
+            {
+                for ( MavenProject prj : reactorProjects )
+                {
+                    scanProject( prj );
                 }
             }
-            else {
-                scanProject(project);
+            else
+            {
+                scanProject( project );
             }
         }
     }
 
-    private void scanProject(MavenProject prj) {
+    private void scanProject( MavenProject prj )
+    {
         List<Resource> resources = prj.getResources();
-        for ( Resource rsrc : resources ) {
-            File dir = new File(rsrc.getDirectory());
-            if ( dir.isDirectory() ) {
+        for ( Resource rsrc : resources )
+        {
+            File dir = new File( rsrc.getDirectory() );
+            if ( dir.isDirectory() )
+            {
                 DirectoryScanner scanner = new DirectoryScanner();
-                scanner.setIncludes(includes);
-                scanner.setExcludes(excludes);
-                scanner.setBasedir(dir);
+                scanner.setIncludes( includes );
+                scanner.setExcludes( excludes );
+                scanner.setBasedir( dir );
                 scanner.scan();
-                for ( String f : scanner.getIncludedFiles() ) {
-                    hivemodules.add(new File(dir, f));
+                for ( String f : scanner.getIncludedFiles() )
+                {
+                    hivemodules.add( new File( dir, f ) );
                 }
             }
         }
     }
 
-    public String getOutputName() {
-        return outputName + "/index";
+
+    public String getOutputName()
+    {
+        return outputName + "/empty_report";
     }
 
-    public String getName(Locale locale) {
+    public String getName( Locale locale )
+    {
         return "Gaderian Modules";
     }
 
-    public String getDescription(Locale locale) {
-        return "Gaderian registry documentation";
+    public String getDescription( Locale locale )
+    {
+        return "Gaderian Registry Documentation";
     }
 
 
-    protected Renderer getSiteRenderer() {
+    protected Renderer getSiteRenderer()
+    {
         return siteRenderer;
     }
 
-    protected String getOutputDirectory() {
-        return outputName;
-        //return outputDir.toString();
-        //return new File(outputDir, outputName);
+    protected String getOutputDirectory()
+    {
+        return outputDir.getAbsolutePath();
     }
 
-    protected MavenProject getProject() {
+    protected MavenProject getProject()
+    {
         return project;
     }
 
-    //public void execute() throws MavenReportException, MojoFailureException {
-    //}
-
-    private void fixDOMTree(Node node) {
-        if ( node.getNodeType() == Node.TEXT_NODE && node.getTextContent() == null ) {
-            node.setTextContent("");
+    private void fixDOMTree( Node node )
+    {
+        if ( node.getNodeType() == Node.TEXT_NODE && node.getTextContent() == null )
+        {
+            node.setTextContent( "" );
         }
-        if ( node.hasChildNodes() ) {
+        if ( node.hasChildNodes() )
+        {
             NodeList children = node.getChildNodes();
-            for ( int i = 0; i < children.getLength(); i++ ) {
-                fixDOMTree(children.item(i));
+            for ( int i = 0; i < children.getLength(); i++ )
+            {
+                fixDOMTree( children.item( i ) );
             }
         }
     }
 
-    private void copyResource(String resource, File targetDir) throws IOException {
+    private void copyResource( String resource, File targetDir ) throws IOException
+    {
         InputStream input = null;
         OutputStream output = null;
-        try {
-            input = new BufferedInputStream(getClass().getResourceAsStream(resource));
-            output = new BufferedOutputStream(new FileOutputStream(new File(targetDir, resource)));
+        try
+        {
+            input = new BufferedInputStream( getClass().getResourceAsStream( resource ) );
+            output = new BufferedOutputStream( new FileOutputStream( new File( targetDir, resource ) ) );
             int b;
-            while ( (b = input.read()) >= 0 ) {
-                output.write(b);
+            while ( ( b = input.read() ) >= 0 )
+            {
+                output.write( b );
             }
         }
-        finally {
-            if ( input != null ) {
-                try {
+        finally
+        {
+            if ( input != null )
+            {
+                try
+                {
                     input.close();
                 }
-                catch ( IOException e ) {
-                    getLog().warn("Error closing input stream for resource " + resource);
+                catch ( IOException e )
+                {
+                    getLog().warn( "Error closing input stream for resource " + resource );
                 }
             }
-            if ( output!= null ) {
-                try {
+            if ( output != null )
+            {
+                try
+                {
                     output.close();
                 }
-                catch ( IOException e ) {
-                    getLog().warn("Error closing output file " + targetDir);
+                catch ( IOException e )
+                {
+                    getLog().warn( "Error closing output file " + targetDir );
                 }
             }
         }

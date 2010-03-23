@@ -1,85 +1,67 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.ops4j.gaderian</groupId>
+    <artifactId>gaderian-project</artifactId>
+    <version>1.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>gaderian-jmx</artifactId>
+  <packaging>jar</packaging>
+  <name>Gaderian JMX</name>
+  <inceptionYear>2009</inceptionYear>
+
+  <dependencies>
+    <dependency>
       <groupId>org.ops4j.gaderian</groupId>
-      <artifactId>gaderian-project</artifactId>
-      <version>1.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-
-    <artifactId>gaderian-jmx</artifactId>
-    <packaging>jar</packaging>
-    <name>Gaderian JMX</name>
-    <inceptionYear>2009</inceptionYear>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.ops4j.gaderian</groupId>
-            <artifactId>gaderian</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ops4j.gaderian</groupId>
-            <artifactId>gaderian</artifactId>
-            <version>${project.version}</version>
-            <classifier>tests</classifier>
-        </dependency>
-         <dependency>
-            <groupId>org.ops4j.gaderian</groupId>
-            <artifactId>gaderian-test-util</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <optional>true</optional>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>mx4j</groupId>
-            <artifactId>mx4j</artifactId>
-            <version>3.0.2</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>mx4j</groupId>
-            <artifactId>mx4j-tools</artifactId>
-            <version>3.0.1</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>mx4j</groupId>
-            <artifactId>mx4j-remote</artifactId>
-            <version>3.0.2</version>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-
-    <reporting>
-        <plugins>
-
-           <!-- <plugin>
-                <groupId>org.ops4j.gaderian.tools</groupId>
-                <artifactId>maven-gaderian-plugin</artifactId>
-                <version>1.0</version>
-                <configuration>
-                    <includes>
-                        <include>META-INF/org/ops4j/gaderian/module.xml</include>
-                    </includes>
-                    <linkJavadoc>false</linkJavadoc>
-                </configuration>
-            </plugin>-->
-
-        </plugins>
-    </reporting>
+      <artifactId>gaderian</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.gaderian</groupId>
+      <artifactId>gaderian</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.ops4j.gaderian</groupId>
+      <artifactId>gaderian-test-util</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.easymock</groupId>
+      <artifactId>easymock</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <optional>true</optional>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>mx4j</groupId>
+      <artifactId>mx4j</artifactId>
+      <version>3.0.2</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>mx4j</groupId>
+      <artifactId>mx4j-tools</artifactId>
+      <version>3.0.1</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>mx4j</groupId>
+      <artifactId>mx4j-remote</artifactId>
+      <version>3.0.2</version>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
 
 </project>

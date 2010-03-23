@@ -134,7 +134,7 @@
   <build>
 
     <plugins>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -313,6 +313,40 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>module-report</id>
+
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.ops4j.gaderian.tools</groupId>
+            <artifactId>maven-gaderian-plugin</artifactId>
+            <version>1.1-SNAPSHOT</version>
+          </plugin>
+        </plugins>
+      </build>
+
+      <reporting>
+        <plugins>
+
+          <plugin>
+            <groupId>org.ops4j.gaderian.tools</groupId>
+            <artifactId>maven-gaderian-plugin</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <configuration>
+              <includes>
+                <include>META-INF/org/ops4j/gaderian/module.xml</include>
+              </includes>
+              <linkJavadoc>true</linkJavadoc>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </reporting>
+
+    </profile>
+
   </profiles>
 
   <properties>
