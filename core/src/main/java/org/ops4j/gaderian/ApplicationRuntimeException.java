@@ -65,6 +65,11 @@ public class ApplicationRuntimeException extends RuntimeException implements Loc
         this(message, null, location, rootCause);
     }
 
+    public ApplicationRuntimeException( String message, Location location )
+    {
+        this( message, null, location, null );
+    }
+
     public Throwable getRootCause()
     {
         return _rootCause;

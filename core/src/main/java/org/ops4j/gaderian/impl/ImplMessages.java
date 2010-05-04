@@ -454,4 +454,15 @@ class ImplMessages
     {
         return _formatter.format("error-resolving-value-for-symbol", name);
     }
+
+    static String noHandlerForType(final Class<?> type)
+    {
+        return _formatter.format( "no-handler-for-type", type.toString() );
+    }
+
+    static String couldNotConvertStringToObject( final String string, final Class<?> type, final String message )
+    {
+        return _formatter.format( "could-not-convert-string-to-object", string, type.toString(), message );
+    }
+
 }

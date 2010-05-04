@@ -15,6 +15,7 @@
 package org.ops4j.gaderian.factory;
 
 import org.ops4j.gaderian.impl.BaseLocatable;
+import org.ops4j.gaderian.internal.Module;
 
 /**
  * A contribution used with an {@link org.ops4j.gaderian.utilities.BeanFactory}
@@ -26,6 +27,7 @@ public class BeanFactoryContribution extends BaseLocatable
 {
     private String _name;
     private Class _beanClass;
+    private Module _module;
     
     // Stored as a boolean, so that null means 'as defined by the factory'
     private Boolean _cacheable;
@@ -58,6 +60,16 @@ public class BeanFactoryContribution extends BaseLocatable
     public void setBeanClass(Class objectClass)
     {
         _beanClass = objectClass;
+    }
+
+    public Module getModule()
+    {
+        return _module;
+    }
+
+    public void setModule( Module module )
+    {
+        this._module = module;
     }
 
     public boolean getStoreResultInCache(boolean defaultCacheable)

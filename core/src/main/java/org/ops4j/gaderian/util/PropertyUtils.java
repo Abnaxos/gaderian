@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Gaderian;
+import org.ops4j.gaderian.internal.Module;
 
 /**
  * A collection of static methods used to perform property-level access on arbitrary objects.
@@ -60,11 +61,11 @@ public class PropertyUtils
      *
      * @since 1.1
      */
-    public static void smartWrite(Object target, String propertyName, String value)
+    public static void smartWrite( Module module, Object target, String propertyName, String value)
     {
         ClassAdaptor a = getAdaptor(target);
 
-        a.smartWrite(target, propertyName, value);
+        a.smartWrite(module, target, propertyName, value);
     }
 
     /**
@@ -83,11 +84,11 @@ public class PropertyUtils
      * @since 1.1
      */
 
-    public static void configureProperties(Object target, String initializer)
+    public static void configureProperties(Module module, Object target, String initializer)
     {
         ClassAdaptor a = getAdaptor(target);
 
-        a.configureProperties(target, initializer);
+        a.configureProperties(module, target, initializer);
     }
 
     /**

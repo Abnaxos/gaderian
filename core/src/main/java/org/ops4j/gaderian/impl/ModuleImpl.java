@@ -94,6 +94,16 @@ public final class ModuleImpl extends BaseLocatable implements Module
         return _registry.containsService(serviceInterface, this);
     }
 
+    public boolean containsService( String serviceId, Class serviceInterface )
+    {
+        return _registry.containsService( serviceId, serviceInterface, this );
+    }
+
+    public int getServiceCount(Class<?> serviceInterface)
+    {
+        return _registry.getServiceCount(serviceInterface, this);
+    }
+
     public <T> T getService(String serviceId, Class<T> serviceInterface)
     {
         String qualifiedId = IdUtils.qualify(_moduleId, serviceId);
@@ -146,6 +156,11 @@ public final class ModuleImpl extends BaseLocatable implements Module
     public String expandSymbols(String input, Location location)
     {
         return _registry.expandSymbols(input, location);
+    }
+
+    public Object stringToObject(String input, Class<?> target, Location location)
+    {
+        return _registry.stringToObject( this, input, target, location );
     }
 
     public String toString()

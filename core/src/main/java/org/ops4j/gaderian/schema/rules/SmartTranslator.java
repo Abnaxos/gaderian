@@ -14,108 +14,31 @@
 
 package org.ops4j.gaderian.schema.rules;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
-import java.util.Map;
-import java.lang.reflect.Constructor;
-
-import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
+import org.ops4j.gaderian.impl.TypeConverter;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.Translator;
 
 /**
  * A "smart" translator that attempts to automatically convert from string types to object or
- * wrapper types, using {@link java.beans.PropertyEditor}s.
- * 
+ * wrapper types, using {@link org.ops4j.gaderian.TypeHandler}s.
+ *
  * @author Howard Lewis Ship
  */
 public class SmartTranslator implements Translator
 {
-    private String _default;
 
-    public SmartTranslator()
+    private final TypeConverter m_converter;
+
+    public SmartTranslator( TypeConverter converter )
     {
+        m_converter = converter;
     }
 
-    /**
-     * Initializers:
-     * <ul>
-     * <li>default: default value for empty input
-     * </ul>
-     */
-    public SmartTranslator(String initializer)
+    public <T> T translate( Module contributingModule, Class<T> propertyType, String inputValue,
+                            Location location )
     {
-        Map m = RuleUtils.convertInitializer(initializer);
-
-        _default = (String) m.get("default");
-    }
-
-    public <T> T translate(Module contributingModule, Class<T> propertyType, String inputValue,
-            Location location)
-    {
-        // HIVEMIND-10: Inside JavaWebStart you (strangely) can't rely on
-        // a PropertyEditor for String (even though it is trivial).
-
-        if (inputValue == null)
-        {
-            if (_default == null)
-                return null;
-
-            inputValue = _default;
-        }
-
-        if (propertyType.equals(String.class) || propertyType.equals(Object.class))
-            return (T) inputValue;
-
-        // TODO: This duplicates logic inside PropertyAdaptor.
-
-        try
-        {
-            PropertyEditor e = PropertyEditorManager.findEditor(propertyType);
-
-          if (e == null)
-          {
-              Object convertedValue = instantiateViaStringConstructor(propertyType, inputValue);
-
-              if (convertedValue != null)
-                  return (T) convertedValue;
-
-              throw new ApplicationRuntimeException(RulesMessages.noPropertyEditor(
-                      propertyType));
-          }
-
-            e.setAsText(inputValue);
-
-            return (T) e.getValue();
-        }
-        catch (Exception ex)
-        {
-            throw new ApplicationRuntimeException(RulesMessages.smartTranslatorError(
-                    inputValue,
-                    propertyType,
-                    ex), location, ex);
-
-        }
-    }
-
-    /**
-     * Checks to see if this adaptor's property type has a public constructor that takes a single
-     * String argument.
-     */
-
-    private <T> T instantiateViaStringConstructor(Class<T> propertyType, String value)
-    {
-        try
-        {
-            Constructor<T> c = propertyType.getConstructor(String.class);
-
-            return c.newInstance(value);
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
+        return m_converter.stringToObject( contributingModule, inputValue, propertyType, location );
     }
 
 }

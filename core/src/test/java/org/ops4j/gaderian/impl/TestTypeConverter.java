@@ -12,13 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package gaderian.test.rules;
+package org.ops4j.gaderian.impl;
 
 import java.beans.PropertyEditorManager;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.easymock.EasyMock;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.Registry;
+import org.ops4j.gaderian.TypeHandler;
+import org.ops4j.gaderian.impl.TypeConverter;
+import org.ops4j.gaderian.impl.TypeConverterImpl;
+import org.ops4j.gaderian.impl.types.*;
+import org.ops4j.gaderian.internal.RegistryInfrastructure;
 import org.ops4j.gaderian.schema.Translator;
 import org.ops4j.gaderian.schema.rules.SmartTranslator;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
@@ -28,15 +37,17 @@ import org.ops4j.gaderian.test.GaderianCoreTestCase;
  *
  * @author Howard Lewis Ship
  */
-public class TestSmartTranslator extends GaderianCoreTestCase
+public class TestTypeConverter extends GaderianCoreTestCase
 {
+
+    // TODO: re-enable tests
 
     /**
      * Test a primitive type (int).
      */
     public void testInt()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         int result = t.translate(null, int.class, "-37", null);
 
@@ -45,25 +56,16 @@ public class TestSmartTranslator extends GaderianCoreTestCase
 
     public void testNullInput()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         assertNull(t.translate(null, int.class, null, null));
     }
 
     public void testBlankInput()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         assertEquals("", t.translate(null, String.class, "", null));
-    }
-
-    public void testDefault()
-    {
-        Translator t = new SmartTranslator("default=100");
-
-        int result = t.translate(null, int.class, null, null);
-
-        assertEquals(100, result);
     }
 
     /**
@@ -71,19 +73,19 @@ public class TestSmartTranslator extends GaderianCoreTestCase
      */
     public void testDouble()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Object result = t.translate(null, Double.class, "3.14", null);
 
         assertEquals(new Double("3.14"), result);
     }
 
-   /**
+    /**
      * Test a wrapper type (Float).
      */
     public void testFloat()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Float result = t.translate(null, Float.class, "3.14", null);
 
@@ -96,7 +98,7 @@ public class TestSmartTranslator extends GaderianCoreTestCase
      */
     public void testString()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Object result = t.translate(null, String.class, "Fluffy Puppies", null);
 
@@ -109,7 +111,7 @@ public class TestSmartTranslator extends GaderianCoreTestCase
      */
     public void testObjectAsString()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Object result = t.translate(null, Object.class, "Fluffy Puppies", null);
 
@@ -123,7 +125,7 @@ public class TestSmartTranslator extends GaderianCoreTestCase
         try
         {
             PropertyEditorManager.setEditorSearchPath(new String[] { "bogus.package" });
-            Translator t = new SmartTranslator();
+            Translator t = new SmartTranslator( createTestConverter());
 
             Object result = t.translate(null, String.class, "Fluffy Puppies", null);
 
@@ -138,7 +140,7 @@ public class TestSmartTranslator extends GaderianCoreTestCase
 
     public void testNoEditor()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
         Location l = newLocation();
 
         try
@@ -149,8 +151,8 @@ public class TestSmartTranslator extends GaderianCoreTestCase
         }
         catch (ApplicationRuntimeException ex)
         {
-            assertEquals("Unable to translate 'fred' to type org.ops4j.gaderian.Registry: "
-                    + "No property editor for org.ops4j.gaderian.Registry.", ex.getMessage());
+            assertEquals("Could not convert string 'fred' to interface org.ops4j.gaderian.Registry: " +
+                    "No type handler for interface org.ops4j.gaderian.Registry", ex.getMessage());
 
             assertSame(l, ex.getLocation());
         }
@@ -159,55 +161,83 @@ public class TestSmartTranslator extends GaderianCoreTestCase
 
     public void testByte()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Byte result = t.translate(null,  Byte.class, "100", null);
 
         assertEquals(new Byte((byte) 100), result);
     }
 
-  public void testShort()
-  {
-      Translator t = new SmartTranslator();
+    public void testShort()
+    {
+        Translator t = new SmartTranslator( createTestConverter());
 
-      Short result = t.translate(null, Short.class, "-37", null);
+        Short result = t.translate(null, Short.class, "-37", null);
 
-      assertEquals(new Short((short) -37), result);
-  }
+        assertEquals(new Short((short) -37), result);
+    }
 
-  public void testInteger()
-  {
-      Translator t = new SmartTranslator();
+    public void testInteger()
+    {
+        Translator t = new SmartTranslator( createTestConverter());
 
-      Integer result = t.translate(null, Integer.class, "-37", null);
+        Integer result = t.translate(null, Integer.class, "-37", null);
 
-      assertEquals(new Integer(-37), result);
-  }
+        assertEquals(new Integer(-37), result);
+    }
 
     public void testLong()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         Long result = t.translate(null, Long.class, "-37", null);
 
         assertEquals(new Long(-37), result);
     }
 
-   public void testPrimitiveLong()
+    public void testPrimitiveLong()
     {
-        Translator t = new SmartTranslator();
+        Translator t = new SmartTranslator( createTestConverter());
 
         long result = t.translate(null, long.class, "-37", null);
 
         assertEquals(-37L, result);
     }
-  public void testBoolean()
-  {
-      Translator t = new SmartTranslator();
 
-      Boolean result = t.translate(null, Boolean.class, "true", null);
+    public void testBoolean()
+    {
+        Translator t = new SmartTranslator( createTestConverter());
 
-      assertEquals(Boolean.TRUE, result);
-  }
+        Boolean result = t.translate(null, Boolean.class, "true", null);
+
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    public static TypeConverter createTestConverter()
+    {
+        RegistryInfrastructure registry = EasyMock.createMock( RegistryInfrastructure.class );
+        registry.getConfigurationAsMap( TypeConverterImpl.TYPE_HANDLERS, null );
+        Map<Class<?>, TypeHandler> config = new HashMap<Class<?>, TypeHandler>();
+        config.put( int.class, new IntegerHandler() );
+        config.put( short.class, new ShortHandler() );
+        config.put( byte.class, new ByteHandler() );
+        config.put( long.class, new LongHandler() );
+        config.put( double.class, new DoubleHandler() );
+        config.put( float.class, new FloatHandler() );
+        config.put( boolean.class, new BooleanHandler() );
+        config.put( Integer.class, new IntegerHandler() );
+        config.put( Short.class, new ShortHandler() );
+        config.put( Byte.class, new ByteHandler() );
+        config.put( Long.class, new LongHandler() );
+        config.put( Double.class, new DoubleHandler() );
+        config.put( Float.class, new FloatHandler() );
+        config.put( Boolean.class, new BooleanHandler() );
+        config.put( String.class, new NullHandler() );
+        config.put( Object.class, new NullHandler() );
+        config.put( Date.class, new DateHandler() );
+        EasyMock.expectLastCall().andReturn( config );
+        EasyMock.replay( registry );
+        return new TypeConverterImpl( registry );
+    }
 
 }

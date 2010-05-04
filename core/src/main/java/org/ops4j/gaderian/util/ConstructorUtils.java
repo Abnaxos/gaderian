@@ -92,7 +92,7 @@ public class ConstructorUtils
                 return invoke(c, parameters);
         }
 
-        throw new ApplicationRuntimeException(UtilMessages.noMatchingConstructor(targetClass), null);
+        throw new ApplicationRuntimeException(UtilMessages.noMatchingConstructor(targetClass));
     }
 
     private static boolean isMatch(Constructor c, Class[] types)

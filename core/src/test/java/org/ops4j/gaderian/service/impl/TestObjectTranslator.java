@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import org.easymock.EasyMock;
 import org.ops4j.gaderian.ErrorLog;
+import org.ops4j.gaderian.impl.TestTypeConverter;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.rules.SmartTranslator;
 import org.ops4j.gaderian.service.ObjectProvider;
@@ -39,7 +40,7 @@ public class TestObjectTranslator extends GaderianCoreTestCase
 
         ot.setContributions(Collections.EMPTY_MAP);
 
-        EasyMock.expect(module.getTranslator("smart")).andReturn(new SmartTranslator());
+        EasyMock.expect(module.getTranslator("smart")).andReturn(new SmartTranslator( TestTypeConverter.createTestConverter()));
 
         replayAllRegisteredMocks();
 

@@ -23,6 +23,7 @@ import java.util.Map;
 import static org.easymock.classextension.EasyMock.expect;
 import org.ops4j.gaderian.*;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
+import org.ops4j.gaderian.util.TestPropertyUtils;
 
 /**
  * Tests for {@link org.ops4j.gaderian.factory.BeanFactoryImpl} and
@@ -43,6 +44,7 @@ public class TestBeanFactoryImpl extends GaderianCoreTestCase
         result.setName(name);
         result.setBeanClass(objectClass);
         result.setCacheable(cacheable);
+        result.setModule( TestPropertyUtils.createModuleForConversion() );
 
         return result;
     }

@@ -24,7 +24,14 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.ops4j.gaderian.ApplicationRuntimeException;
+import org.ops4j.gaderian.Location;
+import org.ops4j.gaderian.impl.TestTypeConverter;
+import org.ops4j.gaderian.impl.TypeConverter;
+import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.test.GaderianCoreTestCase;
 
 /**
@@ -412,7 +419,7 @@ public class TestPropertyUtils extends GaderianCoreTestCase
 
         Bean b = new Bean();
 
-        PropertyUtils.smartWrite(b, "value", "2170");
+        PropertyUtils.smartWrite(createModuleForConversion(), b, "value", "2170");
 
         assertEquals(2170, b.getValue());
     }
@@ -422,7 +429,7 @@ public class TestPropertyUtils extends GaderianCoreTestCase
     {
         MultiPropertyBean b = new MultiPropertyBean();
 
-        PropertyUtils.smartWrite(b, "integer", "42");
+        PropertyUtils.smartWrite(createModuleForConversion(), b, "integer", "42");
 
         assertEquals(new Integer(42), b.getInteger());
     }
@@ -435,7 +442,7 @@ public class TestPropertyUtils extends GaderianCoreTestCase
 
         try
         {
-            PropertyUtils.smartWrite(b, "value", "fred");
+            PropertyUtils.smartWrite(createModuleForConversion(), b, "value", "fred");
             unreachable();
         }
         catch (ApplicationRuntimeException ex)
@@ -452,13 +459,12 @@ public class TestPropertyUtils extends GaderianCoreTestCase
 
         try
         {
-            PropertyUtils.smartWrite(sh, "stream", "good luck");
+            PropertyUtils.smartWrite(createModuleForConversion(), sh, "stream", "good luck");
             unreachable();
         }
         catch (ApplicationRuntimeException ex)
         {
-            assertEquals(
-                    "No property editor exists for property stream of class org.ops4j.gaderian.util.TestPropertyUtils$StreamHolder.",
+            assertRegexp("Unable to convert 'good luck' to type java\\.io\\.InputStream \\(for property stream of object org\\.ops4j\\.gaderian\\.util\\.TestPropertyUtils\\$StreamHolder@[a-z0-9]+\\): Could not convert string 'good luck' to class java\\.io\\.InputStream: No type handler for class java\\.io\\.InputStream",
                     ex.getMessage());
         }
     }
@@ -468,7 +474,7 @@ public class TestPropertyUtils extends GaderianCoreTestCase
     {
         Bean b = new Bean();
 
-        PropertyUtils.configureProperties(b, "value=8192");
+        PropertyUtils.configureProperties(createModuleForConversion(), b, "value=8192");
 
         assertEquals(8192, b.getValue());
     }
@@ -479,11 +485,11 @@ public class TestPropertyUtils extends GaderianCoreTestCase
         BooleanHolder bh = new BooleanHolder();
         assertEquals(false, bh.isFlag());
 
-        PropertyUtils.configureProperties(bh, "flag");
+        PropertyUtils.configureProperties(createModuleForConversion(), bh, "flag");
 
         assertEquals(true, bh.isFlag());
 
-        PropertyUtils.configureProperties(bh, "!flag");
+        PropertyUtils.configureProperties(createModuleForConversion(), bh, "!flag");
 
         assertEquals(false, bh.isFlag());
     }
@@ -495,12 +501,36 @@ public class TestPropertyUtils extends GaderianCoreTestCase
         MultiPropertyBean b = new MultiPropertyBean();
 
         // Note that one property name is preceded by a space to test trimming
-        PropertyUtils.configureProperties(b, "integer=42,long=-937, string=Gaderian,flag");
+        PropertyUtils.configureProperties(createModuleForConversion(), b, "integer=42,long=-937, string=Gaderian,flag");
 
         assertEquals(new Integer(42), b.getInteger());
         assertEquals(-937, b.getLong());
         assertEquals("Gaderian", b.getString());
         assertEquals(true, b.isFlag());
+    }
+
+    public static Module createModuleForConversion()
+    {
+        Module module = EasyMock.createMock( Module.class );
+        addConversionBehaviour( module );
+        EasyMock.replay( module );
+        return module;
+    }
+
+    public static void addConversionBehaviour( Module module )
+    {
+        final TypeConverter converter = TestTypeConverter.createTestConverter();
+        module.stringToObject( EasyMock.<String>anyObject(), EasyMock.<Class<?>>anyObject(), EasyMock.<Location>anyObject() );
+        EasyMock.expectLastCall().andAnswer( new IAnswer<Object>()
+        {
+            public Object answer() throws Throwable
+            {
+                return converter.stringToObject( null,
+                        (String) EasyMock.getCurrentArguments()[0],
+                        (Class<?>) EasyMock.getCurrentArguments()[1],
+                        (Location) EasyMock.getCurrentArguments()[2] );
+            }
+        } ).anyTimes();
     }
 
 }

@@ -56,7 +56,7 @@ public class InstanceCreationUtils
             Gaderian.setLocation(result, location);
 
             if (commax > 0)
-                PropertyUtils.configureProperties(result, initializer.substring(commax + 1));
+                PropertyUtils.configureProperties(module, result, initializer.substring(commax + 1));
 
             return result;
         }

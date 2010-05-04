@@ -27,6 +27,7 @@ import org.ops4j.gaderian.impl.ModuleImpl;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.schema.rules.ClassTranslator;
 import org.ops4j.gaderian.schema.rules.InstanceTranslator;
+import org.ops4j.gaderian.util.TestPropertyUtils;
 
 /**
  * Fill in some gaps in {@link org.ops4j.gaderian.schema.rules.InstanceTranslator} and
@@ -82,6 +83,7 @@ public class TestInstanceTranslator extends FrameworkTestCase
         Module m = newModule();
 
         EasyMock.expect(m.resolveType("Bean")).andReturn(IntHolder.class);
+        TestPropertyUtils.addConversionBehaviour( m );
 
         replayAllRegisteredMocks();
 

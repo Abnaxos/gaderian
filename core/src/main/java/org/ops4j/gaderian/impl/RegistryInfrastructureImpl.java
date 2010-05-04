@@ -70,6 +70,8 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
     private SymbolSource[] _variableSources;
 
+    private TypeConverter _typeConverter;
+
     private ErrorHandler _errorHandler;
 
     private Locale _locale;
@@ -98,16 +100,17 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
     private TranslatorManager _translatorManager;
 
-    private SymbolExpander _expander;
+    private final SymbolExpander _expander;
 
     public RegistryInfrastructureImpl(ErrorHandler errorHandler, Locale locale)
     {
         _errorHandler = errorHandler;
         _locale = locale;
 
-        _translatorManager = new TranslatorManager(this, errorHandler);
+        _translatorManager = new TranslatorManager(this, getTypeConverter(), errorHandler);
 
         _expander = new SymbolExpander(_errorHandler, this);
+
     }
 
     public Locale getLocale()
@@ -286,6 +289,11 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         return _expander.expandSymbols(text, location);
     }
 
+    public <T> T stringToObject(Module module, String input, Class<T> target, Location location)
+    {
+        return getTypeConverter().stringToObject( module, input, target, location );
+    }
+
     public String valueForSymbol(String name)
     {
         checkShutdown();
@@ -344,6 +352,16 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         }
 
         return _variableSources;
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private synchronized TypeConverter getTypeConverter()
+    {
+        if (_typeConverter == null)
+        {
+            _typeConverter = new TypeConverterImpl( this );
+        }
+        return _typeConverter;
     }
 
     public void setShutdownCoordinator(ShutdownCoordinator coordinator)
@@ -489,6 +507,11 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
 
     public boolean containsService(Class serviceInterface, Module module)
     {
+        return getServiceCount( serviceInterface, module ) == 1;
+    }
+
+    public int getServiceCount(Class serviceInterface, Module module)
+    {
         checkShutdown();
 
         String key = serviceInterface.getName();
@@ -496,7 +519,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
         List<ServicePoint> servicePoints = _servicePointsByInterfaceClassName.get(key);
 
         if (servicePoints == null)
-            return false;
+            return 0;
 
         int count = 0;
 
@@ -508,7 +531,7 @@ public final class RegistryInfrastructureImpl implements RegistryInfrastructure,
             }
         }
 
-        return count == 1;
+        return count;
     }
 
     public boolean containsService(String serviceId, Class serviceInterface, Module module)

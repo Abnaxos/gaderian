@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
+import org.ops4j.gaderian.internal.Module;
 
 /**
  * Provides access to an object (of a particular class) as a set of individual property that may be
@@ -66,11 +67,11 @@ class ClassAdaptor
      * @since 1.1
      */
 
-    public void smartWrite(Object target, String propertyName, String value)
+    public void smartWrite( Module module, Object target, String propertyName, String value)
     {
         PropertyAdaptor a = getPropertyAdaptor(target, propertyName);
 
-        a.smartWrite(target, value);
+        a.smartWrite( module, target, value );
     }
 
     /**
@@ -180,13 +181,13 @@ class ClassAdaptor
      * @since 1.1
      */
 
-    public void configureProperties(Object target, String initializer)
+    public void configureProperties(Module module, Object target, String initializer)
     {
         StringTokenizer tokenizer = new StringTokenizer(initializer, ",");
 
         while (tokenizer.hasMoreTokens())
         {
-            configurePropertyFromToken(target, tokenizer.nextToken());
+            configurePropertyFromToken(module, target, tokenizer.nextToken());
         }
     }
 
@@ -201,7 +202,7 @@ class ClassAdaptor
      * 
      * @since 1.1
      */
-    private void configurePropertyFromToken(Object target, String token)
+    private void configurePropertyFromToken(Module module, Object target, String token)
     {
         int equalsx = token.indexOf('=');
 
@@ -210,7 +211,7 @@ class ClassAdaptor
             String propertyName = token.substring(0, equalsx).trim();
             String value = token.substring(equalsx + 1);
 
-            smartWrite(target, propertyName, value);
+            smartWrite(module, target, propertyName, value);
             return;
         }
 

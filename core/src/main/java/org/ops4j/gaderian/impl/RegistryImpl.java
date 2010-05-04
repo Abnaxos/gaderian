@@ -74,6 +74,11 @@ public class RegistryImpl implements Registry
         return _infrastructure.expandSymbols(input, location);
     }
 
+    public Object stringToObject(String input, Class<?> target, Location location)
+    {
+        return _infrastructure.stringToObject( null, input, target, location );
+    }
+
     public Object getService(String serviceId, Class serviceInterface)
     {
         return _infrastructure.getService(serviceId, serviceInterface, null);

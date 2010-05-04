@@ -153,7 +153,7 @@ public class BeanFactoryImpl extends BaseLocatable implements BeanFactory
                     throw new ApplicationRuntimeException(FactoryMessages.invalidInitializerProperty(beanClass, splitInitializer[0], initializer), contribution.getLocation(), null);
                 }
                 // It is writable - attempt to write it
-                PropertyUtils.smartWrite(o, splitInitializer[0], splitInitializer[1]);
+                PropertyUtils.smartWrite(contribution.getModule(), o, splitInitializer[0], splitInitializer[1]);
 
                 // And finally return the new instance
                 return o;

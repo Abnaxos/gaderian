@@ -157,6 +157,8 @@ public interface RegistryInfrastructure extends SymbolSource
 
     public String expandSymbols(String input, Location location);
 
+    public <T> T stringToObject( Module module, String input, Class<T> target, Location location );
+
     /**
      * Returns a named service-model factory
      * @param name
@@ -218,6 +220,16 @@ public interface RegistryInfrastructure extends SymbolSource
      * @since 1.1
      */
     public boolean containsService(Class serviceInterface, Module module);
+
+    /**
+     * Returns the count of services ivisible to the module that implement the specified service
+     * interface.
+     *
+     * @param serviceInterface The service interface.
+     * @param module           The module.
+     * @return The count of implementing services visible to the module.
+     */
+    public int getServiceCount( Class<?> serviceInterface, Module module);
 
     /**
      * Returns true if a single service with the given id exists which implements the specified

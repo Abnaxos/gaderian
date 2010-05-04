@@ -57,7 +57,7 @@ public class TranslatorManager
 
     private boolean _translatorsLoaded;
 
-    public TranslatorManager(RegistryInfrastructure registry, ErrorHandler errorHandler)
+    public TranslatorManager(RegistryInfrastructure registry, TypeConverter typeConverter, ErrorHandler errorHandler)
     {
         _registry = registry;
         _errorHandler = errorHandler;
@@ -67,7 +67,7 @@ public class TranslatorManager
 
         _translatorsCache.put("class", new ClassTranslator());
         _translatorsCache.put("service", new ServiceTranslator());
-        _translatorsCache.put("smart", new SmartTranslator());
+        _translatorsCache.put( "smart", new SmartTranslator( typeConverter ) );
         _translatorsCache.put("instance", new InstanceTranslator());
 
         // smart may take an initializer, so we need to put it into the classes as

@@ -107,8 +107,9 @@ public interface Registry extends SymbolSource
      * @param location
      *            the location from which the string was obtained, used if an error is logged.
      */
-
     public String expandSymbols(String input, Location location);
+
+    public Object stringToObject(String input, Class<?> target, Location location);
 
     /**
      * Obtains a service from the registry. Typically, what's returned is a proxy, but that's

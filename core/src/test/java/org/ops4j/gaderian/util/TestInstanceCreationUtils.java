@@ -49,6 +49,7 @@ public class TestInstanceCreationUtils extends GaderianCoreTestCase
         Module module = createMock(Module.class);
 
         expect(module.resolveType(name)).andReturn(returnValue);
+        TestPropertyUtils.addConversionBehaviour( module );
 
         return module;
     }

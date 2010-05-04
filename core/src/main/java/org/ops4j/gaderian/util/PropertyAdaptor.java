@@ -14,12 +14,11 @@
 
 package org.ops4j.gaderian.util;
 
-import java.beans.PropertyEditor;
-import java.beans.PropertyEditorManager;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.ops4j.gaderian.ApplicationRuntimeException;
+import org.ops4j.gaderian.internal.Module;
 
 /**
  * Used to manage dynamic access to a property of a specific class.
@@ -102,38 +101,22 @@ public class PropertyAdaptor
         }
     }
 
-    public void smartWrite(Object target, String value)
+    public void smartWrite(Module module, Object target, String value)
     {
-        Object convertedValue = convertValueForAssignment(target, value);
+        Object convertedValue = convertValueForAssignment(module, target, value);
 
         write(target, convertedValue);
     }
 
     /** @since 1.1 */
-    private Object convertValueForAssignment(Object target, String value)
+    private Object convertValueForAssignment( Module module, Object target, String value)
     {
         if (value == null || _propertyType.isInstance(value))
             return value;
 
-        PropertyEditor e = PropertyEditorManager.findEditor(_propertyType);
-
-        if (e == null)
-        {
-            Object convertedValue = instantiateViaStringConstructor(value);
-
-            if (convertedValue != null)
-                return convertedValue;
-
-            throw new ApplicationRuntimeException(UtilMessages.noPropertyEditor(
-                    _propertyName,
-                    target.getClass()));
-        }
-
         try
         {
-            e.setAsText(value);
-
-            return e.getValue();
+            return module.stringToObject( value, _propertyType, null );
         }
         catch (Exception ex)
         {

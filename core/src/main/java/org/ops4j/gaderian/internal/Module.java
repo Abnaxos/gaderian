@@ -49,12 +49,34 @@ public interface Module extends Locatable, SymbolSource
     /**
      * Returns true if a single service exists which implements the specified service interface and
      * is visible to this module.
-     * 
+     *
      * @param serviceInterface
      * @return true if a single visible service for the specified service interface exists
      * @since 1.1
      */
     public boolean containsService(Class serviceInterface);
+
+    /**
+     * Returns true if a service with the specified ID exists which implements the specified service
+     * interface and is visible to this module.
+     *
+     * @param serviceId
+     *            an unqualified id for a service within this module, or a fully qualified id for a
+     *            service in this or any other module
+     * @param serviceInterface
+     * @return true if a single visible service for the specified service interface exists
+     * @since 1.1
+     */
+    public boolean containsService(String serviceId, Class serviceInterface);
+
+    /**
+     * Returns the count of services ivisible to the module that implement the specified service
+     * interface.
+     *
+     * @param serviceInterface The service interface.
+     * @return The count of implementing services visible to the module.
+     */
+    public int getServiceCount( Class<?> serviceInterface );
 
     /**
      * Looks up the {@link ServicePoint} (throwing an exception if not found) and invokes
@@ -177,6 +199,8 @@ public interface Module extends Locatable, SymbolSource
      * @see org.ops4j.gaderian.internal.RegistryInfrastructure#expandSymbols(String, Location)
      */
     public String expandSymbols(String input, Location location);
+
+    public Object stringToObject(String input, Class<?> target, Location location);
 
     /**
      * Returns the {@link org.ops4j.gaderian.ErrorHandler} for this Registry.

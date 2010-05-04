@@ -41,6 +41,7 @@ public class TestTranslatorManager extends GaderianCoreTestCase
         return result;
     }
 
+//     TODO: re-enable test
     public void testNoClassOrService()
     {
         TranslatorContribution tc = new TranslatorContribution();
@@ -59,7 +60,7 @@ public class TestTranslatorManager extends GaderianCoreTestCase
 
         replayAllRegisteredMocks();
 
-        TranslatorManager tm = new TranslatorManager(r, eh);
+        TranslatorManager tm = new TranslatorManager(r, TestTypeConverter.createTestConverter(), eh);
 
         try
         {

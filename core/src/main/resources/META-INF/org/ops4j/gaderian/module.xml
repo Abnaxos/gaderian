@@ -117,6 +117,41 @@
         </invoke-factory>
     </service-point>
 
+    <configuration-point id="TypeHandlers">
+        <schema>
+            <element name="handler" key-attribute="class">
+                <attribute name="class" translator="class"/>
+                <attribute name="object" required="true" translator="instance"/>
+                <rules>
+                    <push-attribute attribute="object"/>
+                    <invoke-parent method="addElement"/>
+                </rules>
+            </element>
+        </schema>
+    </configuration-point>
+
+    <contribution configuration-id="TypeHandlers">
+        <handler class="int" object="impl.types.IntegerHandler"/>
+        <handler class="long" object="impl.types.LongHandler"/>
+        <handler class="short" object="impl.types.ShortHandler"/>
+        <handler class="byte" object="impl.types.ByteHandler"/>
+        <handler class="double" object="impl.types.DoubleHandler"/>
+        <handler class="float" object="impl.types.FloatHandler"/>
+        <handler class="boolean" object="impl.types.BooleanHandler"/>
+        <handler class="java.lang.Object" object="impl.types.NullHandler"/>
+        <handler class="java.lang.String" object="impl.types.NullHandler"/>
+        <handler class="java.lang.Integer" object="impl.types.IntegerHandler"/>
+        <handler class="java.lang.Long" object="impl.types.LongHandler"/>
+        <handler class="java.lang.Short" object="impl.types.ShortHandler"/>
+        <handler class="java.lang.Byte" object="impl.types.ByteHandler"/>
+        <handler class="java.lang.Double" object="impl.types.DoubleHandler"/>
+        <handler class="java.lang.Float" object="impl.types.FloatHandler"/>
+        <handler class="java.lang.Boolean" object="impl.types.BooleanHandler"/>
+        <handler class="java.lang.Class" object="impl.types.ClassHandler"/>
+        <handler class="java.util.Date" object="impl.types.DateHandler"/>
+        <handler class="java.io.File" object="impl.types.FileHandler"/>
+    </contribution>
+
     <service-point id="ClassFactory" interface="org.ops4j.gaderian.service.ClassFactory">
 
         Wrapper around Javassist used to dynamically create classes such as service interceptors.
@@ -881,9 +916,17 @@
             <attribute name="cacheable" translator="boolean">Defines whether instances of the bean may be cached; the
                 default is specified by the factory.
             </attribute>
-            <conversion class="factory.BeanFactoryContribution">
-                <map attribute="class" property="beanClass"/>
-            </conversion>
+            <rules>
+                <create-object class="factory.BeanFactoryContribution"/>
+                <read-attribute attribute="name" property="name"/>
+                <read-attribute attribute="class" property="beanClass"/>
+                <read-attribute attribute="cacheable" property="cacheable"/>
+                <set-module property="module"/>
+                <invoke-parent method="addElement"/>
+            </rules>
+            <!--<conversion class="factory.BeanFactoryContribution">-->
+                <!--<map attribute="class" property="beanClass"/>-->
+            <!--</conversion>-->
         </element>
     </schema>
 
