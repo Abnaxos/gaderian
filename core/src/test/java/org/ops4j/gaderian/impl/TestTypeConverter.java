@@ -213,6 +213,16 @@ public class TestTypeConverter extends GaderianCoreTestCase
         assertEquals(Boolean.TRUE, result);
     }
 
+    public void testEnum()
+    {
+        TypeConverter c = createTestConverter();
+        assertEquals( TestEnum.FOO, c.stringToObject(null, "FOO", TestEnum.class, null ));
+        assertEquals( TestEnum.FOO, c.stringToObject(null, "foo", TestEnum.class, null ));
+        assertEquals( TestEnum.FOO_BAR, c.stringToObject(null, "foo-Bar", TestEnum.class, null ));
+        assertEquals( TestEnum.fooBar, c.stringToObject(null, "fooBar", TestEnum.class, null ));
+        assertEquals( TestEnum.foo_bar, c.stringToObject(null, "foo-bar", TestEnum.class, null ));
+    }
+
     public static TypeConverter createTestConverter()
     {
         RegistryInfrastructure registry = EasyMock.createMock( RegistryInfrastructure.class );
@@ -238,6 +248,10 @@ public class TestTypeConverter extends GaderianCoreTestCase
         EasyMock.expectLastCall().andReturn( config );
         EasyMock.replay( registry );
         return new TypeConverterImpl( registry );
+    }
+
+    private static enum TestEnum {
+        FOO, FOO_BAR, fooBar, foo_bar
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.ops4j.gaderian.ApplicationRuntimeException;
 import org.ops4j.gaderian.Location;
 import org.ops4j.gaderian.TypeHandler;
+import org.ops4j.gaderian.impl.types.EnumHandler;
 import org.ops4j.gaderian.impl.types.StringConstructorHandler;
 import org.ops4j.gaderian.internal.Module;
 import org.ops4j.gaderian.internal.RegistryInfrastructure;
@@ -66,15 +67,20 @@ public class TypeConverterImpl implements TypeConverter
         handler = handlers.get( target );
         if( handler == null )
         {
-            // the following sees if there is a public constructor with one string argument that can be used
-            // we'll put the resulting converter into the map
-            handler = StringConstructorHandler.tryCreate( target );
-            if ( handler == null ) {
-                handler = UNSUPPORTED;
+            if( target.isEnum() )
+            {
+                handler = new EnumHandler( asEnum(target) );
             }
-            // tryCreate() returns null, if there is no usable constructor, which we'll put into the map anyway
-            // as sort of a cache: If null is in the handler map, we know we've already checked the type and
-            // cannot convert the string
+            else {
+                // the following sees if there is a public constructor with one string argument that can be used
+                // we'll put the resulting converter into the map
+                handler = StringConstructorHandler.tryCreate( target );
+                if( handler == null )
+                {
+                    // OK, no way, sorry; contribute something
+                    handler = UNSUPPORTED;
+                }
+            }
             TypeHandler prev = handlers.putIfAbsent( target, handler );
             if( prev != null )
             {
@@ -100,6 +106,12 @@ public class TypeConverterImpl implements TypeConverter
         {
             throw new ApplicationRuntimeException( ImplMessages.couldNotConvertStringToObject( input, target, e.toString() ), location, e );
         }
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    private static Class<? extends Enum> asEnum( Class<?> enumClazz )
+    {
+        return (Class<? extends Enum>) enumClazz;
     }
 
 }
