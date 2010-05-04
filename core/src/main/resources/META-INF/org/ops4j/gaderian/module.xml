@@ -121,9 +121,9 @@
         <schema>
             <element name="handler" key-attribute="class">
                 <attribute name="class" translator="class"/>
-                <attribute name="object" required="true" translator="instance"/>
+                <attribute name="handler" required="true" translator="instance"/>
                 <rules>
-                    <push-attribute attribute="object"/>
+                    <push-attribute attribute="handler"/>
                     <invoke-parent method="addElement"/>
                 </rules>
             </element>
@@ -131,25 +131,25 @@
     </configuration-point>
 
     <contribution configuration-id="TypeHandlers">
-        <handler class="int" object="impl.types.IntegerHandler"/>
-        <handler class="long" object="impl.types.LongHandler"/>
-        <handler class="short" object="impl.types.ShortHandler"/>
-        <handler class="byte" object="impl.types.ByteHandler"/>
-        <handler class="double" object="impl.types.DoubleHandler"/>
-        <handler class="float" object="impl.types.FloatHandler"/>
-        <handler class="boolean" object="impl.types.BooleanHandler"/>
-        <handler class="java.lang.Object" object="impl.types.NullHandler"/>
-        <handler class="java.lang.String" object="impl.types.NullHandler"/>
-        <handler class="java.lang.Integer" object="impl.types.IntegerHandler"/>
-        <handler class="java.lang.Long" object="impl.types.LongHandler"/>
-        <handler class="java.lang.Short" object="impl.types.ShortHandler"/>
-        <handler class="java.lang.Byte" object="impl.types.ByteHandler"/>
-        <handler class="java.lang.Double" object="impl.types.DoubleHandler"/>
-        <handler class="java.lang.Float" object="impl.types.FloatHandler"/>
-        <handler class="java.lang.Boolean" object="impl.types.BooleanHandler"/>
-        <handler class="java.lang.Class" object="impl.types.ClassHandler"/>
-        <handler class="java.util.Date" object="impl.types.DateHandler"/>
-        <handler class="java.io.File" object="impl.types.FileHandler"/>
+        <handler class="int" handler="impl.types.IntegerHandler"/>
+        <handler class="long" handler="impl.types.LongHandler"/>
+        <handler class="short" handler="impl.types.ShortHandler"/>
+        <handler class="byte" handler="impl.types.ByteHandler"/>
+        <handler class="double" handler="impl.types.DoubleHandler"/>
+        <handler class="float" handler="impl.types.FloatHandler"/>
+        <handler class="boolean" handler="impl.types.BooleanHandler"/>
+        <handler class="java.lang.Object" handler="impl.types.NullHandler"/>
+        <handler class="java.lang.String" handler="impl.types.NullHandler"/>
+        <handler class="java.lang.Integer" handler="impl.types.IntegerHandler"/>
+        <handler class="java.lang.Long" handler="impl.types.LongHandler"/>
+        <handler class="java.lang.Short" handler="impl.types.ShortHandler"/>
+        <handler class="java.lang.Byte" handler="impl.types.ByteHandler"/>
+        <handler class="java.lang.Double" handler="impl.types.DoubleHandler"/>
+        <handler class="java.lang.Float" handler="impl.types.FloatHandler"/>
+        <handler class="java.lang.Boolean" handler="impl.types.BooleanHandler"/>
+        <handler class="java.lang.Class" handler="impl.types.ClassHandler"/>
+        <handler class="java.util.Date" handler="impl.types.DateHandler"/>
+        <handler class="java.io.File" handler="impl.types.FileHandler"/>
     </contribution>
 
     <service-point id="ClassFactory" interface="org.ops4j.gaderian.service.ClassFactory">
