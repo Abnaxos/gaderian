@@ -269,6 +269,14 @@
         </xs:simpleContent>
     </xs:complexType>
 
+   <xs:complexType name="SetModuleType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="property" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
     <xs:complexType name="SetConfigurationType">
         <xs:simpleContent>
             <xs:extension base="xs:string">
@@ -292,6 +300,15 @@
             <xs:extension base="xs:string">
                 <xs:attribute type="xs:string" name="value" use="required"/>
                 <xs:attribute type="xs:string" name="symbol" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+    <xs:complexType name="HandlerType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="class" use="required"/>
+                <xs:attribute type="xs:string" name="handler" use="required"/>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -441,6 +458,7 @@
             <xs:element type="SetPropertyType" name="set-property"/>
             <xs:element type="ReadContentType" name="read-content"/>
             <xs:element type="PushAttributeType" name="push-attribute"/>
+            <xs:element type="SetModuleType" name="set-module"/>
         </xs:choice>
     </xs:complexType>
 
@@ -484,6 +502,7 @@
             <xs:element type="EagerLoadType" name="load"/>
             <xs:element type="ProviderType" name="provider"/>
             <xs:element type="DefaultsType" name="default"/>
+            <xs:element type="HandlerType" name="handler"/>
             <xs:any namespace="##other" processContents="lax"/>
         </xs:choice>
         <xs:attribute type="xs:string" name="configuration-id" use="required"/>
