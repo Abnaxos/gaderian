@@ -1,5 +1,7 @@
 package org.ops4j.gaderian.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -29,7 +31,7 @@ public class TypeConverterImpl implements TypeConverter
 
 //    private final Map<Class<?>, Class<?>> _primitives;
     private final RegistryInfrastructure _registry;
-    private final AtomicReference<ConcurrentMap<Class<?>, TypeHandler>> _handlers = new AtomicReference<ConcurrentMap<Class<?>, TypeHandler>>();
+    private Map<Class<?>, TypeHandler> _handlers = null;
 
     public TypeConverterImpl( RegistryInfrastructure registry )
     {
@@ -46,15 +48,6 @@ public class TypeConverterImpl implements TypeConverter
     }
 
     @SuppressWarnings({ "unchecked" })
-    private synchronized ConcurrentMap<Class<?>, TypeHandler> getHandlers()
-    {
-        if( _handlers.get() == null ) {
-            _handlers.compareAndSet(null, new ConcurrentHashMap<Class<?>, TypeHandler>(_registry.getConfigurationAsMap(TYPE_HANDLERS, null)));
-        }
-        return _handlers.get();
-    }
-
-    @SuppressWarnings({ "unchecked" })
     public <T> T stringToObject( Module module, String input, Class<T> target, Location location )
     {
         Defense.notNull( target, "target" );
@@ -62,29 +55,32 @@ public class TypeConverterImpl implements TypeConverter
         {
             return null;
         }
-        ConcurrentMap<Class<?>, TypeHandler> handlers = getHandlers();
         TypeHandler handler;
-        handler = handlers.get( target );
-        if( handler == null )
+        synchronized( this )
         {
-            if( target.isEnum() )
+            if( _handlers == null )
             {
-                handler = new EnumHandler( asEnum(target) );
+                _handlers = new HashMap<Class<?>, TypeHandler>( _registry.getConfigurationAsMap( TYPE_HANDLERS, null ) );
             }
-            else {
-                // the following sees if there is a public constructor with one string argument that can be used
-                // we'll put the resulting converter into the map
-                handler = StringConstructorHandler.tryCreate( target );
-                if( handler == null )
+            handler = _handlers.get( target );
+            if( handler == null )
+            {
+                if( target.isEnum() )
                 {
-                    // OK, no way, sorry; contribute something
-                    handler = UNSUPPORTED;
+                    handler = new EnumHandler( asEnum( target ) );
                 }
-            }
-            TypeHandler prev = handlers.putIfAbsent( target, handler );
-            if( prev != null )
-            {
-                handler = prev;
+                else
+                {
+                    // the following sees if there is a public constructor with one string argument that can be used
+                    // we'll put the resulting converter into the map
+                    handler = StringConstructorHandler.tryCreate( target );
+                    if( handler == null )
+                    {
+                        // OK, no way, sorry; contribute something
+                        handler = UNSUPPORTED;
+                    }
+                }
+                _handlers.put( target, handler );
             }
         }
         assert handler != null;
